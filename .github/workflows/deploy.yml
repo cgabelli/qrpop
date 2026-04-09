@@ -37,21 +37,7 @@ jobs:
           script: |
             cd /var/www/qrpop
             git pull origin main
-            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
-            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
-            echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
-            echo "NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}" >> .env
-            echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> .env
-            echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> .env
-            echo "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> .env
-            echo "STRIPE_PRICE_BASIC_IMAGE_MONTHLY=${{ secrets.STRIPE_PRICE_BASIC_IMAGE_MONTHLY }}" >> .env
-            echo "STRIPE_PRICE_BASIC_IMAGE_ANNUAL=${{ secrets.STRIPE_PRICE_BASIC_IMAGE_ANNUAL }}" >> .env
-            echo "STRIPE_PRICE_UNLIMITED_IMAGE_MONTHLY=${{ secrets.STRIPE_PRICE_UNLIMITED_IMAGE_MONTHLY }}" >> .env
-            echo "STRIPE_PRICE_UNLIMITED_IMAGE_ANNUAL=${{ secrets.STRIPE_PRICE_UNLIMITED_IMAGE_ANNUAL }}" >> .env
-            echo "STRIPE_PRICE_BASIC_VIDEO_MONTHLY=${{ secrets.STRIPE_PRICE_BASIC_VIDEO_MONTHLY }}" >> .env
-            echo "STRIPE_PRICE_BASIC_VIDEO_ANNUAL=${{ secrets.STRIPE_PRICE_BASIC_VIDEO_ANNUAL }}" >> .env
-            echo "STRIPE_PRICE_UNLIMITED_VIDEO_MONTHLY=${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO_MONTHLY }}" >> .env
-            echo "STRIPE_PRICE_UNLIMITED_VIDEO_ANNUAL=${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO_ANNUAL }}" >> .env
+
             npm ci
             npx prisma generate
             npx prisma db push --accept-data-loss
