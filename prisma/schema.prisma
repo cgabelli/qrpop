@@ -63,8 +63,10 @@ model User {
   phone           String?
   
   // Verifica
-  emailVerified    DateTime?
-  verificationToken String?   @unique
+  emailVerified         DateTime?
+  verificationToken     String?   @unique
+  passwordResetToken    String?   @unique
+  passwordResetExpires  DateTime?
 
   plan            String     @default("basic_image")
   billingInterval String     @default("monthly")

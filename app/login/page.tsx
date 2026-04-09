@@ -97,9 +97,14 @@ function LoginForm() {
             </div>
 
             <div>
-              <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
-                Password
-              </label>
+              <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 8 }}>
+                <label style={{ fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)" }}>
+                  Password
+                </label>
+                <Link href="/forgot-password" style={{ fontSize: 12, color: "hsl(262 83% 72%)", textDecoration: "none" }}>
+                  Password dimenticata?
+                </Link>
+              </div>
               <input
                 id="password"
                 type="password"
