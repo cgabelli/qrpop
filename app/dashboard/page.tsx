@@ -23,7 +23,7 @@ export default async function DashboardPage() {
   if (!user) redirect("/login");
 
   const plan = getPlan(user.plan);
-  const activeCreativity = user.creativita.find(c => c.status === "active");
+  const activeCreativity = user.creativita.find((c: any) => c.status === "active");
   const totalCreativity = await prisma.creativita.count({ where: { userId: user.id } });
   const uploadedThisMonth = user.uploadCount;
 
@@ -137,7 +137,7 @@ export default async function DashboardPage() {
           </div>
 
           <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {user.creativita.map(c => (
+            {user.creativita.map((c: any) => (
               <div key={c.id} className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 16 }}>
                 <div style={{ fontSize: 28 }}>{c.type === "video" ? "🎬" : "🖼️"}</div>
                 <div style={{ flex: 1, minWidth: 0 }}>
