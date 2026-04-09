@@ -6,6 +6,10 @@ import crypto from "crypto";
 export async function POST(req: NextRequest) {
   try {
     const { email } = await req.json();
+
+    console.log("[DEBUG API] DATABASE_URL IS:", process.env.DATABASE_URL);
+    console.log("[DEBUG API] cwd:", process.cwd());
+
     if (!email) return NextResponse.json({ error: "Email obbligatoria" }, { status: 400 });
 
     const user = await prisma.user.findUnique({ where: { email } });
