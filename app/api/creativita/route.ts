@@ -87,7 +87,7 @@ export async function POST(req: NextRequest) {
   const resetDate = new Date(user.uploadResetDate);
   const needsReset = now.getMonth() !== resetDate.getMonth() || now.getFullYear() !== resetDate.getFullYear();
 
-  const creativita = await prisma.$transaction(async (tx) => {
+  const creativita = await prisma.$transaction(async (tx: any) => {
     const created = await tx.creativita.create({
       data: {
         userId: user.id,
