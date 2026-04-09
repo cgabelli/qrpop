@@ -50,6 +50,6 @@ jobs:
             echo "STRIPE_PRICE_UNLIMITED_VIDEO=${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO }}" >> .env
             npm ci --production
             npx prisma generate
-            npx prisma migrate deploy
+            npx prisma db push --accept-data-loss
             npm run build
             pm2 restart qrpop || pm2 start npm --name qrpop -- start
