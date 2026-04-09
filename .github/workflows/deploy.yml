@@ -14,22 +14,19 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
-          cache-dependency-path: web/package-lock.json
+          cache-dependency-path: package-lock.json
 
       - name: Install dependencies
-        working-directory: web
         run: npm ci
 
       - name: Generate Prisma Client
-        working-directory: web
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate
 
       - name: Build
-        working-directory: web
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
           NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
@@ -53,7 +50,6 @@ jobs:
           script: |
             cd /var/www/qrpop
             git pull origin main
-            cd web
             npm ci --production
             npx prisma generate
             npx prisma migrate deploy
