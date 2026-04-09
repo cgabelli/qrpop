@@ -196,73 +196,167 @@ function HeroSection() {
         </a>
       </div>
 
-      {/* Phone mockup */}
+      {/* Visual Demo Section */}
       <div
         className="animate-fade-up-delay-4"
         style={{
           marginTop: 80,
-          position: "relative",
-          display: "inline-block",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          gap: "clamp(40px, 8vw, 100px)",
+          flexWrap: "wrap",
+          perspective: 1000,
         }}
       >
-        <div
-          style={{
-            width: 280,
-            height: 560,
-            borderRadius: 40,
-            background: "hsl(240 6% 8%)",
-            border: "1px solid rgba(255,255,255,0.1)",
-            boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05)",
-            overflow: "hidden",
+        {/* Action 1: Scan */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+          <div style={{
             position: "relative",
-          }}
-        >
-          {/* Notch */}
-          <div style={{
-            position: "absolute", top: 14, left: "50%", transform: "translateX(-50%)",
-            width: 80, height: 20, borderRadius: 10,
-            background: "hsl(240 6% 5%)", zIndex: 10,
-          }} />
-
-          {/* Video hero — carica /public/hero-video.mp4 se presente */}
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
-            onError={(e) => {
-              // Fallback: nasconde il video rotto e mostra il overlay
-              (e.currentTarget as HTMLVideoElement).style.display = "none";
-            }}
-          >
-            <source src="/hero-video.mp4" type="video/mp4" />
-          </video>
-
-          {/* Overlay brand watermark */}
-          <div style={{
-            position: "absolute", bottom: 0, left: 0, right: 0,
-            padding: "40px 16px 20px",
-            background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
-            textAlign: "center", fontSize: 11,
-            color: "rgba(255,255,255,0.5)",
+            width: 220,
+            height: 220,
+            background: "rgba(255,255,255,0.02)",
+            border: "1px dashed rgba(255,255,255,0.15)",
+            borderRadius: 32,
+            padding: 40,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
           }}>
-            Powered by QRpop
+            {/* Fake QR Code */}
+            <div style={{
+              width: "100%",
+              height: "100%",
+              background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\" opacity=\"0.4\"><path d=\"M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-2h2v2h-2zm-2 2h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm-2-4h2v2h-2zm2 2h2v2h-2z\"/></svg>')",
+              backgroundSize: "contain",
+              backgroundRepeat: "no-repeat",
+              backgroundPosition: "center",
+            }} />
+            
+            {/* Scanning line animation */}
+            <div style={{
+              position: "absolute",
+              top: "10%",
+              left: 20,
+              right: 20,
+              height: 3,
+              background: "hsl(262 83% 68%)",
+              boxShadow: "0 0 20px 2px hsl(262 83% 68%)",
+              animation: "scanLine 2.5s infinite cubic-bezier(0.4, 0, 0.2, 1)",
+              borderRadius: "50%",
+            }} />
+             <style>{`
+              @keyframes scanLine {
+                0% { top: 15%; opacity: 0; }
+                10% { opacity: 1; }
+                90% { opacity: 1; }
+                100% { top: 85%; opacity: 0; }
+              }
+            `}</style>
+
+            {/* Corner brackets */}
+            <div style={{ position: "absolute", top: 20, left: 20, width: 20, height: 20, borderTop: "3px solid hsl(262 83% 68%)", borderLeft: "3px solid hsl(262 83% 68%)", borderRadius: "4px 0 0 0" }} />
+            <div style={{ position: "absolute", top: 20, right: 20, width: 20, height: 20, borderTop: "3px solid hsl(262 83% 68%)", borderRight: "3px solid hsl(262 83% 68%)", borderRadius: "0 4px 0 0" }} />
+            <div style={{ position: "absolute", bottom: 20, left: 20, width: 20, height: 20, borderBottom: "3px solid hsl(262 83% 68%)", borderLeft: "3px solid hsl(262 83% 68%)", borderRadius: "0 0 0 4px" }} />
+            <div style={{ position: "absolute", bottom: 20, right: 20, width: 20, height: 20, borderBottom: "3px solid hsl(262 83% 68%)", borderRight: "3px solid hsl(262 83% 68%)", borderRadius: "0 0 4px 0" }} />
+          </div>
+          
+          <div style={{ 
+            display: "inline-flex", 
+            alignItems: "center", 
+            gap: 12, 
+            padding: "8px 20px", 
+            borderRadius: 999, 
+            background: "rgba(255,255,255,0.05)",
+            color: "hsl(240 5% 70%)", 
+            fontSize: 15, 
+            fontWeight: 500,
+            border: "1px solid rgba(255,255,255,0.05)"
+          }}>
+            <span>Il cliente inquadra il QR</span>
+            <span style={{ color: "hsl(262 83% 68%)" }}>→</span>
           </div>
         </div>
 
-        {/* Glow under phone */}
-        <div style={{
-          position: "absolute",
-          bottom: -30,
-          left: "50%",
-          transform: "translateX(-50%)",
-          width: 200,
-          height: 60,
-          borderRadius: "50%",
-          background: "radial-gradient(ellipse, rgba(124,58,237,0.4), transparent 70%)",
-          filter: "blur(10px)",
-        }} />
+        {/* Action 2: Result in Phone */}
+        <div style={{ position: "relative" }}>
+          <div
+            style={{
+              width: 280,
+              height: 560,
+              borderRadius: 40,
+              background: "hsl(240 6% 8%)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05)",
+              overflow: "hidden",
+              position: "relative",
+            }}
+          >
+            {/* Notch */}
+            <div style={{
+              position: "absolute", top: 14, left: "50%", transform: "translateX(-50%)",
+              width: 80, height: 20, borderRadius: 10,
+              background: "hsl(240 6% 5%)", zIndex: 10,
+            }} />
+
+            {/* Video hero */}
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+              onError={(e) => {
+                (e.currentTarget as HTMLVideoElement).style.display = "none";
+              }}
+            >
+              <source src="/hero-video.mp4" type="video/mp4" />
+            </video>
+
+            {/* Overlay brand watermark */}
+            <div style={{
+              position: "absolute", bottom: 0, left: 0, right: 0,
+              padding: "40px 16px 20px",
+              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
+              textAlign: "center", fontSize: 11,
+              color: "rgba(255,255,255,0.5)",
+            }}>
+              Powered by QRpop
+            </div>
+          </div>
+
+          {/* Glow under phone */}
+          <div style={{
+            position: "absolute",
+            bottom: -30,
+            left: "50%",
+            transform: "translateX(-50%)",
+            width: 200,
+            height: 60,
+            borderRadius: "50%",
+            background: "radial-gradient(ellipse, rgba(124,58,237,0.4), transparent 70%)",
+            filter: "blur(10px)",
+            zIndex: -1,
+          }} />
+          
+          <div style={{ 
+            position: "absolute",
+            bottom: -20,
+            right: -80,
+            display: "inline-flex", 
+            alignItems: "center", 
+            padding: "8px 20px", 
+            borderRadius: 999, 
+            background: "rgba(124,58,237,0.15)",
+            color: "hsl(262 83% 75%)", 
+            fontSize: 15, 
+            fontWeight: 600,
+            border: "1px solid rgba(124,58,237,0.3)",
+            backdropFilter: "blur(10px)",
+          }}>
+            Vede la tua offerta! 🎉
+          </div>
+        </div>
       </div>
     </section>
   );
