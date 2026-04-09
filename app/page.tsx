@@ -86,7 +86,7 @@ function NavBar() {
             Accedi
           </Link>
           <Link href="/register" className="btn-primary" style={{ padding: "10px 20px", fontSize: 14, borderRadius: 10 }}>
-            Inizia gratis →
+            Inizia ora →
           </Link>
         </div>
       </div>
@@ -189,7 +189,7 @@ function HeroSection() {
 
       <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
         <Link href="/register" className="btn-primary" style={{ padding: "16px 32px", fontSize: 16 }}>
-          Inizia ora — da 10€/mese →
+          Inizia ora — da 49€/anno →
         </Link>
         <a href="#come-funziona" className="btn-ghost" style={{ padding: "16px 32px", fontSize: 16 }}>
           Come funziona
@@ -284,7 +284,7 @@ function HowItWorks() {
     {
       icon: "1️⃣",
       title: "Registrati e scegli il piano",
-      desc: "Crea il tuo account in 2 minuti, scegli tra immagine o video e attiva l'abbonamento.",
+      desc: "Crea il tuo account Business, seleziona il pacchetto annuale su misura per te e attiva l'ambiente.",
     },
     {
       icon: "2️⃣",
@@ -513,7 +513,7 @@ function CTASection() {
           Unisciti ai ristoratori che hanno già trasformato il semplice QR code in uno strumento di comunicazione potente.
         </p>
         <Link href="/register" className="btn-primary" style={{ padding: "18px 40px", fontSize: 17 }}>
-          Crea il tuo account gratis →
+          Crea il tuo account Business →
         </Link>
       </div>
     </section>
