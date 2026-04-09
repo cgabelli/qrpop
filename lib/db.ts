@@ -18,10 +18,6 @@ function createPrismaClient() {
   
   return new PrismaClient({
     adapter,
-    // @ts-expect-error - Prisma types exclude datasources when schema url is removed
-    datasources: {
-      db: { url }
-    },
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 }
