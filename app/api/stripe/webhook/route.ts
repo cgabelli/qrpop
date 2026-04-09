@@ -25,19 +25,26 @@ export async function POST(req: NextRequest) {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
       const planId = session.metadata?.planId;
-      const billingInterval = session.metadata?.billingInterval ?? "monthly";
+      const isAddon = session.metadata?.isAddon === "true";
       const subscriptionId = session.subscription as string;
 
       if (userId && planId) {
-        await prisma.user.update({
-          where: { id: userId },
-          data: {
-            plan: planId,
-            billingInterval,
-            stripeSubscriptionId: subscriptionId,
-            isActive: true,
-          },
-        });
+        if (isAddon) {
+           await prisma.user.update({
+             where: { id: userId },
+             data: { purchasedCredits: { increment: 10 } }
+           });
+        } else {
+           await prisma.user.update({
+             where: { id: userId },
+             data: {
+               plan: planId,
+               billingInterval: "annual",
+               stripeSubscriptionId: subscriptionId,
+               isActive: true,
+             },
+           });
+        }
       }
       break;
     }

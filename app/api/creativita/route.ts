@@ -34,8 +34,8 @@ export async function POST(req: NextRequest) {
   if (!user) return NextResponse.json({ error: "Utente non trovato" }, { status: 404 });
 
   // Controlla limite upload
-  if (!canUpload(user.plan, user.uploadCount, user.uploadResetDate)) {
-    return NextResponse.json({ error: "Limite upload del piano raggiunto per questo mese" }, { status: 403 });
+  if (!canUpload(user.plan, user.baseCredits, user.purchasedCredits)) {
+    return NextResponse.json({ error: "Crediti di upload esauriti. Ricarica il tuo piano per continuare." }, { status: 403 });
   }
 
   const formData = await req.formData();
@@ -55,14 +55,15 @@ export async function POST(req: NextRequest) {
   const mimeType = file.type;
   const isImage = mimeType.startsWith("image/");
   const isVideo = mimeType.startsWith("video/");
+  const isPdf = mimeType === "application/pdf";
 
-  if (!isImage && !isVideo) {
-    return NextResponse.json({ error: "Tipo file non supportato (solo immagini e video)" }, { status: 400 });
+  if (!isImage && !isVideo && !isPdf) {
+    return NextResponse.json({ error: "Tipo file non supportato (solo immagini, video o PDF)" }, { status: 400 });
   }
 
   const plan = user.plan;
-  if (isVideo && !plan.includes("video")) {
-    return NextResponse.json({ error: "Il tuo piano non supporta l'upload di video" }, { status: 403 });
+  if (isPdf && plan === "media") {
+    return NextResponse.json({ error: "Il piano 'Media' non supporta l'upload di PDF. Fai l'upgrade al piano 'Pdf'." }, { status: 403 });
   }
 
   // Salva file
@@ -82,16 +83,13 @@ export async function POST(req: NextRequest) {
     status = "scheduled";
   }
 
-  // Resetta contatore se nuovo mese
-  const now = new Date();
-  const resetDate = new Date(user.uploadResetDate);
-  const needsReset = now.getMonth() !== resetDate.getMonth() || now.getFullYear() !== resetDate.getFullYear();
+  const fileTypeStr = isPdf ? "pdf" : isVideo ? "video" : "image";
 
   const creativita = await prisma.$transaction(async (tx: any) => {
     const created = await tx.creativita.create({
       data: {
         userId: user.id,
-        type: isVideo ? "video" : "image",
+        type: fileTypeStr,
         filePath: relativePath,
         fileName: file.name,
         fileSize: file.size,
@@ -102,13 +100,21 @@ export async function POST(req: NextRequest) {
       },
     });
 
-    await tx.user.update({
-      where: { id: user.id },
-      data: {
-        uploadCount: needsReset ? 1 : { increment: 1 },
-        uploadResetDate: needsReset ? now : undefined,
-      },
-    });
+    // Deduct credit
+    const isUnlimited = user.plan === "unlimited";
+    if (!isUnlimited) {
+       if (user.baseCredits > 0) {
+          await tx.user.update({
+            where: { id: user.id },
+            data: { baseCredits: { decrement: 1 } },
+          });
+       } else if (user.purchasedCredits > 0) {
+          await tx.user.update({
+            where: { id: user.id },
+            data: { purchasedCredits: { decrement: 1 } },
+          });
+       }
+    }
 
     return created;
   });

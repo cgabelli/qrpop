@@ -23,10 +23,11 @@ export default async function AbbonamentoPage({
   return (
     <AbbonamentoClient
       currentPlanId={user.plan}
-      currentBillingInterval={user.billingInterval}
       currentPlanName={currentPlan.name}
       currentPlanDesc={currentPlan.description}
       stripeSubscriptionId={user.stripeSubscriptionId}
+      baseCredits={user.baseCredits}
+      purchasedCredits={user.purchasedCredits}
       successParam={!!params.success}
       canceledParam={!!params.canceled}
     />

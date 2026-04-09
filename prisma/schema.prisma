@@ -53,7 +53,8 @@ model User {
   plan            String     @default("basic_image")
   billingInterval String     @default("monthly") // 'monthly' | 'annual'
   isActive        Boolean    @default(true)
-  uploadCount     Int        @default(0)
+  baseCredits     Int        @default(0)
+  purchasedCredits Int       @default(0)
   uploadResetDate DateTime   @default(now())
   stripeCustomerId     String?
   stripeSubscriptionId String?

@@ -1,107 +1,86 @@
 export const PLAN_TYPES = {
-  image_only: {
-    id: "image_only",
-    name: "Solo Immagine",
-    type: "image" as const,
-    limit: 5,
-    description: "5 immagini al mese",
+  media: {
+    id: "media",
+    name: "Media",
+    type: "video" as const, // Allows jpg, gif, mp4
+    limit: 10,
+    description: "10 upload all'anno (JPG, GIF, MP4)",
     features: [
-      "5 immagini al mese (JPG o GIF)",
+      "10 upload all'anno",
+      "Formati supportati: JPG, GIF, MP4",
       "QR code statico dedicato",
       "Scheduling contenuti",
-      "Link permanente",
     ],
-    monthly: {
-      price: 10,
-      stripePriceId: process.env.STRIPE_PRICE_IMAGE_ONLY_MONTHLY,
-    },
-    annual: {
-      price: 99,
-      monthlyEquiv: 8.25,
-      stripePriceId: process.env.STRIPE_PRICE_IMAGE_ONLY_ANNUAL,
-    },
-  },
-  plus_video: {
-    id: "plus_video",
-    name: "Immagine + Video",
-    type: "video" as const,
-    limit: 5,
-    description: "5 upload al mese",
-    features: [
-      "5 upload totali (Immagini o Video)",
-      "QR code statico dedicato",
-      "Video autoplay mobile",
-      "Scheduling avanzato",
-    ],
-    monthly: {
+    price: 49,
+    stripePriceId: process.env.STRIPE_PRICE_MEDIA_ANNUAL,
+    addon: {
       price: 15,
-      stripePriceId: process.env.STRIPE_PRICE_PLUS_VIDEO_MONTHLY,
-    },
-    annual: {
-      price: 119,
-      monthlyEquiv: 9.9,
-      stripePriceId: process.env.STRIPE_PRICE_PLUS_VIDEO_ANNUAL,
-    },
+      amount: 10,
+      stripePriceId: process.env.STRIPE_PRICE_MEDIA_ADDON,
+    }
+  },
+  pdf: {
+    id: "pdf",
+    name: "Pdf",
+    type: "pdf" as const, // Allows jpg, gif, mp4, pdf
+    limit: 20,
+    description: "20 upload all'anno (Incluso PDF)",
+    features: [
+      "20 upload all'anno",
+      "Supporto file PDF per Menu",
+      "Modifica contenuti fluida",
+      "Video autoplay mobile",
+    ],
+    price: 99,
+    stripePriceId: process.env.STRIPE_PRICE_PDF_ANNUAL,
+    addon: {
+      price: 25,
+      amount: 10,
+      stripePriceId: process.env.STRIPE_PRICE_PDF_ADDON,
+    }
   },
   unlimited: {
     id: "unlimited",
     name: "Unlimited",
-    type: "video" as const,
+    type: "pdf" as const,
     limit: null,
-    description: "Upload illimitati",
+    description: "Upload illimitati (qualunque formato)",
     features: [
-      "Caricamenti illimitati",
-      "Foto e Video inclusi",
+      "Upload illimitati totali",
+      "Tutti i formati (Inclusi PDF Multi-pagina)",
       "QR code statico dedicato",
-      "Priorità supporto",
+      "Analytics e report (Prossimamente)",
     ],
-    monthly: null, // Nessun piano mensile previsto
-    annual: {
-      price: 249,
-      monthlyEquiv: 20.75,
-      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
-    },
+    price: 149,
+    stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
+    addon: null
   },
 } as const;
 
 export type PlanId = keyof typeof PLAN_TYPES;
-export type BillingInterval = "monthly" | "annual";
 
 export function getPlan(planId: string) {
-  return PLAN_TYPES[planId as PlanId] ?? PLAN_TYPES.image_only;
+  return PLAN_TYPES[planId as PlanId] ?? PLAN_TYPES.media;
 }
 
-export function getStripePriceId(planId: string, interval: BillingInterval): string | undefined {
+export function getStripePriceId(planId: string, isAddon: boolean = false): string | undefined {
   const plan = getPlan(planId);
-  if (interval === "monthly" && !plan.monthly) return undefined;
-  return interval === "monthly" ? plan.monthly?.stripePriceId : plan.annual.stripePriceId;
+  return isAddon && plan.addon ? plan.addon.stripePriceId : plan.stripePriceId;
 }
 
-export function getPlanPrice(planId: string, interval: BillingInterval): number {
+export function getPlanPrice(planId: string, isAddon: boolean = false): number {
   const plan = getPlan(planId);
-  if (interval === "monthly" && !plan.monthly) return 0;
-  return interval === "monthly" ? (plan.monthly?.price ?? 0) : plan.annual.price;
+  return isAddon && plan.addon ? plan.addon.price : plan.price;
 }
 
 export function canUpload(
   planId: string,
-  uploadCount: number,
-  uploadResetDate: Date
+  baseCredits: number,
+  purchasedCredits: number
 ): boolean {
   const plan = getPlan(planId);
   if (plan.limit === null) return true;
-
-  const now = new Date();
-  const resetDate = new Date(uploadResetDate);
-  if (
-    now.getMonth() !== resetDate.getMonth() ||
-    now.getFullYear() !== resetDate.getFullYear()
-  ) {
-    return true; // Contatore si resetterà al prossimo upload
-  }
-
-  return uploadCount < plan.limit;
+  return (baseCredits + purchasedCredits) > 0;
 }
 
-// Backward compat: usato in posti che non hanno ancora il billing interval
 export const PLANS = PLAN_TYPES;
