@@ -200,96 +200,120 @@ function HeroSection() {
       <div
         className="animate-fade-up-delay-4"
         style={{
-          marginTop: 80,
+          marginTop: 100,
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
-          gap: "clamp(40px, 8vw, 100px)",
+          gap: "clamp(30px, 6vw, 80px)",
           flexWrap: "wrap",
           perspective: 1000,
+          position: "relative",
         }}
       >
-        {/* Action 1: Scan */}
-        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 24 }}>
+        {/* Glowing background line connecting them (desktop only) */}
+        <div className="hidden md:block" style={{
+          position: "absolute",
+          top: "50%",
+          left: "20%",
+          right: "20%",
+          height: 2,
+          background: "linear-gradient(90deg, transparent, hsl(262 83% 68%), transparent)",
+          zIndex: -1,
+          opacity: 0.5,
+        }} />
+
+        {/* Action 1: Scan (Bright Physical Mode) */}
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 32, zIndex: 2 }}>
+          {/* Table Tent / Card mockup */}
           <div style={{
             position: "relative",
-            width: 220,
-            height: 220,
-            background: "rgba(255,255,255,0.02)",
-            border: "1px dashed rgba(255,255,255,0.15)",
-            borderRadius: 32,
-            padding: 40,
+            width: 240,
+            height: 280,
+            background: "linear-gradient(135deg, #ffffff 0%, #f3f4f6 100%)",
+            borderRadius: "16px 16px 4px 4px",
+            boxShadow: "0 20px 40px rgba(0,0,0,0.4), inset 0 2px 0 rgba(255,255,255,1)",
+            padding: "30px 20px",
             display: "flex",
+            flexDirection: "column",
             alignItems: "center",
-            justifyContent: "center",
+            transform: "rotateY(10deg) rotateX(5deg)",
           }}>
-            {/* Fake QR Code */}
-            <div style={{
-              width: "100%",
-              height: "100%",
-              background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"white\" opacity=\"0.4\"><path d=\"M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-2h2v2h-2zm-2 2h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm-2-4h2v2h-2zm2 2h2v2h-2z\"/></svg>')",
-              backgroundSize: "contain",
-              backgroundRepeat: "no-repeat",
-              backgroundPosition: "center",
-            }} />
-            
-            {/* Scanning line animation */}
-            <div style={{
-              position: "absolute",
-              top: "10%",
-              left: 20,
-              right: 20,
-              height: 3,
-              background: "hsl(262 83% 68%)",
-              boxShadow: "0 0 20px 2px hsl(262 83% 68%)",
-              animation: "scanLine 2.5s infinite cubic-bezier(0.4, 0, 0.2, 1)",
-              borderRadius: "50%",
-            }} />
-             <style>{`
-              @keyframes scanLine {
-                0% { top: 15%; opacity: 0; }
-                10% { opacity: 1; }
-                90% { opacity: 1; }
-                100% { top: 85%; opacity: 0; }
-              }
-            `}</style>
-
-            {/* Corner brackets */}
-            <div style={{ position: "absolute", top: 20, left: 20, width: 20, height: 20, borderTop: "3px solid hsl(262 83% 68%)", borderLeft: "3px solid hsl(262 83% 68%)", borderRadius: "4px 0 0 0" }} />
-            <div style={{ position: "absolute", top: 20, right: 20, width: 20, height: 20, borderTop: "3px solid hsl(262 83% 68%)", borderRight: "3px solid hsl(262 83% 68%)", borderRadius: "0 4px 0 0" }} />
-            <div style={{ position: "absolute", bottom: 20, left: 20, width: 20, height: 20, borderBottom: "3px solid hsl(262 83% 68%)", borderLeft: "3px solid hsl(262 83% 68%)", borderRadius: "0 0 0 4px" }} />
-            <div style={{ position: "absolute", bottom: 20, right: 20, width: 20, height: 20, borderBottom: "3px solid hsl(262 83% 68%)", borderRight: "3px solid hsl(262 83% 68%)", borderRadius: "0 0 4px 0" }} />
+            <div style={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
+              <div style={{ color: "#333", fontWeight: 800, fontSize: 18, marginBottom: 12, textAlign: "center", lineHeight: 1.2 }}>
+                ORDINA QUI<br/><span style={{ color: "hsl(262 83% 58%)", fontSize: 14 }}>& Scopri le offerte</span>
+              </div>
+              
+              {/* High Contrast QR Code */}
+              <div style={{
+                width: 140,
+                height: 140,
+                background: "white",
+                padding: 10,
+                borderRadius: 12,
+                boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
+                position: "relative",
+              }}>
+                <div style={{
+                  width: "100%",
+                  height: "100%",
+                  background: "url('data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 24 24\" fill=\"%23000\"><path d=\"M3 3h8v8H3zm2 2v4h4V5zm8-2h8v8h-8zm2 2v4h4V5zM3 13h8v8H3zm2 2v4h4v-4zm13-2h2v2h-2zm-2 2h2v2h-2zm2 2h2v2h-2zm-2 2h2v2h-2zm-2-4h2v2h-2zm2 2h2v2h-2z\"/></svg>')",
+                  backgroundSize: "contain",
+                  backgroundRepeat: "no-repeat",
+                  backgroundPosition: "center",
+                }} />
+                
+                {/* Laser scan line */}
+                <div style={{
+                  position: "absolute",
+                  top: "10%",
+                  left: -5,
+                  right: -5,
+                  height: 4,
+                  background: "hsl(262 83% 58%)",
+                  boxShadow: "0 0 15px 3px hsl(262 83% 68%)",
+                  animation: "scanLine 2.5s infinite ease-in-out",
+                  borderRadius: "50%",
+                }} />
+              </div>
+              
+              <div style={{ marginTop: 16, fontSize: 11, color: "#666", fontWeight: 600 }}>INQUADRA CON LA FOTOCAMERA</div>
+            </div>
+            {/* Base of table tent */}
+            <div style={{ position: "absolute", bottom: -10, left: 0, right: 0, height: 20, background: "#e5e7eb", borderRadius: "0 0 8px 8px", transform: "skewX(-10deg)" }} />
           </div>
           
           <div style={{ 
             display: "inline-flex", 
             alignItems: "center", 
             gap: 12, 
-            padding: "8px 20px", 
+            padding: "10px 24px", 
             borderRadius: 999, 
-            background: "rgba(255,255,255,0.05)",
-            color: "hsl(240 5% 70%)", 
-            fontSize: 15, 
-            fontWeight: 500,
-            border: "1px solid rgba(255,255,255,0.05)"
+            background: "white",
+            color: "#000", 
+            fontSize: 16, 
+            fontWeight: 800,
+            boxShadow: "0 10px 30px rgba(124,58,237,0.3)"
           }}>
-            <span>Il cliente inquadra il QR</span>
-            <span style={{ color: "hsl(262 83% 68%)" }}>→</span>
+            <span>1. Il cliente inquadra</span>
           </div>
         </div>
 
+        {/* Action arrow (Mobile mainly) */}
+        <div className="md:hidden" style={{ fontSize: 32, color: "hsl(262 83% 68%)", fontWeight: 800, transform: "rotate(90deg)" }}>→</div>
+
         {/* Action 2: Result in Phone */}
-        <div style={{ position: "relative" }}>
+        <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: 32, zIndex: 2 }}>
           <div
             style={{
               width: 280,
               height: 560,
               borderRadius: 40,
               background: "hsl(240 6% 8%)",
-              border: "1px solid rgba(255,255,255,0.1)",
-              boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05)",
+              border: "1px solid rgba(255,255,255,0.2)",
+              boxShadow: "0 40px 80px rgba(0,0,0,0.8), 0 0 0 2px hsl(240 6% 15%), inset 0 0 0 1px rgba(255,255,255,0.1)",
               overflow: "hidden",
               position: "relative",
+              transform: "rotateY(-5deg) rotateX(5deg)",
             }}
           >
             {/* Notch */}
@@ -317,46 +341,43 @@ function HeroSection() {
             <div style={{
               position: "absolute", bottom: 0, left: 0, right: 0,
               padding: "40px 16px 20px",
-              background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
+              background: "linear-gradient(to top, rgba(0,0,0,0.9) 0%, transparent 100%)",
               textAlign: "center", fontSize: 11,
-              color: "rgba(255,255,255,0.5)",
+              color: "rgba(255,255,255,0.6)",
+              fontWeight: 500,
             }}>
               Powered by QRpop
             </div>
           </div>
-
-          {/* Glow under phone */}
-          <div style={{
-            position: "absolute",
-            bottom: -30,
-            left: "50%",
-            transform: "translateX(-50%)",
-            width: 200,
-            height: 60,
-            borderRadius: "50%",
-            background: "radial-gradient(ellipse, rgba(124,58,237,0.4), transparent 70%)",
-            filter: "blur(10px)",
-            zIndex: -1,
-          }} />
           
           <div style={{ 
-            position: "absolute",
-            bottom: -20,
-            right: -80,
             display: "inline-flex", 
             alignItems: "center", 
-            padding: "8px 20px", 
+            padding: "10px 24px", 
             borderRadius: 999, 
-            background: "rgba(124,58,237,0.15)",
-            color: "hsl(262 83% 75%)", 
-            fontSize: 15, 
-            fontWeight: 600,
-            border: "1px solid rgba(124,58,237,0.3)",
-            backdropFilter: "blur(10px)",
+            background: "linear-gradient(135deg, hsl(262 83% 58%), hsl(330 81% 60%))",
+            color: "white", 
+            fontSize: 16, 
+            fontWeight: 800,
+            boxShadow: "0 10px 30px rgba(219,39,119,0.3)",
           }}>
-            Vede la tua offerta! 🎉
+            2. Vede la tua offerta! 🎉
           </div>
         </div>
+
+        {/* Glow under everything */}
+        <div style={{
+          position: "absolute",
+          top: "50%",
+          left: "50%",
+          transform: "translate(-50%, -50%)",
+          width: "80%",
+          height: 200,
+          borderRadius: "50%",
+          background: "radial-gradient(ellipse, rgba(124,58,237,0.15), transparent 70%)",
+          filter: "blur(40px)",
+          zIndex: 0,
+        }} />
       </div>
     </section>
   );
