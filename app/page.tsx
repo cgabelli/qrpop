@@ -214,54 +214,43 @@ function HeroSection() {
             border: "1px solid rgba(255,255,255,0.1)",
             boxShadow: "0 40px 80px rgba(0,0,0,0.5), 0 0 0 1px rgba(255,255,255,0.05), inset 0 0 0 1px rgba(255,255,255,0.05)",
             overflow: "hidden",
-            display: "flex",
-            flexDirection: "column",
-            alignItems: "center",
-            justifyContent: "center",
             position: "relative",
           }}
         >
-          {/* Screen content */}
-          <div
-            style={{
-              width: "100%",
-              height: "100%",
-              background: "linear-gradient(180deg, rgba(124,58,237,0.3) 0%, rgba(219,39,119,0.2) 100%)",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              justifyContent: "center",
-              gap: 16,
-              padding: 24,
+          {/* Notch */}
+          <div style={{
+            position: "absolute", top: 14, left: "50%", transform: "translateX(-50%)",
+            width: 80, height: 20, borderRadius: 10,
+            background: "hsl(240 6% 5%)", zIndex: 10,
+          }} />
+
+          {/* Video hero — carica /public/hero-video.mp4 se presente */}
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+            onError={(e) => {
+              // Fallback: nasconde il video rotto e mostra il overlay
+              (e.currentTarget as HTMLVideoElement).style.display = "none";
             }}
           >
-            <div style={{ fontSize: 64 }}>🍕</div>
-            <div style={{ textAlign: "center" }}>
-              <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 8 }}>Offerta del Giorno</div>
-              <div style={{ fontSize: 14, color: "rgba(255,255,255,0.7)", lineHeight: 1.5 }}>
-                Pizza Margherita + Birra<br />
-                <strong style={{ fontSize: 18, color: "hsl(262 83% 75%)" }}>€ 12,90</strong>
-              </div>
-            </div>
-            <div
-              style={{
-                width: 80,
-                height: 80,
-                borderRadius: 16,
-                background: "white",
-                display: "flex",
-                alignItems: "center",
-                justifyContent: "center",
-                fontSize: 40,
-              }}
-            >
-              ◈
-            </div>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.4)", textAlign: "center" }}>
-              Powered by QRpop
-            </div>
+            <source src="/hero-video.mp4" type="video/mp4" />
+          </video>
+
+          {/* Overlay brand watermark */}
+          <div style={{
+            position: "absolute", bottom: 0, left: 0, right: 0,
+            padding: "40px 16px 20px",
+            background: "linear-gradient(to top, rgba(0,0,0,0.7) 0%, transparent 100%)",
+            textAlign: "center", fontSize: 11,
+            color: "rgba(255,255,255,0.5)",
+          }}>
+            Powered by QRpop
           </div>
         </div>
+
         {/* Glow under phone */}
         <div style={{
           position: "absolute",
