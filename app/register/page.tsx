@@ -1,35 +1,38 @@
 "use client";
 
 import { Suspense, useState, useEffect } from "react";
-import { signIn } from "next-auth/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const PLANS = [
-  { id: "basic_image", name: "Immagine Base", price: "€10/mese", icon: "🖼️", type: "Immagini", desc: "3 upload al mese" },
-  { id: "unlimited_image", name: "Immagine Unlimited", price: "€15/mese", icon: "🖼️", type: "Immagini", desc: "Illimitati" },
-  { id: "basic_video", name: "Video Base", price: "€20/mese", icon: "🎬", type: "Video", desc: "2 video al mese" },
-  { id: "unlimited_video", name: "Video Unlimited", price: "€50/mese", icon: "🎬", type: "Video", desc: "Illimitati" },
+  { id: "media_annual", name: "Media", price: "€49/anno", icon: "📸", type: "Media", desc: "10 upload all'anno" },
+  { id: "pdf_annual", name: "PDF", price: "€99/anno", icon: "📄", type: "PDF", desc: "20 upload all'anno" },
+  { id: "unlimited_annual", name: "Unlimited", price: "€149/anno", icon: "🚀", type: "Unlimited", desc: "Illimitati in ogni formato" },
 ];
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const defaultPlan = searchParams.get("plan") ?? "basic_image";
-  const defaultBilling = searchParams.get("billing") === "annual" ? "annual" : "monthly";
+  const defaultPlan = searchParams.get("plan") ?? "media_annual";
 
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState(defaultPlan);
-  const [billingInterval, setBillingInterval] = useState<"monthly" | "annual">(defaultBilling);
-  const [form, setForm] = useState({ businessName: "", email: "", password: "", confirmPassword: "" });
+  const [isCompany, setIsCompany] = useState<boolean | null>(null);
+  
+  const [form, setForm] = useState({ 
+    firstName: "", lastName: "", businessName: "", 
+    address: "", city: "", zipCode: "", province: "", 
+    fiscalCode: "", vatNumber: "", sdiCode: "", phone: "",
+    email: "", password: "", confirmPassword: ""
+  });
+  
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(false);
 
   useEffect(() => {
     const plan = searchParams.get("plan");
     if (plan) setSelectedPlan(plan);
-    const billing = searchParams.get("billing");
-    if (billing === "annual" || billing === "monthly") setBillingInterval(billing);
   }, [searchParams]);
 
   async function handleSubmit(e: React.FormEvent) {
@@ -47,16 +50,17 @@ function RegisterForm() {
 
     setLoading(true);
 
+    const payload = {
+      ...form,
+      plan: selectedPlan,
+      isCompany,
+      billingInterval: "annual"
+    };
+
     const res = await fetch("/api/auth/register", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({
-        businessName: form.businessName,
-        email: form.email,
-        password: form.password,
-        plan: selectedPlan,
-        billingInterval,
-      }),
+      body: JSON.stringify(payload),
     });
 
     const data = await res.json();
@@ -67,21 +71,29 @@ function RegisterForm() {
       return;
     }
 
-    // Auto-login after registration
-    const loginRes = await signIn("credentials", {
-      email: form.email,
-      password: form.password,
-      redirect: false,
-    });
-
-    if (loginRes?.error) {
-      router.push("/login");
-    } else {
-      router.push("/dashboard");
-    }
+    setSuccess(true);
+    setLoading(false);
   }
 
   const plan = PLANS.find(p => p.id === selectedPlan) ?? PLANS[0];
+
+  if (success) {
+    return (
+      <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, background: "hsl(240 10% 3.9%)" }}>
+        <div className="card" style={{ maxWidth: 460, padding: 40, textAlign: "center" }}>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>📧</div>
+          <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 16 }}>Controlla la tua email</h1>
+          <p style={{ color: "hsl(240 5% 60%)", lineHeight: 1.6, marginBottom: 24 }}>
+            Ti abbiamo inviato un link di verifica all'indirizzo <strong>{form.email}</strong>.<br/><br/>
+            Clicca sul link per confermare la tua identità e accedere alla piattaforma.
+          </p>
+          <Link href="/login" className="btn-primary" style={{ display: "inline-block", padding: "12px 24px", textDecoration: "none" }}>
+            Vai al Login
+          </Link>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div
@@ -103,25 +115,20 @@ function RegisterForm() {
         pointerEvents: "none",
       }} />
 
-      <div style={{ width: "100%", maxWidth: step === 1 ? 680 : 460, position: "relative", zIndex: 1 }}>
+      <div style={{ width: "100%", maxWidth: step === 1 ? 680 : 560, position: "relative", zIndex: 1, paddingBottom: 40 }}>
         {/* Logo */}
-        <div style={{ textAlign: "center", marginBottom: 40 }}>
-          <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 10 }}>
-            <img src="/logo-negative.svg" alt="QRpop Logo" style={{ height: 36, width: "auto" }} />
+        <div style={{ textAlign: "center", marginBottom: 30 }}>
+          <Link href="/" style={{ textDecoration: "none", display: "inline-block" }}>
+            <img src="/logo-negative.svg" alt="QRpop Logo" style={{ height: 32, width: "auto" }} />
           </Link>
         </div>
 
         {/* Step 1: Choose plan */}
         {step === 1 && (
           <div className="animate-fade-up">
-            <h1 style={{ fontSize: 28, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>
-              Scegli il tuo piano
-            </h1>
-            <p style={{ textAlign: "center", color: "hsl(240 5% 55%)", fontSize: 15, marginBottom: 36 }}>
-              Puoi cambiarlo in qualsiasi momento
-            </p>
-
-            <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 32 }}>
+            <h1 style={{ fontSize: 28, fontWeight: 800, textAlign: "center", marginBottom: 8 }}>Scegli il tuo piano</h1>
+            <p style={{ textAlign: "center", color: "hsl(240 5% 55%)", fontSize: 15, marginBottom: 36 }}>Puoi cambiarlo in qualsiasi momento</p>
+            <div style={{ display: "flex", flexDirection: "column", gap: 16, marginBottom: 32 }}>
               {PLANS.map((p) => (
                 <button
                   key={p.id}
@@ -129,174 +136,198 @@ function RegisterForm() {
                   style={{
                     background: selectedPlan === p.id ? "rgba(124,58,237,0.15)" : "hsl(240 6% 8%)",
                     border: selectedPlan === p.id ? "2px solid hsl(262 83% 58%)" : "2px solid transparent",
-                    borderRadius: 16,
-                    padding: "20px",
-                    cursor: "pointer",
-                    textAlign: "left",
-                    transition: "all 0.2s",
-                    outline: "none",
+                    borderRadius: 16, padding: "20px", cursor: "pointer", textAlign: "left", transition: "all 0.2s",
+                    display: "flex", alignItems: "center", gap: 20
                   }}
                 >
-                  <div style={{ fontSize: 28, marginBottom: 8 }}>{p.icon}</div>
-                  <div style={{ fontSize: 16, fontWeight: 700, color: "white", marginBottom: 4 }}>{p.name}</div>
-                  <div style={{ fontSize: 13, color: "hsl(240 5% 55%)", marginBottom: 8 }}>{p.desc}</div>
-                  <div style={{
-                    fontSize: 20, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif",
-                    color: selectedPlan === p.id ? "hsl(262 83% 72%)" : "white",
-                  }}>{p.price}</div>
+                  <div style={{ fontSize: 32 }}>{p.icon}</div>
+                  <div style={{ flex: 1 }}>
+                    <div style={{ fontSize: 18, fontWeight: 700, color: "white", marginBottom: 4 }}>{p.name}</div>
+                    <div style={{ fontSize: 14, color: "hsl(240 5% 55%)" }}>{p.desc}</div>
+                  </div>
+                  <div style={{ fontSize: 20, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif", color: selectedPlan === p.id ? "hsl(262 83% 72%)" : "white" }}>
+                    {p.price}
+                  </div>
                 </button>
               ))}
             </div>
-
             <button
               onClick={() => setStep(2)}
               className="btn-primary"
-              style={{ width: "100%", padding: "14px", fontSize: 15 }}
+              style={{ width: "100%", padding: "16px", fontSize: 16, fontWeight: 600 }}
             >
               Continua con {plan.name} →
             </button>
-
-            <p style={{ textAlign: "center", marginTop: 20, fontSize: 14, color: "hsl(240 5% 55%)" }}>
-              Hai già un account?{" "}
-              <Link href="/login" style={{ color: "hsl(262 83% 72%)", fontWeight: 600, textDecoration: "none" }}>
-                Accedi
-              </Link>
+            <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: "hsl(240 5% 55%)" }}>
+              Hai già un account? <Link href="/login" style={{ color: "hsl(262 83% 72%)", fontWeight: 600, textDecoration: "none" }}>Accedi</Link>
             </p>
           </div>
         )}
 
-        {/* Step 2: Account details */}
+        {/* Step 2: Choose type */}
         {step === 2 && (
           <div className="animate-fade-up">
-            <button
-              onClick={() => setStep(1)}
-              style={{
-                background: "none", border: "none", color: "hsl(240 5% 55%)",
-                cursor: "pointer", fontSize: 14, marginBottom: 24, display: "flex", alignItems: "center", gap: 6,
-              }}
-            >
-              ← Torna ai piani
-            </button>
+            <button onClick={() => setStep(1)} style={{ background: "none", border: "none", color: "hsl(240 5% 55%)", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, marginBottom: 24 }}>← Torna ai piani</button>
+            <div className="card" style={{ padding: "40px" }}>
+              <h1 style={{ fontSize: 24, fontWeight: 700, textAlign: "center", marginBottom: 12 }}>Chi sei?</h1>
+              <p style={{ textAlign: "center", color: "hsl(240 5% 60%)", marginBottom: 32 }}>Per offrirti il servizio e redigere i documenti fiscali, abbiamo bisogno di sapere come registrarti.</p>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16 }}>
+                <button
+                  onClick={() => { setIsCompany(false); setStep(3); }}
+                  style={{ background: "hsl(240 6% 10%)", border: "1px solid hsl(240 5% 20%)", padding: 30, borderRadius: 16, cursor: "pointer", transition: "all 0.2s" }}
+                  onMouseOver={(e) => e.currentTarget.style.borderColor = "hsl(262 83% 58%)"}
+                  onMouseOut={(e) => e.currentTarget.style.borderColor = "hsl(240 5% 20%)"}
+                >
+                  <div style={{ fontSize: 40, marginBottom: 16 }}>👤</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 600, color: "white", marginBottom: 8 }}>Privato</h3>
+                  <p style={{ fontSize: 13, color: "hsl(240 5% 60%)" }}>Acquisto senza Partita IVA</p>
+                </button>
 
-            <div className="card" style={{ padding: 40 }}>
-              {/* Plan badge */}
-              <div style={{
-                display: "inline-flex", alignItems: "center", gap: 8,
-                padding: "8px 14px", borderRadius: 10, marginBottom: 24,
-                background: "rgba(124,58,237,0.12)", border: "1px solid rgba(124,58,237,0.3)",
-              }}>
-                <span>{plan.icon}</span>
-                <span style={{ fontSize: 14, fontWeight: 600, color: "hsl(262 83% 75%)" }}>
-                  {plan.name} — {plan.price}
+                <button
+                  onClick={() => { setIsCompany(true); setStep(3); }}
+                  style={{ background: "hsl(240 6% 10%)", border: "1px solid hsl(240 5% 20%)", padding: 30, borderRadius: 16, cursor: "pointer", transition: "all 0.2s" }}
+                  onMouseOver={(e) => e.currentTarget.style.borderColor = "hsl(262 83% 58%)"}
+                  onMouseOut={(e) => e.currentTarget.style.borderColor = "hsl(240 5% 20%)"}
+                >
+                  <div style={{ fontSize: 40, marginBottom: 16 }}>🏢</div>
+                  <h3 style={{ fontSize: 18, fontWeight: 600, color: "white", marginBottom: 8 }}>Azienda</h3>
+                  <p style={{ fontSize: 13, color: "hsl(240 5% 60%)" }}>Acquisto con P.IVA e SDI</p>
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Step 3: Complex form */}
+        {step === 3 && (
+          <div className="animate-fade-up">
+            <button onClick={() => setStep(2)} style={{ background: "none", border: "none", color: "hsl(240 5% 55%)", cursor: "pointer", display: "flex", alignItems: "center", gap: 6, marginBottom: 24 }}>← Indietro</button>
+            <div className="card" style={{ padding: "40px" }}>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 24 }}>
+                <h1 style={{ fontSize: 22, fontWeight: 700 }}>Dati {isCompany ? "Aziendali" : "Personali"}</h1>
+                <span style={{ fontSize: 12, padding: "4px 10px", borderRadius: 100, background: "rgba(124,58,237,0.15)", color: "hsl(262 83% 70%)" }}>
+                  Piano: {plan.name}
                 </span>
               </div>
 
-              <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 28 }}>Crea il tuo account</h1>
-
               {error && (
-                <div style={{
-                  padding: "12px 16px", borderRadius: 10, marginBottom: 20,
-                  background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)",
-                  color: "hsl(0 72% 70%)", fontSize: 14,
-                }}>
-                  {error}
-                </div>
+                <div style={{ padding: "12px 16px", borderRadius: 8, marginBottom: 20, background: "rgba(239,68,68,0.1)", border: "1px solid rgba(239,68,68,0.2)", color: "hsl(0 72% 70%)", fontSize: 14 }}>{error}</div>
               )}
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
+                
+                {isCompany ? (
+                  <>
+                    <div>
+                      <label className="form-label">Ragione Sociale *</label>
+                      <input className="input-field" type="text" value={form.businessName} onChange={e => setForm({...form, businessName: e.target.value})} required />
+                    </div>
+                    <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                      <div>
+                        <label className="form-label">Nome Referente *</label>
+                        <input className="input-field" type="text" value={form.firstName} onChange={e => setForm({...form, firstName: e.target.value})} required />
+                      </div>
+                      <div>
+                        <label className="form-label">Cognome Referente *</label>
+                        <input className="input-field" type="text" value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} required />
+                      </div>
+                    </div>
+                  </>
+                ) : (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div>
+                      <label className="form-label">Nome *</label>
+                      <input className="input-field" type="text" value={form.firstName} onChange={e => setForm({...form, firstName: e.target.value})} required />
+                    </div>
+                    <div>
+                      <label className="form-label">Cognome *</label>
+                      <input className="input-field" type="text" value={form.lastName} onChange={e => setForm({...form, lastName: e.target.value})} required />
+                    </div>
+                  </div>
+                )}
+
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
-                    Nome del locale
-                  </label>
-                  <input
-                    id="businessName"
-                    type="text"
-                    className="input-field"
-                    placeholder="Es. Pizzeria da Marco"
-                    value={form.businessName}
-                    onChange={e => setForm({ ...form, businessName: e.target.value })}
-                    required
-                  />
+                  <label className="form-label">Indirizzo (Via e Civico) *</label>
+                  <input className="input-field" type="text" value={form.address} onChange={e => setForm({...form, address: e.target.value})} required />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "2fr 1fr", gap: 12 }}>
+                  <div>
+                    <label className="form-label">Comune *</label>
+                    <input className="input-field" type="text" value={form.city} onChange={e => setForm({...form, city: e.target.value})} required />
+                  </div>
+                  <div>
+                    <label className="form-label">CAP *</label>
+                    <input className="input-field" type="text" value={form.zipCode} onChange={e => setForm({...form, zipCode: e.target.value})} required />
+                  </div>
                 </div>
 
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
-                    Email
-                  </label>
-                  <input
-                    id="reg-email"
-                    type="email"
-                    className="input-field"
-                    placeholder="nome@locale.it"
-                    value={form.email}
-                    onChange={e => setForm({ ...form, email: e.target.value })}
-                    required
-                    autoComplete="email"
-                  />
+                  <label className="form-label">Provincia (Sigla) *</label>
+                  <input className="input-field" type="text" maxLength={2} value={form.province} onChange={e => setForm({...form, province: e.target.value})} required style={{ textTransform: "uppercase" }} />
                 </div>
 
-                <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
-                    Password
-                  </label>
-                  <input
-                    id="reg-password"
-                    type="password"
-                    className="input-field"
-                    placeholder="Minimo 8 caratteri"
-                    value={form.password}
-                    onChange={e => setForm({ ...form, password: e.target.value })}
-                    required
-                    autoComplete="new-password"
-                  />
-                </div>
+                {isCompany ? (
+                  <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                    <div>
+                      <label className="form-label">Partita IVA *</label>
+                      <input className="input-field" type="text" value={form.vatNumber} onChange={e => setForm({...form, vatNumber: e.target.value})} required />
+                    </div>
+                    <div>
+                      <label className="form-label">Codice univoco SDI *</label>
+                      <input className="input-field" type="text" maxLength={7} value={form.sdiCode} onChange={e => setForm({...form, sdiCode: e.target.value})} required style={{ textTransform: "uppercase" }} />
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <label className="form-label">Codice Fiscale *</label>
+                    <input className="input-field" type="text" maxLength={16} value={form.fiscalCode} onChange={e => setForm({...form, fiscalCode: e.target.value})} required style={{ textTransform: "uppercase" }} />
+                  </div>
+                )}
 
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
-                    Conferma password
-                  </label>
-                  <input
-                    id="reg-confirm-password"
-                    type="password"
-                    className="input-field"
-                    placeholder="Ripeti la password"
-                    value={form.confirmPassword}
-                    onChange={e => setForm({ ...form, confirmPassword: e.target.value })}
-                    required
-                    autoComplete="new-password"
-                  />
+                  <label className="form-label">Cellulare (Opzionale)</label>
+                  <input className="input-field" type="tel" value={form.phone} onChange={e => setForm({...form, phone: e.target.value})} />
+                </div>
+
+                <div style={{ height: 1, backgroundColor: "rgba(255,255,255,0.1)", margin: "8px 0" }} />
+
+                <div>
+                  <label className="form-label">Email di accesso *</label>
+                  <input className="input-field" type="email" value={form.email} onChange={e => setForm({...form, email: e.target.value})} required autoComplete="username" />
+                </div>
+
+                <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12 }}>
+                  <div>
+                    <label className="form-label">Password *</label>
+                    <input className="input-field" type="password" value={form.password} onChange={e => setForm({...form, password: e.target.value})} required autoComplete="new-password" />
+                  </div>
+                  <div>
+                    <label className="form-label">Conferma Password *</label>
+                    <input className="input-field" type="password" value={form.confirmPassword} onChange={e => setForm({...form, confirmPassword: e.target.value})} required autoComplete="new-password" />
+                  </div>
                 </div>
 
                 <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 8 }}>
-                  <input
-                    type="checkbox"
-                    id="accepted-terms"
-                    required
-                    style={{ marginTop: 3, cursor: "pointer", accentColor: "hsl(262 83% 58%)", width: 16, height: 16 }}
-                  />
+                  <input type="checkbox" id="accepted-terms" required style={{ marginTop: 3, cursor: "pointer", accentColor: "hsl(262 83% 58%)", width: 16, height: 16 }} />
                   <label htmlFor="accepted-terms" style={{ fontSize: 13, color: "hsl(240 5% 60%)", lineHeight: 1.5, cursor: "pointer" }}>
-                    Ho letto e accetto i <Link href="/termini" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Termini e Condizioni</Link> e la <Link href="/privacy" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Privacy Policy</Link>. Autorizzo il trattamento dei miei dati personali.
+                    Dichiaro l'esattezza dei dati inseriti e accetto i <Link href="/termini" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Termini e Condizioni</Link> e la <Link href="/privacy" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Privacy Policy</Link>.
                   </label>
                 </div>
 
-                <button
-                  id="register-submit"
-                  type="submit"
-                  className="btn-primary"
-                  disabled={loading}
-                  style={{ width: "100%", marginTop: 12, padding: "14px", fontSize: 15 }}
-                >
-                  {loading ? "Creazione account..." : "Crea account e inizia →"}
+                <button type="submit" className="btn-primary" disabled={loading} style={{ width: "100%", marginTop: 12, padding: "16px", fontSize: 15, fontWeight: 600 }}>
+                  {loading ? "Creazione in corso..." : "Crea account e verifica l'email →"}
                 </button>
-
-                <p style={{ textAlign: "center", fontSize: 12, color: "hsl(240 5% 45%)", lineHeight: 1.5, marginTop: 4 }}>
-                  L&apos;abbonamento si attiva subito e può essere disdetto in qualsiasi momento dal tuo pannello di controllo.
-                </p>
               </form>
             </div>
           </div>
         )}
+
       </div>
+      <style dangerouslySetInnerHTML={{__html: `
+        .form-label { display: block; font-size: 13px; font-weight: 600; color: hsl(240 5% 70%); margin-bottom: 6px; }
+      `}} />
     </div>
   );
 }

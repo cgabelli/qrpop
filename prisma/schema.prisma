@@ -43,16 +43,35 @@ model VerificationToken {
 
 model User {
   id              String     @id @default(cuid())
-  businessName    String
+  businessName    String     // Per i privati sarà "Nome Cognome", per le aziende la "Ragione Sociale"
   slug            String     @unique
   email           String     @unique
   password        String
+  
+  // KYC Dati
+  isCompany       Boolean    @default(false)
+  firstName       String?
+  lastName        String?
+  address         String?
+  city            String?
+  province        String?
+  zipCode         String?
+  fiscalCode      String?
+  vatNumber       String?
+  sdiCode         String?
+  phone           String?
+  
+  // Verifica
+  emailVerified    DateTime?
+  verificationToken String?   @unique
+
   plan            String     @default("basic_image")
-  billingInterval String     @default("monthly") // 'monthly' | 'annual'
+  billingInterval String     @default("monthly")
   isActive        Boolean    @default(true)
   baseCredits     Int        @default(0)
   purchasedCredits Int       @default(0)
   uploadResetDate DateTime   @default(now())
+  
   stripeCustomerId     String?
   stripeSubscriptionId String?
   createdAt    DateTime   @default(now())

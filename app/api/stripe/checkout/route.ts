@@ -37,11 +37,38 @@ export async function POST(req: NextRequest) {
   // Crea o recupera customer Stripe
   let customerId = user.stripeCustomerId;
   if (!customerId) {
-    const customer = await stripe.customers.create({
+    const customerData: any = {
       email: user.email,
-      name: user.businessName,
+      name: user.isCompany ? user.businessName : `${user.firstName} ${user.lastName}`,
+      phone: user.phone || undefined,
       metadata: { userId: user.id },
-    });
+    };
+
+    if (user.address && user.city && user.zipCode) {
+      customerData.address = {
+        line1: user.address,
+        city: user.city,
+        postal_code: user.zipCode,
+        state: user.province,
+        country: "IT",
+      };
+    }
+
+    const customer = await stripe.customers.create(customerData);
+
+    // Salva Tax IDs su Stripe
+    if (user.vatNumber && user.isCompany) {
+      try {
+        await stripe.customers.createTaxId(customer.id, {
+          type: 'eu_vat',
+          value: user.vatNumber.startsWith('IT') ? user.vatNumber : `IT${user.vatNumber}`,
+        });
+      } catch (e) {
+        console.error("Non è stato possibile caricare la partita IVA su Stripe", e);
+      }
+    }
+
+    customerId = customer.id;
     customerId = customer.id;
     await prisma.user.update({
       where: { id: user.id },

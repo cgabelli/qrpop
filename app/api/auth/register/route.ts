@@ -1,22 +1,39 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
-import { PLAN_TYPES, PlanId, BillingInterval } from "@/lib/plans";
+import { PLAN_TYPES, PlanId } from "@/lib/plans";
+import crypto from "crypto";
+import { sendVerificationEmail } from "@/lib/email";
 
 export async function POST(req: NextRequest) {
   try {
-    const { businessName, email, password, plan, billingInterval = "monthly" } = await req.json();
+    const data = await req.json();
+    const { 
+      email, password, plan,
+      isCompany, businessName, firstName, lastName,
+      address, city, province, zipCode, phone,
+      fiscalCode, vatNumber, sdiCode 
+    } = data;
 
-    // Validazione
-    if (!businessName || !email || !password || !plan) {
-      return NextResponse.json({ error: "Tutti i campi sono obbligatori" }, { status: 400 });
+    // Validazione base
+    if (!email || !password || !plan || !address || !city || !zipCode || !province) {
+      return NextResponse.json({ error: "Compila tutti i campi obbligatori dell'indirizzo e account" }, { status: 400 });
     }
+
+    if (isCompany) {
+      if (!businessName || !vatNumber || !sdiCode) {
+        return NextResponse.json({ error: "Ragione sociale, Partita IVA e SDI sono obbligatori per le aziende" }, { status: 400 });
+      }
+    } else {
+      if (!firstName || !lastName || !fiscalCode) {
+        return NextResponse.json({ error: "Nome, Cognome e Codice Fiscale sono obbligatori per i privati" }, { status: 400 });
+      }
+    }
+
     if (!PLAN_TYPES[plan as PlanId]) {
       return NextResponse.json({ error: "Piano non valido" }, { status: 400 });
     }
-    if (!["monthly", "annual"].includes(billingInterval)) {
-      return NextResponse.json({ error: "Intervallo di fatturazione non valido" }, { status: 400 });
-    }
+    
     if (password.length < 8) {
       return NextResponse.json({ error: "La password deve essere di almeno 8 caratteri" }, { status: 400 });
     }
@@ -27,8 +44,9 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Email già registrata" }, { status: 409 });
     }
 
-    // Genera slug univoco dal nome del locale
-    let baseSlug = businessName
+    // Genera slug univoco
+    const nameForSlug = isCompany ? businessName : `${firstName} ${lastName}`;
+    let baseSlug = nameForSlug
       .toLowerCase()
       .replace(/[àáâä]/g, "a").replace(/[èéêë]/g, "e")
       .replace(/[ìíîï]/g, "i").replace(/[òóôö]/g, "o")
@@ -41,21 +59,37 @@ export async function POST(req: NextRequest) {
     }
 
     const passwordHash = await bcrypt.hash(password, 12);
+    const verificationToken = crypto.randomBytes(32).toString('hex');
 
     const user = await prisma.user.create({
       data: {
-        businessName,
         email,
         password: passwordHash,
         slug,
         plan,
-        billingInterval: billingInterval as BillingInterval,
+        billingInterval: "annual",
         uploadResetDate: new Date(),
         isActive: true,
+        businessName: isCompany ? businessName : `${firstName} ${lastName}`,
+        isCompany,
+        firstName,
+        lastName,
+        address,
+        city,
+        province,
+        zipCode,
+        fiscalCode,
+        vatNumber,
+        sdiCode,
+        phone,
+        verificationToken
       },
     });
 
-    return NextResponse.json({ success: true, userId: user.id, slug: user.slug });
+    // Invia email di verifica
+    await sendVerificationEmail(email, verificationToken);
+
+    return NextResponse.json({ success: true, message: "Verification link sent" });
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json({ error: "Errore interno del server" }, { status: 500 });
