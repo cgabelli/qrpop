@@ -48,7 +48,7 @@ jobs:
             echo "STRIPE_PRICE_UNLIMITED_IMAGE=${{ secrets.STRIPE_PRICE_UNLIMITED_IMAGE }}" >> .env
             echo "STRIPE_PRICE_BASIC_VIDEO=${{ secrets.STRIPE_PRICE_BASIC_VIDEO }}" >> .env
             echo "STRIPE_PRICE_UNLIMITED_VIDEO=${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO }}" >> .env
-            npm ci --production
+            npm ci
             npx prisma generate
             npx prisma db push --accept-data-loss
             npm run build
