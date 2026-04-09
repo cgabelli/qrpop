@@ -5,47 +5,30 @@ import { useState, useEffect } from "react";
 
 const PLANS = [
   {
-    id: "basic_image",
-    name: "Immagine Base",
-    type: "Immagini",
-    monthlyPrice: 10,
+    id: "media_annual",
+    name: "Media",
+    type: "Img & Video",
+    annualPrice: 49,
+    description: "Ideale per i menu e le promozioni",
+    features: ["10 upload all'anno", "Supporto Immagini e Video", "QR code dinamico intelligente", "Link permanente"],
+    popular: false,
+  },
+  {
+    id: "pdf_annual",
+    name: "PDF",
+    type: "Documenti",
     annualPrice: 99,
-    annualMonthly: 8,
-    description: "3 upload al mese",
-    features: ["3 immagini al mese", "QR code statico dedicato", "Scheduling contenuti", "Link permanente"],
-    popular: false,
-  },
-  {
-    id: "unlimited_image",
-    name: "Immagine Unlimited",
-    type: "Immagini",
-    monthlyPrice: 15,
-    annualPrice: 149,
-    annualMonthly: 12,
-    description: "Upload illimitati",
-    features: ["Immagini illimitate", "QR code statico dedicato", "Scheduling avanzato", "Link permanente", "Priorità supporto"],
-    popular: false,
-  },
-  {
-    id: "basic_video",
-    name: "Video Base",
-    type: "Video",
-    monthlyPrice: 20,
-    annualPrice: 199,
-    annualMonthly: 17,
-    description: "2 video al mese",
-    features: ["2 video al mese", "QR code statico dedicato", "Video autoplay mobile", "Scheduling contenuti"],
+    description: "Per chi gestisce cataloghi strutturati",
+    features: ["20 upload all'anno", "Supporto PDF (max 50MB)", "QR code dinamico intelligente", "Link permanente"],
     popular: true,
   },
   {
-    id: "unlimited_video",
-    name: "Video Unlimited",
-    type: "Video",
-    monthlyPrice: 50,
-    annualPrice: 499,
-    annualMonthly: 42,
-    description: "Video illimitati",
-    features: ["Video illimitati", "QR code statico dedicato", "Video autoplay mobile", "Scheduling avanzato", "Priorità supporto", "Analytics (prossimamente)"],
+    id: "unlimited_annual",
+    name: "Unlimited",
+    type: "Tutto illimitato",
+    annualPrice: 149,
+    description: "Libertà totale creativa e di upload",
+    features: ["Upload illimitati all'anno", "Multi-formato (Immagini, Video, PDF)", "Gestione prioritaria", "Analytics completi"],
     popular: false,
   },
 ];
@@ -396,8 +379,6 @@ function HowItWorks() {
 }
 
 function PricingSection() {
-  const [annual, setAnnual] = useState(false);
-
   return (
     <section
       id="prezzi"
@@ -418,48 +399,11 @@ function PricingSection() {
             Prezzi
           </div>
           <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 16 }}>
-            Zero sorprese, prezzi chiari.
+            Zero sorprese, fatturazione annuale.
           </h2>
           <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 500, margin: "0 auto 36px" }}>
-            Scegli il piano più adatto al tuo locale. Nessun costo nascosto.
+            Scegli il piano più adatto al tuo locale. Nessun costo nascosto, setup immediato.
           </p>
-
-          {/* Billing toggle */}
-          <div style={{
-            display: "inline-flex", alignItems: "center", gap: 16,
-            background: "hsl(240 6% 8%)", border: "1px solid hsl(240 5% 15%)",
-            borderRadius: 999, padding: "6px 8px",
-          }}>
-            <button
-              onClick={() => setAnnual(false)}
-              style={{
-                padding: "8px 20px", borderRadius: 999, border: "none", cursor: "pointer",
-                background: !annual ? "linear-gradient(135deg, hsl(262 83% 58%), hsl(330 81% 60%))" : "transparent",
-                color: !annual ? "white" : "hsl(240 5% 55%)",
-                fontSize: 14, fontWeight: 600, transition: "all 0.2s", fontFamily: "Inter, sans-serif",
-              }}
-            >
-              Mensile
-            </button>
-            <button
-              onClick={() => setAnnual(true)}
-              style={{
-                padding: "8px 20px", borderRadius: 999, border: "none", cursor: "pointer",
-                background: annual ? "linear-gradient(135deg, hsl(262 83% 58%), hsl(330 81% 60%))" : "transparent",
-                color: annual ? "white" : "hsl(240 5% 55%)",
-                fontSize: 14, fontWeight: 600, transition: "all 0.2s", fontFamily: "Inter, sans-serif",
-                display: "flex", alignItems: "center", gap: 8,
-              }}
-            >
-              Annuale
-              <span style={{
-                padding: "2px 8px", borderRadius: 999, fontSize: 11, fontWeight: 700,
-                background: "rgba(34,197,94,0.15)", color: "hsl(142 71% 55%)",
-              }}>
-                -17%
-              </span>
-            </button>
-          </div>
         </div>
 
         <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
@@ -494,40 +438,31 @@ function PricingSection() {
 
               <div style={{
                 display: "inline-flex", alignItems: "center", padding: "6px 12px", borderRadius: 8,
-                background: plan.type === "Video" ? "rgba(219,39,119,0.15)" : "rgba(124,58,237,0.15)",
-                color: plan.type === "Video" ? "hsl(330 81% 70%)" : "hsl(262 83% 75%)",
+                background: plan.type === "Documenti" ? "rgba(219,39,119,0.15)" : "rgba(124,58,237,0.15)",
+                color: plan.type === "Documenti" ? "hsl(330 81% 70%)" : "hsl(262 83% 75%)",
                 fontSize: 12, fontWeight: 700, marginBottom: 20,
               }}>
-                {plan.type === "Video" ? "🎬" : "🖼️"} {plan.type}
+                {plan.type === "Documenti" ? "📄" : "🚀"} {plan.type}
               </div>
 
               <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>{plan.name}</div>
               <div style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24 }}>{plan.description}</div>
 
               {/* Price display */}
-              {annual ? (
-                <div style={{ marginBottom: 8 }}>
-                  <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                    <span style={{ fontSize: 48, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif" }}>
-                      €{plan.annualPrice}
-                    </span>
-                    <span style={{ color: "hsl(240 5% 55%)", fontSize: 15 }}>/anno</span>
-                  </div>
-                  <div style={{ fontSize: 13, color: "hsl(142 71% 55%)", marginBottom: 24 }}>
-                    ≈ €{plan.annualMonthly}/mese — pagamento anticipato
-                  </div>
-                </div>
-              ) : (
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4, marginBottom: 32 }}>
+              <div style={{ marginBottom: 32 }}>
+                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
                   <span style={{ fontSize: 48, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif" }}>
-                    €{plan.monthlyPrice}
+                    €{plan.annualPrice}
                   </span>
-                  <span style={{ color: "hsl(240 5% 55%)", fontSize: 15 }}>/mese</span>
+                  <span style={{ color: "hsl(240 5% 55%)", fontSize: 15 }}>/anno</span>
                 </div>
-              )}
+                <div style={{ fontSize: 13, color: "hsl(142 71% 55%)", marginTop: 4 }}>
+                  ≈ €{Math.round((plan.annualPrice / 12) * 10) / 10}/mese
+                </div>
+              </div>
 
               <Link
-                href={`/register?plan=${plan.id}&billing=${annual ? "annual" : "monthly"}`}
+                href={`/register?plan=${plan.id}`}
                 className="btn-primary"
                 style={{
                   display: "block", textAlign: "center", textDecoration: "none", marginBottom: 32,
