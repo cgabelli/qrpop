@@ -26,20 +26,7 @@ jobs:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: npx prisma generate
 
-      - name: Build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_URL: ${{ secrets.NEXTAUTH_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          STRIPE_SECRET_KEY: ${{ secrets.STRIPE_SECRET_KEY }}
-          STRIPE_PUBLISHABLE_KEY: ${{ secrets.STRIPE_PUBLISHABLE_KEY }}
-          STRIPE_WEBHOOK_SECRET: ${{ secrets.STRIPE_WEBHOOK_SECRET }}
-          STRIPE_PRICE_BASIC_IMAGE: ${{ secrets.STRIPE_PRICE_BASIC_IMAGE }}
-          STRIPE_PRICE_UNLIMITED_IMAGE: ${{ secrets.STRIPE_PRICE_UNLIMITED_IMAGE }}
-          STRIPE_PRICE_BASIC_VIDEO: ${{ secrets.STRIPE_PRICE_BASIC_VIDEO }}
-          STRIPE_PRICE_UNLIMITED_VIDEO: ${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO }}
-          NEXT_PUBLIC_APP_URL: ${{ secrets.NEXT_PUBLIC_APP_URL }}
-        run: npm run build
+
 
       - name: Deploy via SSH
         uses: appleboy/ssh-action@v1
@@ -50,7 +37,19 @@ jobs:
           script: |
             cd /var/www/qrpop
             git pull origin main
+            echo "DATABASE_URL=${{ secrets.DATABASE_URL }}" > .env
+            echo "NEXTAUTH_URL=${{ secrets.NEXTAUTH_URL }}" >> .env
+            echo "NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}" >> .env
+            echo "NEXT_PUBLIC_APP_URL=${{ secrets.NEXT_PUBLIC_APP_URL }}" >> .env
+            echo "STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}" >> .env
+            echo "STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}" >> .env
+            echo "STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}" >> .env
+            echo "STRIPE_PRICE_BASIC_IMAGE=${{ secrets.STRIPE_PRICE_BASIC_IMAGE }}" >> .env
+            echo "STRIPE_PRICE_UNLIMITED_IMAGE=${{ secrets.STRIPE_PRICE_UNLIMITED_IMAGE }}" >> .env
+            echo "STRIPE_PRICE_BASIC_VIDEO=${{ secrets.STRIPE_PRICE_BASIC_VIDEO }}" >> .env
+            echo "STRIPE_PRICE_UNLIMITED_VIDEO=${{ secrets.STRIPE_PRICE_UNLIMITED_VIDEO }}" >> .env
             npm ci --production
             npx prisma generate
             npx prisma migrate deploy
+            npm run build
             pm2 restart qrpop || pm2 start npm --name qrpop -- start
