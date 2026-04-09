@@ -267,18 +267,30 @@ function RegisterForm() {
                   />
                 </div>
 
+                <div style={{ display: "flex", alignItems: "flex-start", gap: 10, marginTop: 8 }}>
+                  <input
+                    type="checkbox"
+                    id="accepted-terms"
+                    required
+                    style={{ marginTop: 3, cursor: "pointer", accentColor: "hsl(262 83% 58%)", width: 16, height: 16 }}
+                  />
+                  <label htmlFor="accepted-terms" style={{ fontSize: 13, color: "hsl(240 5% 60%)", lineHeight: 1.5, cursor: "pointer" }}>
+                    Ho letto e accetto i <Link href="/termini" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Termini e Condizioni</Link> e la <Link href="/privacy" target="_blank" style={{ color: "hsl(262 83% 72%)" }}>Privacy Policy</Link>. Autorizzo il trattamento dei miei dati personali.
+                  </label>
+                </div>
+
                 <button
                   id="register-submit"
                   type="submit"
                   className="btn-primary"
                   disabled={loading}
-                  style={{ width: "100%", marginTop: 8, padding: "14px", fontSize: 15 }}
+                  style={{ width: "100%", marginTop: 12, padding: "14px", fontSize: 15 }}
                 >
                   {loading ? "Creazione account..." : "Crea account e inizia →"}
                 </button>
 
-                <p style={{ textAlign: "center", fontSize: 12, color: "hsl(240 5% 45%)", lineHeight: 1.5 }}>
-                  Creando un account accetti i termini di servizio. L&apos;abbonamento si attiva subito e può essere cancellato in qualsiasi momento.
+                <p style={{ textAlign: "center", fontSize: 12, color: "hsl(240 5% 45%)", lineHeight: 1.5, marginTop: 4 }}>
+                  L&apos;abbonamento si attiva subito e può essere disdetto in qualsiasi momento dal tuo pannello di controllo.
                 </p>
               </form>
             </div>

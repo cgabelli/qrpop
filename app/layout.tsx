@@ -23,6 +23,8 @@ export const metadata: Metadata = {
   },
 };
 
+import { CookieBanner } from "@/components/CookieBanner";
+
 export default function RootLayout({
   children,
 }: {
@@ -30,7 +32,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="it" className={inter.className}>
-      <body className="min-h-screen antialiased">{children}</body>
+      <body className="min-h-screen antialiased">
+        {children}
+        <CookieBanner />
+      </body>
     </html>
   );
 }
