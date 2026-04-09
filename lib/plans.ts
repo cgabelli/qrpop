@@ -1,93 +1,65 @@
 export const PLAN_TYPES = {
-  basic_image: {
-    id: "basic_image",
-    name: "Immagine Base",
+  image_only: {
+    id: "image_only",
+    name: "Solo Immagine",
     type: "image" as const,
-    limit: 3,
-    description: "3 upload al mese",
+    limit: 5,
+    description: "5 immagini al mese",
     features: [
-      "3 immagini al mese",
+      "5 immagini al mese (JPG o GIF)",
       "QR code statico dedicato",
       "Scheduling contenuti",
       "Link permanente",
     ],
     monthly: {
       price: 10,
-      stripePriceId: process.env.STRIPE_PRICE_BASIC_IMAGE_MONTHLY,
+      stripePriceId: process.env.STRIPE_PRICE_IMAGE_ONLY_MONTHLY,
     },
     annual: {
-      price: 99,        // €8.25/mese — risparmio 17%
-      monthlyEquiv: 8,  // per visualizzazione
-      stripePriceId: process.env.STRIPE_PRICE_BASIC_IMAGE_ANNUAL,
+      price: 99,
+      monthlyEquiv: 8.25,
+      stripePriceId: process.env.STRIPE_PRICE_IMAGE_ONLY_ANNUAL,
     },
   },
-  unlimited_image: {
-    id: "unlimited_image",
-    name: "Immagine Unlimited",
-    type: "image" as const,
-    limit: null,
-    description: "Upload illimitati",
+  plus_video: {
+    id: "plus_video",
+    name: "Immagine + Video",
+    type: "video" as const,
+    limit: 5,
+    description: "5 upload al mese",
     features: [
-      "Immagini illimitate",
+      "5 upload totali (Immagini o Video)",
       "QR code statico dedicato",
+      "Video autoplay mobile",
       "Scheduling avanzato",
-      "Link permanente",
-      "Priorità supporto",
     ],
     monthly: {
       price: 15,
-      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_IMAGE_MONTHLY,
+      stripePriceId: process.env.STRIPE_PRICE_PLUS_VIDEO_MONTHLY,
     },
     annual: {
-      price: 149,
-      monthlyEquiv: 12,
-      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_IMAGE_ANNUAL,
+      price: 119,
+      monthlyEquiv: 9.9,
+      stripePriceId: process.env.STRIPE_PRICE_PLUS_VIDEO_ANNUAL,
     },
   },
-  basic_video: {
-    id: "basic_video",
-    name: "Video Base",
-    type: "video" as const,
-    limit: 2,
-    description: "2 video al mese",
-    features: [
-      "2 video al mese",
-      "QR code statico dedicato",
-      "Video autoplay mobile",
-      "Scheduling contenuti",
-    ],
-    monthly: {
-      price: 20,
-      stripePriceId: process.env.STRIPE_PRICE_BASIC_VIDEO_MONTHLY,
-    },
-    annual: {
-      price: 199,
-      monthlyEquiv: 17,
-      stripePriceId: process.env.STRIPE_PRICE_BASIC_VIDEO_ANNUAL,
-    },
-  },
-  unlimited_video: {
-    id: "unlimited_video",
-    name: "Video Unlimited",
+  unlimited: {
+    id: "unlimited",
+    name: "Unlimited",
     type: "video" as const,
     limit: null,
-    description: "Video illimitati",
+    description: "Upload illimitati",
     features: [
-      "Video illimitati",
+      "Caricamenti illimitati",
+      "Foto e Video inclusi",
       "QR code statico dedicato",
-      "Video autoplay mobile",
-      "Scheduling avanzato",
       "Priorità supporto",
-      "Analytics (prossimamente)",
     ],
-    monthly: {
-      price: 50,
-      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_VIDEO_MONTHLY,
-    },
+    monthly: null, // Nessun piano mensile previsto
     annual: {
-      price: 499,
-      monthlyEquiv: 42,
-      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_VIDEO_ANNUAL,
+      price: 249,
+      monthlyEquiv: 20.75,
+      stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
     },
   },
 } as const;
@@ -96,17 +68,19 @@ export type PlanId = keyof typeof PLAN_TYPES;
 export type BillingInterval = "monthly" | "annual";
 
 export function getPlan(planId: string) {
-  return PLAN_TYPES[planId as PlanId] ?? PLAN_TYPES.basic_image;
+  return PLAN_TYPES[planId as PlanId] ?? PLAN_TYPES.image_only;
 }
 
 export function getStripePriceId(planId: string, interval: BillingInterval): string | undefined {
   const plan = getPlan(planId);
-  return plan[interval].stripePriceId;
+  if (interval === "monthly" && !plan.monthly) return undefined;
+  return interval === "monthly" ? plan.monthly?.stripePriceId : plan.annual.stripePriceId;
 }
 
 export function getPlanPrice(planId: string, interval: BillingInterval): number {
   const plan = getPlan(planId);
-  return plan[interval].price;
+  if (interval === "monthly" && !plan.monthly) return 0;
+  return interval === "monthly" ? (plan.monthly?.price ?? 0) : plan.annual.price;
 }
 
 export function canUpload(

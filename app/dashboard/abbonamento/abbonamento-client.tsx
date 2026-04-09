@@ -8,15 +8,14 @@ interface Plan {
   name: string;
   type: string;
   description: string;
-  monthly: { price: number };
+  monthly: { price: number } | null;
   annual: { price: number; monthlyEquiv: number };
 }
 
 const PLANS_LIST: Plan[] = [
-  { id: "basic_image", name: "Immagine Base", type: "image", description: "3 upload al mese", monthly: { price: 10 }, annual: { price: 99, monthlyEquiv: 8 } },
-  { id: "unlimited_image", name: "Immagine Unlimited", type: "image", description: "Upload illimitati", monthly: { price: 15 }, annual: { price: 149, monthlyEquiv: 12 } },
-  { id: "basic_video", name: "Video Base", type: "video", description: "2 video al mese", monthly: { price: 20 }, annual: { price: 199, monthlyEquiv: 17 } },
-  { id: "unlimited_video", name: "Video Unlimited", type: "video", description: "Video illimitati", monthly: { price: 50 }, annual: { price: 499, monthlyEquiv: 42 } },
+  { id: "image_only", name: "Solo Immagine", type: "image", description: "5 upload (JPG/GIF) al mese", monthly: { price: 10 }, annual: { price: 99, monthlyEquiv: 8.25 } },
+  { id: "plus_video", name: "Immagine + Video", type: "video", description: "5 upload (Immagini/Video) al mese", monthly: { price: 15 }, annual: { price: 119, monthlyEquiv: 9.9 } },
+  { id: "unlimited", name: "Unlimited", type: "video", description: "Upload illimitati", monthly: null, annual: { price: 249, monthlyEquiv: 20.75 } },
 ];
 
 interface Props {
@@ -45,7 +44,7 @@ export default function AbbonamentoClient({
 
   const currentPlanData = PLANS_LIST.find(p => p.id === currentPlanId);
   const currentPrice = currentPlanData
-    ? (currentBillingInterval === "annual" ? currentPlanData.annual.price : currentPlanData.monthly.price)
+    ? (currentBillingInterval === "annual" ? currentPlanData.annual.price : (currentPlanData.monthly?.price ?? 0))
     : 0;
 
   async function handleChangePlan(planId: string) {
@@ -148,7 +147,7 @@ export default function AbbonamentoClient({
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 16 }}>
         {PLANS_LIST.map(plan => {
           const isCurrent = plan.id === currentPlanId && currentBillingInterval === billingInterval;
-          const price = billingInterval === "annual" ? plan.annual.price : plan.monthly.price;
+          const price = billingInterval === "annual" ? plan.annual.price : (plan.monthly?.price ?? 0);
           return (
             <div
               key={plan.id}
@@ -164,7 +163,7 @@ export default function AbbonamentoClient({
               <div style={{ fontSize: 18, fontWeight: 700, marginBottom: 4 }}>{plan.name}</div>
               <div style={{ fontSize: 13, color: "hsl(240 5% 55%)", marginBottom: 12 }}>{plan.description}</div>
               <div style={{ fontSize: 26, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif", marginBottom: billingInterval === "annual" ? 4 : 20 }}>
-                €{price}
+                {billingInterval === "monthly" && !plan.monthly ? "Solo Annuale" : `€${price}`}
               </div>
               {billingInterval === "annual" && (
                 <div style={{ fontSize: 12, color: "hsl(142 71% 55%)", marginBottom: 16 }}>
@@ -179,11 +178,11 @@ export default function AbbonamentoClient({
               ) : (
                 <button
                   onClick={() => handleChangePlan(plan.id)}
-                  disabled={!!loadingPlan}
+                  disabled={!!loadingPlan || (billingInterval === "monthly" && !plan.monthly)}
                   className="btn-ghost"
-                  style={{ display: "block", width: "100%", textAlign: "center" }}
+                  style={{ display: "block", width: "100%", textAlign: "center", opacity: (billingInterval === "monthly" && !plan.monthly) ? 0.3 : 1 }}
                 >
-                  {loadingPlan === plan.id ? "..." : `Passa a ${plan.name}`}
+                  {loadingPlan === plan.id ? "..." : (billingInterval === "monthly" && !plan.monthly) ? "Non disponibile" : `Passa a ${plan.name}`}
                 </button>
               )}
             </div>
