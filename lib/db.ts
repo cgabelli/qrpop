@@ -7,16 +7,20 @@ const globalForPrisma = globalThis as unknown as {
 };
 
 function createPrismaClient() {
-  const libsql = createClient({
-    url: (process.env.DATABASE_URL && process.env.DATABASE_URL !== "undefined") 
+  const url = (process.env.DATABASE_URL && process.env.DATABASE_URL !== "undefined") 
           ? process.env.DATABASE_URL 
-          : "file:./dev.db",
-  });
+          : "file:./dev.db";
+
+  const libsql = createClient({ url });
+  
   // @ts-expect-error - Prisma and libSQL TS definitions mismatch on Client vs Config type
   const adapter = new PrismaLibSql(libsql);
   
   return new PrismaClient({
     adapter,
+    datasources: {
+      db: { url }
+    },
     log: process.env.NODE_ENV === "development" ? ["error", "warn"] : ["error"],
   });
 }
