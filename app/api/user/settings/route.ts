@@ -9,11 +9,15 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { openAiKey } = await req.json();
+    const { openAiKey, geminiKey, aiProvider } = await req.json();
 
     await prisma.user.update({
       where: { id: session.user.id },
-      data: { openAiKey: openAiKey || null }
+      data: { 
+        openAiKey: openAiKey || null,
+        geminiKey: geminiKey || null,
+        aiProvider: aiProvider || "openai"
+      }
     });
 
     return NextResponse.json({ success: true });
