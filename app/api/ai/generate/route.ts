@@ -17,18 +17,23 @@ export async function POST(req: Request) {
       return NextResponse.json({ error: "Manca la chiave API di Google Gemini. Aggiungila in Impostazioni." }, { status: 400 });
     }
 
-    const { prodotto, offerta, tono } = await req.json();
+    const { target, vantaggio, obiettivo, tono } = await req.json();
 
     const systemPrompt = `
-    Sei un copywriter esperto di marketing vettoriale per locandine. 
-    Il cliente vuole promuovere: "${prodotto}".
-    Offerta/Condizioni: "${offerta}".
-    Tono di voce richiesto: "${tono}".
+    Sei un Copywriter d'assalto esperto in Neuromarketing per locandine ristorative e materiali di marketing (Digital/Point of Sale).
     
-    Genera ESATTAMENTE un oggetto JSON con due campi.
-    "titolo": un testo d'impatto, corto (massimo 4-5 parole) che generi hook. Maiuscolo.
-    "sottotitolo": un testo descrittivo che spiega l'offerta o dà contesto, di 1-2 righe massimo.
-    Non restituire null'altro che il JSON.
+    CONTESTO DELLA CAMPAGNA:
+    - Pubblico Target a cui ci rivolgiamo: "${target}"
+    - Il nostro Vantaggio Competitivo / Prodotto di punta: "${vantaggio}"
+    - Obiettivo / Call to Action finale desiderata: "${obiettivo}"
+    - Tono di voce richiesto: "${tono}"
+    
+    ISTRUZIONI RIGIDE:
+    1. Scrivi un Testo ad alto gancio emotivo, studiato per attirare immediatamente l'attenzione del target.
+    2. Genera ESATTAMENTE un oggetto JSON con due campi.
+    3. Campo "titolo": un testo d'impatto, ad altissima conversione, corto (massimo 4-5 parole). Tutto maiuscolo.
+    4. Campo "sottotitolo": un testo descrittivo/magnetico (1-2 righe) che rafforzi il titolo, spieghi il vantaggio e spinga all'obiettivo desiderato.
+    Non restituire null'altro che il JSON validato.
     `;
 
     let resultJsonStr = "";

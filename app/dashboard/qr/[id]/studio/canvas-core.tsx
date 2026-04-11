@@ -161,7 +161,7 @@ export default function CanvasCore({ qrSpot }: any) {
   const [selectedId, selectShape] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);
   const [aiWizardOpen, setAiWizardOpen] = useState(false);
-  const [aiForm, setAiForm] = useState({ prodotto: "", offerta: "", tono: "Accattivante e Persuasivo" });
+  const [aiForm, setAiForm] = useState({ target: "", vantaggio: "", obiettivo: "Acquisto / Ordine", tono: "Accattivante e Persuasivo" });
   const [aiLoading, setAiLoading] = useState(false);
   
   // Format: Instagram Story Portrait (1080x1920) scaled for UI
@@ -262,7 +262,7 @@ export default function CanvasCore({ qrSpot }: any) {
            addElement({ type: "text", text: sottotitolo, x: 100, y: 550, fontSize: 50, fontFamily: "Montserrat", fill: "#ffffff" });
         }, 100);
         setAiWizardOpen(false);
-        setAiForm({ prodotto: "", offerta: "", tono: "Accattivante e Persuasivo" });
+        setAiForm({ target: "", vantaggio: "", obiettivo: "Acquisto / Ordine", tono: "Accattivante e Persuasivo" });
       }
     } catch (e) {
       alert("Errore di rete con OpenAI");
@@ -423,33 +423,46 @@ export default function CanvasCore({ qrSpot }: any) {
                 </div>
                 <h2 style={{ fontSize: 20, fontWeight: 700, color: "white" }}>Scrittore AI Integrato</h2>
               </div>
-              <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24 }}>Comunichiamo con la tua chiave OpenAI per generare hook perfetti per questa grafica.</p>
+              <p style={{ color: "hsl(240 5% 65%)", fontSize: 13, marginBottom: 24 }}>L'Intelligenza Artificiale applica le regole del neuromarketing se gli fornisci il giusto contesto psicologico della tua campagna.</p>
 
               <div style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>Progetto / Cosa vendi?</label>
-                  <input type="text" className="input-field" placeholder="Es. Nuova Pokè al Salmone..." value={aiForm.prodotto} onChange={e => setAiForm({ ...aiForm, prodotto: e.target.value })} style={{ width: "100%" }} />
+                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>1. A chi ti stai rivolgendo? (Target)</label>
+                  <input type="text" className="input-field" placeholder="Es. Studenti Universitari, Famiglie..." value={aiForm.target} onChange={e => setAiForm({ ...aiForm, target: e.target.value })} style={{ width: "100%" }} />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>Offerta (Opzionale ma consigliato)</label>
-                  <input type="text" className="input-field" placeholder="Es. Bibita in omaggio / -20% a pranzo" value={aiForm.offerta} onChange={e => setAiForm({ ...aiForm, offerta: e.target.value })} style={{ width: "100%" }} />
+                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>2. Qual è l'offerta/prodotto di punta?</label>
+                  <input type="text" className="input-field" placeholder="Es. Hamburger XXL, Sconto 20%..." value={aiForm.vantaggio} onChange={e => setAiForm({ ...aiForm, vantaggio: e.target.value })} style={{ width: "100%" }} />
                 </div>
-                <div>
-                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>Tono di Voce</label>
-                  <select className="input-field" value={aiForm.tono} onChange={e => setAiForm({ ...aiForm, tono: e.target.value })} style={{ width: "100%" }}>
-                    <option value="Accattivante e Persuasivo">Accattivante e Persuasivo</option>
-                    <option value="Giovane e Dinamico">Giovane e Dinamico</option>
-                    <option value="Elegante e Formale">Elegante e Formale</option>
-                    <option value="Urgente (Scarsità)">Urgente (Call to Action massiva)</option>
-                  </select>
+                
+                <div style={{ display: "flex", gap: 12 }}>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>3. Obiettivo</label>
+                    <select className="input-field" value={aiForm.obiettivo} onChange={e => setAiForm({ ...aiForm, obiettivo: e.target.value })} style={{ width: "100%", fontSize: 13 }}>
+                      <option value="Acquisto / Ordine">Incentiva Acquisto</option>
+                      <option value="Download / Coupon">Fai scaricare un Coupon</option>
+                      <option value="Iscrizione Evento">Promuovi un Evento</option>
+                      <option value="Brand Awareness">Incuriosire (Brand)</option>
+                    </select>
+                  </div>
+                  <div style={{ flex: 1 }}>
+                    <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 6 }}>4. Tono di voce</label>
+                    <select className="input-field" value={aiForm.tono} onChange={e => setAiForm({ ...aiForm, tono: e.target.value })} style={{ width: "100%", fontSize: 13 }}>
+                      <option value="Accattivante e Persuasivo">D'impatto (Persuasivo)</option>
+                      <option value="Giovane e Dinamico">Informale (Giovane)</option>
+                      <option value="Elegante e Formale">Luxury (Elegante)</option>
+                      <option value="Urgente (Scarsità)">Urgente (FOMO)</option>
+                    </select>
+                  </div>
                 </div>
+
                 <button 
                   onClick={handleGenerateAi} 
-                  disabled={aiLoading || !aiForm.prodotto} 
+                  disabled={aiLoading || !aiForm.target || !aiForm.vantaggio} 
                   className="btn-primary" 
-                  style={{ width: "100%", padding: 14, marginTop: 8, justifyContent: "center", display: "flex", alignItems: "center", gap: 8 }}
+                  style={{ width: "100%", padding: 14, marginTop: 12, justifyContent: "center", display: "flex", alignItems: "center", gap: 8 }}
                 >
-                  {aiLoading ? "Generazione in corso..." : "Genera Testo in Automatico"}
+                  {aiLoading ? "Generazione AI in corso..." : "Scrivi il mio Copy Perfetto"}
                 </button>
               </div>
             </div>
