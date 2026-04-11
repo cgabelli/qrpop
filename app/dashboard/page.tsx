@@ -88,41 +88,19 @@ export default async function DashboardPage() {
       {/* Quick actions */}
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(280px, 1fr))", gap: 20, marginBottom: 40 }}>
         <Link
-          href="/dashboard/creativita"
+          href="/dashboard/abbonamento"
           style={{
             textDecoration: "none",
             background: "linear-gradient(135deg, rgba(124,58,237,0.2), rgba(219,39,119,0.1))",
             border: "1px solid rgba(124,58,237,0.3)",
             borderRadius: 16,
             padding: 28,
-            transition: "transform 0.2s",
             display: "block",
           }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
         >
           <div style={{ fontSize: 32, marginBottom: 16 }}>🎯</div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 8 }}>Gestisci Contenuti</h3>
-          <p style={{ color: "hsl(240 5% 70%)", fontSize: 14 }}>Carica nuove immagini, video o PDF per i tuoi QR</p>
-        </Link>
-
-        <Link
-          href="/dashboard/abbonamento"
-          style={{
-            textDecoration: "none",
-            background: "rgba(255,255,255,0.03)",
-            border: "1px solid rgba(255,255,255,0.08)",
-            borderRadius: 16,
-            padding: 28,
-            transition: "transform 0.2s",
-            display: "block",
-          }}
-          onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
-          onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
-        >
-          <div style={{ fontSize: 32, marginBottom: 16 }}>🛒</div>
-          <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 8 }}>I tuoi QR Spot</h3>
-          <p style={{ color: "hsl(240 5% 70%)", fontSize: 14 }}>Vedi o acquista nuovi QR per nuovi tavoli o stanze</p>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 8 }}>Gestisci i tuoi QR</h3>
+          <p style={{ color: "hsl(240 5% 70%)", fontSize: 14 }}>Carica foto, link o pdf nei tuoi codici QR</p>
         </Link>
       </div>
 
@@ -130,8 +108,8 @@ export default async function DashboardPage() {
       <div>
         <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
           <h3 style={{ fontSize: 18, fontWeight: 600 }}>File Caricati di Recente</h3>
-          <Link href="/dashboard/creativita" style={{ fontSize: 13, color: "hsl(262 83% 70%)", textDecoration: "none" }}>
-            Vedi tutti →
+          <Link href="/dashboard/abbonamento" style={{ fontSize: 13, color: "hsl(262 83% 70%)", textDecoration: "none" }}>
+            Vedi tutti i QR →
           </Link>
         </div>
 
@@ -139,7 +117,7 @@ export default async function DashboardPage() {
           <div style={{ padding: 40, textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 16, border: "1px dashed rgba(255,255,255,0.1)" }}>
             <div style={{ fontSize: 32, marginBottom: 12 }}>👻</div>
             <div style={{ color: "hsl(240 5% 60%)", marginBottom: 16 }}>Non hai ancora caricato nulla.</div>
-            <Link href="/dashboard/creativita" className="btn-primary">Carica primo file</Link>
+            <Link href="/dashboard/abbonamento" className="btn-primary">Vai ai QR Spot</Link>
           </div>
         ) : (
           <div style={{ display: "grid", gap: 12 }}>
