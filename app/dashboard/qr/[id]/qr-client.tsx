@@ -2,6 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import QRCode from "qrcode";
+import Link from "next/link";
 
 function formatBytes(bytes: number) {
   if (bytes < 1024) return `${bytes} B`;
@@ -274,6 +275,22 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
            </div>
         ) : (
            <>
+              {qrSpot.type === "image" && (
+                <div style={{ marginBottom: 24, padding: "20px", background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(219,39,119,0.1))", borderRadius: 20, border: "1px solid rgba(124,58,237,0.3)" }}>
+                   <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                      <div>
+                        <h3 style={{ fontSize: 16, fontWeight: 700, marginBottom: 4, display: "flex", alignItems: "center", gap: 8 }}>
+                           QRpop Studio <span style={{ padding: "2px 6px", background: "hsl(262 83% 58%)", borderRadius: 4, fontSize: 10, fontWeight: 800 }}>BETA</span>
+                        </h3>
+                        <p style={{ color: "hsl(240 5% 70%)", fontSize: 13 }}>Non hai la grafica pronta? Creane una fantastica direttamente qui.</p>
+                      </div>
+                      <Link href={`/dashboard/qr/${qrSpot.id}/studio`} className="btn-primary" style={{ padding: "10px 16px", fontSize: 13, textDecoration: "none" }}>
+                         Apri Studio 🪄
+                      </Link>
+                   </div>
+                </div>
+              )}
+
               <div 
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
