@@ -275,7 +275,7 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
            </div>
         ) : (
            <>
-              {qrSpot.type === "image" && (
+              {(qrSpot.type === "image" || qrSpot.type === "unlimited") && (
                 <div style={{ marginBottom: 24, padding: "20px", background: "linear-gradient(135deg, rgba(124,58,237,0.1), rgba(219,39,119,0.1))", borderRadius: 20, border: "1px solid rgba(124,58,237,0.3)" }}>
                    <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
                       <div>
