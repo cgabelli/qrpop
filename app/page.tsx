@@ -200,9 +200,8 @@ function HeroSection() {
           maxWidth: 900,
         }}
       >
-        Il tuo QR code{" "}
-        <span className="gradient-text">parla</span>
-        {" "}da solo.
+        QR Code <span className="gradient-text">Dinamici</span>
+        {" "}per il tuo business.
       </h1>
 
       <p
@@ -210,22 +209,20 @@ function HeroSection() {
         style={{
           fontSize: "clamp(1.1rem, 2.5vw, 1.4rem)",
           color: "hsl(240 5% 65%)",
-          maxWidth: 600,
+          maxWidth: 700,
           marginBottom: 48,
           lineHeight: 1.7,
         }}
       >
-        Carica immagini e video promozionali che i tuoi clienti vedono subito
-        dopo aver scansionato il QR. Cambi contenuto quando vuoi, il QR resta
-        sempre lo stesso.
+        Stampa una volta, aggiorna all'infinito. Inserisci il logo della tua azienda e usalo per rimandare al tuo sito web gratis, oppure usalo come vetrina cloud per il tuo Menu PDF o Video Promozionali.
       </p>
 
       <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
         <Link href="/register" className="btn-primary" style={{ padding: "16px 32px", fontSize: 16 }}>
-          Inizia ora — da 49€/anno →
+          Crea QR Gratis →
         </Link>
         <a href="#come-funziona" className="btn-ghost" style={{ padding: "16px 32px", fontSize: 16 }}>
-          Come funziona
+          Scopri di più
         </a>
       </div>
 
@@ -420,23 +417,23 @@ function HowItWorks() {
   const steps = [
     {
       icon: "1️⃣",
-      title: "Registrati e scegli il piano",
-      desc: "Crea il tuo account Business, seleziona il pacchetto annuale su misura per te e attiva l'ambiente.",
+      title: "Crea e carica il Logo",
+      desc: "QRpop innesca in automatico la correzione errori 'H'. Inserisci il logo aziendale al centro del codice senza perdere leggibilità.",
     },
     {
       icon: "2️⃣",
-      title: "Scarica il tuo QR code",
-      desc: "Ricevi il tuo QR code statico personalizzato. Stampalo e posizionalo sui tavoli del locale.",
+      title: "Scegli cosa mostrare",
+      desc: "Imposta un Link esterno (Gratis) o ospita file PDF, Video e Foto comodamente sui nostri server rapidi.",
     },
     {
       icon: "3️⃣",
-      title: "Carica i contenuti",
-      desc: "Dal pannello di controllo, carica immagini o video promozionali e imposta quando mostrarli.",
+      title: "Stampa ed esponi",
+      desc: "Scarica il QR in formato HD, stampalo e mettilo sui tavoli, volantini o vetrine. Non dovrai mai più ristamparlo.",
     },
     {
       icon: "4️⃣",
-      title: "I clienti scansionano",
-      desc: "Chi punta il telefono al QR vede immediatamente il tuo contenuto. Senza app, senza attese.",
+      title: "Cambia live",
+      desc: "Vuoi aggiornare il menu o la promo natalizia? Fallo con un clic dalla tua dashboard. Il QR fisico rimane identico.",
     },
   ];
 
@@ -466,10 +463,10 @@ function HowItWorks() {
           Come funziona
         </div>
         <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 16 }}>
-          Semplice come deve essere.
+          Stampa una volta,<br/>decidi tu cosa mostrare.
         </h2>
-        <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 500, margin: "0 auto" }}>
-          Dal tuo pannello di controllo al tavolo del cliente, in meno di un minuto.
+        <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 600, margin: "0 auto" }}>
+          Un solo QR code fisico per infiniti utilizzi. Modifica la destinazione dalla dashboard aziendale in tempo reale senza dover cambiare la grafica plastificata al tavolo.
         </p>
       </div>
 
@@ -653,14 +650,14 @@ function CTASection() {
           ◈
         </div>
         <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 20 }}>
-          Pronto a far parlare{" "}
-          <span className="gradient-text">il tuo locale?</span>
+          Smetti di ristampare{" "}
+          <span className="gradient-text">QR vecchi.</span>
         </h2>
         <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", marginBottom: 40, lineHeight: 1.7 }}>
-          Unisciti ai ristoratori che hanno già trasformato il semplice QR code in uno strumento di comunicazione potente.
+          Unisciti ad agenzie e ristoratori che evitano costi di tipografia controllando i propri QR a distanza da una dashboard centralizzata.
         </p>
         <Link href="/register" className="btn-primary" style={{ padding: "18px 40px", fontSize: 17 }}>
-          Crea il tuo account Business →
+          Inizia gratis il tuo primo QR →
         </Link>
       </div>
     </section>
