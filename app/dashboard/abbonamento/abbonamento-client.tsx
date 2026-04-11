@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { QRSpot } from "@prisma/client";
 import { QR_SPOT_TYPES, QRSpotTypeId } from "@/lib/plans";
+import Link from "next/link";
 
 interface Props {
   qrSpots: QRSpot[];
@@ -89,11 +90,19 @@ export default function AbbonamentoClient({
              const typeDef = QR_SPOT_TYPES[spot.type as QRSpotTypeId];
              const isActive = spot.status === "active";
              return (
-              <div key={spot.id} style={{ 
-                background: "rgba(255,255,255,0.03)", 
-                border: isActive ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(255,255,255,0.06)", 
-                borderRadius: 16, padding: 20 
-              }}>
+              <Link 
+                href={`/dashboard/qr/${spot.id}`}
+                key={spot.id} 
+                style={{ 
+                  background: "rgba(255,255,255,0.03)", 
+                  border: isActive ? "1px solid rgba(124,58,237,0.3)" : "1px solid rgba(255,255,255,0.06)", 
+                  borderRadius: 16, padding: 20,
+                  textDecoration: "none", color: "inherit",
+                  display: "flex", flexDirection: "column",
+                  transition: "transform 0.2s, background 0.2s"
+                }}
+                className="hover-card"
+              >
                 <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 12 }}>
                   <div>
                     <div style={{ fontSize: 24, marginBottom: 4 }}>{typeDef?.emoji || "📱"}</div>
@@ -108,11 +117,15 @@ export default function AbbonamentoClient({
                   </div>
                 </div>
                 
-                <div style={{ fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 16 }}>
+                <div style={{ fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 16, flex: 1 }}>
                   <div><strong>Tipo:</strong> {typeDef?.name || spot.type}</div>
                   <div><strong>Scadenza:</strong> {spot.expiresAt ? new Date(spot.expiresAt).toLocaleDateString("it-IT") : "Mai"}</div>
                 </div>
-              </div>
+
+                <div style={{ marginTop: "auto", paddingTop: 16, borderTop: "1px solid rgba(255,255,255,0.06)", display: "flex", justifyContent: "flex-end" }}>
+                   <span style={{ fontSize: 13, color: "hsl(262 83% 70%)", fontWeight: 600 }}>Gestisci →</span>
+                </div>
+              </Link>
              )
           })}
         </div>
