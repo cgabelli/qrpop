@@ -75,7 +75,7 @@ export async function POST(req: NextRequest) {
   const buffer = Buffer.from(await file.arrayBuffer());
   await fs.writeFile(filePath, buffer);
 
-  const relativePath = `/uploads/${user.id}/${fileName}`;
+  const relativePath = `/api/uploads/${user.id}/${fileName}`;
 
   // Determina status
   let status = "active";
