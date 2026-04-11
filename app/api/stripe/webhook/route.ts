@@ -66,7 +66,7 @@ export async function POST(req: NextRequest) {
     }
 
     case "customer.subscription.updated": {
-      const sub = event.data.object as Stripe.Subscription;
+      const sub: any = event.data.object;
       
       const qrSpot = await prisma.qRSpot.findFirst({
         where: { stripeSubscriptionId: sub.id }
