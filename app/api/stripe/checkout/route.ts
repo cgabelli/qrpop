@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { auth } from "@/lib/auth";
 import { prisma } from "@/lib/db";
-import { PLAN_TYPES, PlanId } from "@/lib/plans";
+import { QR_SPOT_TYPES, QRSpotTypeId } from "@/lib/plans";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
   apiVersion: "2025-01-27.acacia",
@@ -14,30 +14,28 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Non autorizzato" }, { status: 401 });
   }
 
-  const { planId, isAddon = false } = await req.json();
-  const plan = PLAN_TYPES[planId as PlanId];
+  const { spotTypeId, spotName } = await req.json();
+  const spotType = QR_SPOT_TYPES[spotTypeId as QRSpotTypeId];
 
-  if (!plan) {
-    return NextResponse.json({ error: "Piano non valido" }, { status: 400 });
+  if (!spotType) {
+    return NextResponse.json({ error: "Tipo QR Spot non valido" }, { status: 400 });
   }
 
-  const stripePriceId = isAddon ? plan.addon?.stripePriceId : plan.stripePriceId;
+  if (spotType.price === 0) {
+    return NextResponse.json({ error: "Questo tipo non richiede pagamento" }, { status: 400 });
+  }
 
-  if (!stripePriceId) {
-    return NextResponse.json({ error: "Prezzo Stripe non configurato per questo piano/addon" }, { status: 500 });
+  if (!spotType.stripePriceId) {
+    return NextResponse.json({ error: "Prezzo Stripe non configurato per questo tipo di QR" }, { status: 500 });
   }
 
   const user = await prisma.user.findUnique({ where: { id: session.user.id } });
   if (!user) return NextResponse.json({ error: "Utente non trovato" }, { status: 404 });
 
-  if (isAddon && user.plan !== planId) {
-     return NextResponse.json({ error: "Puoi comprare l'add-on solo per il piano che possiedi." }, { status: 400 });
-  }
-
   // Crea o recupera customer Stripe
   let customerId = user.stripeCustomerId;
   if (!customerId) {
-    const customerData: any = {
+    const customerData: Stripe.CustomerCreateParams = {
       email: user.email,
       name: user.isCompany ? user.businessName : `${user.firstName} ${user.lastName}`,
       phone: user.phone || undefined,
@@ -49,26 +47,24 @@ export async function POST(req: NextRequest) {
         line1: user.address,
         city: user.city,
         postal_code: user.zipCode,
-        state: user.province,
+        state: user.province || undefined,
         country: "IT",
       };
     }
 
     const customer = await stripe.customers.create(customerData);
 
-    // Salva Tax IDs su Stripe
     if (user.vatNumber && user.isCompany) {
       try {
         await stripe.customers.createTaxId(customer.id, {
-          type: 'eu_vat',
-          value: user.vatNumber.startsWith('IT') ? user.vatNumber : `IT${user.vatNumber}`,
+          type: "eu_vat",
+          value: user.vatNumber.startsWith("IT") ? user.vatNumber : `IT${user.vatNumber}`,
         });
       } catch (e) {
         console.error("Non è stato possibile caricare la partita IVA su Stripe", e);
       }
     }
 
-    customerId = customer.id;
     customerId = customer.id;
     await prisma.user.update({
       where: { id: user.id },
@@ -78,15 +74,25 @@ export async function POST(req: NextRequest) {
 
   const checkoutSession = await stripe.checkout.sessions.create({
     customer: customerId,
-    mode: isAddon ? "payment" : "subscription",
-    line_items: [{ price: stripePriceId, quantity: 1 }],
-    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/abbonamento?success=1`,
-    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard/abbonamento?canceled=1`,
-    metadata: { userId: user.id, planId, isAddon: isAddon ? "true" : "false" },
+    mode: "subscription",
+    line_items: [{ price: spotType.stripePriceId, quantity: 1 }],
+    success_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?success=1`,
+    cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/dashboard?canceled=1`,
+    metadata: {
+      userId: user.id,
+      spotTypeId,
+      spotName: spotName ?? spotType.name,
+    },
+    subscription_data: {
+      metadata: {
+        userId: user.id,
+        spotTypeId,
+        spotName: spotName ?? spotType.name,
+      },
+    },
     billing_address_collection: "required",
     tax_id_collection: { enabled: true },
     customer_update: { name: "auto", address: "auto" },
-    ...(isAddon && { payment_intent_data: { metadata: { userId: user.id, isAddon: "true", planId } } })
   });
 
   return NextResponse.json({ url: checkoutSession.url });
