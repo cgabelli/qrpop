@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { prisma } from "@/lib/db";
+import { getQRSpotType } from "@/lib/plans";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || "sk_test_dummy", {
   apiVersion: "2025-01-27.acacia",
@@ -24,54 +25,70 @@ export async function POST(req: NextRequest) {
     case "checkout.session.completed": {
       const session = event.data.object as Stripe.Checkout.Session;
       const userId = session.metadata?.userId;
-      const planId = session.metadata?.planId;
-      const isAddon = session.metadata?.isAddon === "true";
+      const spotTypeId = session.metadata?.spotTypeId;
+      const spotName = session.metadata?.spotName || "Nuovo QR";
       const subscriptionId = session.subscription as string;
 
-      if (userId && planId) {
-        if (isAddon) {
-           await prisma.user.update({
-             where: { id: userId },
-             data: { purchasedCredits: { increment: 10 } }
-           });
-        } else {
-           await prisma.user.update({
-             where: { id: userId },
-             data: {
-               plan: planId,
-               billingInterval: "annual",
-               stripeSubscriptionId: subscriptionId,
-               isActive: true,
-             },
-           });
+      if (userId && spotTypeId) {
+        const spotType = getQRSpotType(spotTypeId);
+        
+        let subDetails;
+        if (subscriptionId) {
+          subDetails = await stripe.subscriptions.retrieve(subscriptionId);
         }
+
+        const expiresAt = new Date();
+        expiresAt.setFullYear(expiresAt.getFullYear() + 1);
+
+        // Genera base slug
+        const user = await prisma.user.findUnique({ where: { id: userId } });
+        let slug = `${user?.slug || userId}-${spotTypeId}-${Date.now().toString().slice(-4)}`;
+        let counter = 1;
+        while (await prisma.qRSpot.findUnique({ where: { slug } })) {
+          slug = `${user?.slug || userId}-${spotTypeId}-${Date.now().toString().slice(-4)}-${counter}`;
+          counter++;
+        }
+
+        await prisma.qRSpot.create({
+          data: {
+            userId,
+            slug,
+            name: spotName,
+            type: spotTypeId,
+            status: "active",
+            stripeSubscriptionId: subscriptionId || null,
+            stripePriceId: spotType.stripePriceId || null,
+            expiresAt: subDetails ? new Date((subDetails.current_period_end as number) * 1000) : expiresAt,
+          },
+        });
       }
       break;
     }
 
     case "customer.subscription.updated": {
       const sub = event.data.object as Stripe.Subscription;
-      const customer = await stripe.customers.retrieve(sub.customer as string);
-      if ("metadata" in customer) {
-        const userId = customer.metadata?.userId;
-        if (userId) {
-          await prisma.user.update({
-            where: { id: userId },
-            data: {
-              stripeSubscriptionId: sub.id,
-              isActive: sub.status === "active",
-            },
-          });
-        }
+      
+      const qrSpot = await prisma.qRSpot.findFirst({
+        where: { stripeSubscriptionId: sub.id }
+      });
+
+      if (qrSpot) {
+        await prisma.qRSpot.update({
+          where: { id: qrSpot.id },
+          data: {
+            status: sub.status === "active" || sub.status === "trialing" ? "active" : "inactive",
+            expiresAt: new Date((sub.current_period_end as number) * 1000),
+          },
+        });
       }
       break;
     }
 
     case "customer.subscription.deleted": {
       const sub = event.data.object as Stripe.Subscription;
-      await prisma.user.updateMany({
+      await prisma.qRSpot.updateMany({
         where: { stripeSubscriptionId: sub.id },
-        data: { isActive: false },
+        data: { status: "expired" },
       });
       break;
     }
