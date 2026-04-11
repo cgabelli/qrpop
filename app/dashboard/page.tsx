@@ -1,7 +1,6 @@
 import { auth } from "@/lib/auth";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-import { getPlan } from "@/lib/plans";
 import Link from "next/link";
 
 export const metadata = { title: "Dashboard" };
@@ -13,6 +12,7 @@ export default async function DashboardPage() {
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
     include: {
+      qrSpots: true,
       creativita: {
         orderBy: { createdAt: "desc" },
         take: 3,
@@ -22,17 +22,17 @@ export default async function DashboardPage() {
 
   if (!user) redirect("/login");
 
-  const plan = getPlan(user.plan);
-  const activeCreativity = user.creativita.find((c: any) => c.status === "active");
+  const totalSpots = user.qrSpots.length;
+  const activeSpots = user.qrSpots.filter((s) => s.status === "active").length;
+  const activeCreativity = user.creativita.find((c) => c.status === "active");
   const totalCreativity = await prisma.creativita.count({ where: { userId: user.id } });
-  const uploadedThisMonth = user.baseCredits + user.purchasedCredits;
 
   return (
     <div style={{ padding: "40px 48px", maxWidth: 1100 }}>
       {/* Header */}
       <div style={{ marginBottom: 48 }}>
         <h1 style={{ fontSize: 32, fontWeight: 800, marginBottom: 8 }}>
-          Ciao, {user.businessName} 👋
+          Ciao, {user.businessName ?? user.firstName} 👋
         </h1>
         <p style={{ color: "hsl(240 5% 55%)", fontSize: 16 }}>
           Ecco il riepilogo della tua area
@@ -43,18 +43,18 @@ export default async function DashboardPage() {
       <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(200px, 1fr))", gap: 20, marginBottom: 40 }}>
         {[
           {
-            label: "Piano attivo",
-            value: plan.name,
+            label: "QR Spot Totali",
+            value: totalSpots.toString(),
             icon: "📋",
             color: "hsl(262 83% 65%)",
             bg: "rgba(124,58,237,0.1)",
           },
           {
-            label: "Contenuto attivo",
-            value: activeCreativity ? "Sì ✓" : "Nessuno",
-            icon: "📡",
-            color: activeCreativity ? "hsl(142 71% 55%)" : "hsl(240 5% 55%)",
-            bg: activeCreativity ? "rgba(34,197,94,0.08)" : "rgba(255,255,255,0.04)",
+            label: "QR Spot Attivi",
+            value: activeSpots.toString(),
+            icon: "✅",
+            color: activeSpots > 0 ? "hsl(142 71% 55%)" : "hsl(240 5% 55%)",
+            bg: activeSpots > 0 ? "rgba(34,197,94,0.08)" : "rgba(255,255,255,0.04)",
           },
           {
             label: "Totale creatività",
@@ -64,8 +64,8 @@ export default async function DashboardPage() {
             bg: "rgba(251,191,36,0.08)",
           },
           {
-            label: "Upload questo mese",
-            value: plan.limit === null ? `${uploadedThisMonth} (∞)` : `${uploadedThisMonth} / ${plan.limit}`,
+            label: "Ultimo Caricamento",
+            value: activeCreativity ? "Recente" : "Nessuno",
             icon: "⬆️",
             color: "hsl(200 70% 60%)",
             bg: "rgba(56,189,248,0.08)",
@@ -74,7 +74,7 @@ export default async function DashboardPage() {
           <div
             key={stat.label}
             className="card"
-            style={{ padding: 24, background: stat.bg, border: "1px solid rgba(255,255,255,0.06)" }}
+            style={{ padding: 24, background: stat.bg, border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16 }}
           >
             <div style={{ fontSize: 28, marginBottom: 12 }}>{stat.icon}</div>
             <div style={{ fontSize: 24, fontWeight: 800, color: stat.color, marginBottom: 4, fontFamily: "Space Grotesk, sans-serif" }}>
@@ -98,16 +98,16 @@ export default async function DashboardPage() {
             transition: "transform 0.2s",
             display: "block",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
         >
-          <div style={{ fontSize: 32, marginBottom: 12 }}>🎨</div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "white", marginBottom: 8 }}>Gestisci creatività</div>
-          <div style={{ fontSize: 14, color: "hsl(240 5% 60%)" }}>
-            Carica immagini e video, imposta quando mostrarli
-          </div>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>🎯</div>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 8 }}>Gestisci Contenuti</h3>
+          <p style={{ color: "hsl(240 5% 70%)", fontSize: 14 }}>Carica nuove immagini, video o PDF per i tuoi QR</p>
         </Link>
 
         <Link
-          href="/dashboard/qrcode"
+          href="/dashboard/abbonamento"
           style={{
             textDecoration: "none",
             background: "rgba(255,255,255,0.03)",
@@ -117,62 +117,51 @@ export default async function DashboardPage() {
             transition: "transform 0.2s",
             display: "block",
           }}
+          onMouseEnter={(e) => (e.currentTarget.style.transform = "translateY(-4px)")}
+          onMouseLeave={(e) => (e.currentTarget.style.transform = "none")}
         >
-          <div style={{ fontSize: 32, marginBottom: 12 }}>◈</div>
-          <div style={{ fontSize: 18, fontWeight: 700, color: "white", marginBottom: 8 }}>Il tuo QR code</div>
-          <div style={{ fontSize: 14, color: "hsl(240 5% 60%)" }}>
-            Scarica il QR statico da stampare e mettere sui tavoli
-          </div>
+          <div style={{ fontSize: 32, marginBottom: 16 }}>🛒</div>
+          <h3 style={{ fontSize: 20, fontWeight: 700, color: "white", marginBottom: 8 }}>I tuoi QR Spot</h3>
+          <p style={{ color: "hsl(240 5% 70%)", fontSize: 14 }}>Vedi o acquista nuovi QR per nuovi tavoli o stanze</p>
         </Link>
       </div>
 
-      {/* Recent content */}
-      {user.creativita.length > 0 && (
-        <div>
-          <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
-            <h2 style={{ fontSize: 18, fontWeight: 700 }}>Creatività recenti</h2>
-            <Link href="/dashboard/creativita" style={{ color: "hsl(262 83% 70%)", fontSize: 14, textDecoration: "none", fontWeight: 500 }}>
-              Vedi tutte →
-            </Link>
-          </div>
+      {/* Recenti */}
+      <div>
+        <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: 20 }}>
+          <h3 style={{ fontSize: 18, fontWeight: 600 }}>File Caricati di Recente</h3>
+          <Link href="/dashboard/creativita" style={{ fontSize: 13, color: "hsl(262 83% 70%)", textDecoration: "none" }}>
+            Vedi tutti →
+          </Link>
+        </div>
 
-          <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
-            {user.creativita.map((c: any) => (
-              <div key={c.id} className="card" style={{ padding: "16px 20px", display: "flex", alignItems: "center", gap: 16 }}>
-                <div style={{ fontSize: 28 }}>{c.type === "video" ? "🎬" : "🖼️"}</div>
-                <div style={{ flex: 1, minWidth: 0 }}>
-                  <div style={{ fontSize: 15, fontWeight: 600, marginBottom: 2, overflow: "hidden", textOverflow: "ellipsis", whiteSpace: "nowrap" }}>
-                    {c.title ?? c.fileName}
+        {user.creativita.length === 0 ? (
+          <div style={{ padding: 40, textAlign: "center", background: "rgba(255,255,255,0.02)", borderRadius: 16, border: "1px dashed rgba(255,255,255,0.1)" }}>
+            <div style={{ fontSize: 32, marginBottom: 12 }}>👻</div>
+            <div style={{ color: "hsl(240 5% 60%)", marginBottom: 16 }}>Non hai ancora caricato nulla.</div>
+            <Link href="/dashboard/creativita" className="btn-primary">Carica primo file</Link>
+          </div>
+        ) : (
+          <div style={{ display: "grid", gap: 12 }}>
+            {user.creativita.map((c) => (
+              <div key={c.id} style={{ display: "flex", alignItems: "center", justifyContent: "space-between", padding: 16, background: "rgba(255,255,255,0.03)", borderRadius: 12 }}>
+                <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                  <div style={{ width: 40, height: 40, borderRadius: 8, background: "rgba(255,255,255,0.1)", display: "flex", alignItems: "center", justifyContent: "center", fontSize: 18 }}>
+                    {c.type === "image" ? "🖼️" : c.type === "video" ? "🎥" : "📄"}
                   </div>
-                  <div style={{ fontSize: 12, color: "hsl(240 5% 50%)" }}>
-                    {new Date(c.createdAt).toLocaleDateString("it-IT")}
+                  <div>
+                    <div style={{ fontWeight: 600, fontSize: 14, color: "white" }}>{c.title || c.fileName}</div>
+                    <div style={{ fontSize: 12, color: "hsl(240 5% 50%)" }}>{new Date(c.createdAt).toLocaleDateString("it-IT")}</div>
                   </div>
                 </div>
-                <span className={`badge badge-${c.status}`}>{c.status}</span>
+                <div style={{ padding: "4px 10px", borderRadius: 99, fontSize: 11, fontWeight: 600, background: c.status === "active" ? "rgba(34,197,94,0.15)" : "rgba(255,255,255,0.1)", color: c.status === "active" ? "hsl(142 71% 55%)" : "hsl(240 5% 60%)", textTransform: "uppercase" }}>
+                  {c.status}
+                </div>
               </div>
             ))}
           </div>
-        </div>
-      )}
-
-      {user.creativita.length === 0 && (
-        <div style={{
-          textAlign: "center",
-          padding: "60px 24px",
-          border: "1px dashed rgba(255,255,255,0.1)",
-          borderRadius: 16,
-          color: "hsl(240 5% 50%)",
-        }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>🎨</div>
-          <div style={{ fontSize: 18, fontWeight: 600, marginBottom: 8, color: "hsl(240 5% 70%)" }}>
-            Nessuna creatività ancora
-          </div>
-          <div style={{ fontSize: 15, marginBottom: 24 }}>Carica la tua prima immagine o video</div>
-          <Link href="/dashboard/creativita" className="btn-primary" style={{ textDecoration: "none" }}>
-            Carica ora →
-          </Link>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }

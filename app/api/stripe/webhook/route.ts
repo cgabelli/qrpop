@@ -32,9 +32,9 @@ export async function POST(req: NextRequest) {
       if (userId && spotTypeId) {
         const spotType = getQRSpotType(spotTypeId);
         
-        let subDetails: Stripe.Subscription | undefined;
+        let subDetails: any;
         if (subscriptionId) {
-          subDetails = (await stripe.subscriptions.retrieve(subscriptionId)) as Stripe.Subscription;
+          subDetails = await stripe.subscriptions.retrieve(subscriptionId);
         }
 
         const expiresAt = new Date();

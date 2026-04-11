@@ -11,7 +11,7 @@ export default async function DashboardLayout({
   const session = await auth();
   if (!session?.user) redirect("/login");
 
-  const user = session.user as { id: string; email: string; name?: string; slug?: string; plan?: string; businessName?: string };
+  const user = session.user as { id: string; email: string; name?: string; slug?: string; businessName?: string };
 
   return (
     <div style={{ display: "flex", minHeight: "100vh", background: "hsl(240 10% 3.9%)" }}>
@@ -84,15 +84,6 @@ export default async function DashboardLayout({
               {user.businessName ?? user.name}
             </div>
             <div style={{ fontSize: 12, color: "hsl(240 5% 50%)" }}>{user.email}</div>
-            <div style={{
-              display: "inline-flex", alignItems: "center", gap: 4,
-              marginTop: 8, padding: "3px 8px", borderRadius: 6,
-              background: "rgba(124,58,237,0.15)", border: "1px solid rgba(124,58,237,0.3)",
-              fontSize: 11, fontWeight: 700, color: "hsl(262 83% 72%)",
-              textTransform: "uppercase", letterSpacing: "0.05em",
-            }}>
-              {user.plan?.replace("_", " ")}
-            </div>
           </div>
 
           <form
