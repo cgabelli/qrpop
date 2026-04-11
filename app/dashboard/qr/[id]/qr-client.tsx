@@ -27,17 +27,46 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
   const fileRef = useRef<HTMLInputElement>(null);
   const [dragOver, setDragOver] = useState(false);
 
+  // Logo
+  const logoRef = useRef<HTMLInputElement>(null);
+  const [uploadingLogo, setUploadingLogo] = useState(false);
+
   useEffect(() => {
     if (canvasRef.current && publicUrl) {
       QRCode.toCanvas(canvasRef.current, publicUrl, {
         width: 200,
         margin: 2,
         color: { dark: "#000000", light: "#ffffff" },
+        errorCorrectionLevel: "H",
       }, (err) => {
-        if (err) console.error("Errore generazione QR", err);
+        if (err) {
+           console.error("Errore generazione QR", err);
+           return;
+        }
+
+        if (qrSpot.customLogoPath && canvasRef.current) {
+          const ctx = canvasRef.current.getContext("2d");
+          if (!ctx) return;
+          const img = new Image();
+          img.crossOrigin = "anonymous";
+          img.onload = () => {
+             // Il logo è garantito essere quadrato (150x150) dall'API
+             // Dipingiamo il quadrato nel centro del canvas di 200px.
+             // Copriamo circa il 25% dell'area centrale (es. 50x50 su 200x200).
+             const logoSize = 56; // 28% della larghezza
+             const center = 100; // metà di 200
+             
+             // Disegniamo sfondo bianco per mascherare il codice dietro al logo se ha trasparenze
+             ctx.fillStyle = "white";
+             ctx.fillRect(center - logoSize/2, center - logoSize/2, logoSize, logoSize);
+             
+             ctx.drawImage(img, center - logoSize/2, center - logoSize/2, logoSize, logoSize);
+          };
+          img.src = qrSpot.customLogoPath;
+        }
       });
     }
-  }, [publicUrl]);
+  }, [publicUrl, qrSpot.customLogoPath]);
 
   async function downloadQR() {
     if (!canvasRef.current) return;
@@ -103,6 +132,47 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
     if (fileRef.current) fileRef.current.value = "";
   }
 
+  async function handleLogoUpload(e: React.ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    setUploadingLogo(true);
+    setError("");
+
+    const fd = new FormData();
+    fd.append("logo", file);
+
+    try {
+      const res = await fetch(`/api/qrspot/${qrSpot.id}/logo`, { method: "POST", body: fd });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Errore upload logo");
+      }
+    } catch {
+      setError("Errore di rete");
+    }
+    setUploadingLogo(false);
+    if (logoRef.current) logoRef.current.value = "";
+  }
+
+  async function handleRemoveLogo() {
+    if (!confirm("Sei sicuro di voler rimuovere il logo?")) return;
+    setUploadingLogo(true);
+    try {
+      const res = await fetch(`/api/qrspot/${qrSpot.id}/logo`, { method: "DELETE" });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+         setError("Errore durante la rimozione del logo");
+      }
+    } catch {
+      setError("Errore di rete");
+    }
+    setUploadingLogo(false);
+  }
+
   async function handleDeleteFile(id: string) {
     if (!confirm("Sei sicuro di voler eliminare questo file? Il QR diventerà vuoto.")) return;
     await fetch(`/api/creativita/${id}`, { method: "DELETE" });
@@ -144,6 +214,37 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
                   Salva
                 </button>
              </div>
+          </div>
+        </div>
+
+        {/* Add-on Logo */}
+        <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Stile e Logo</h3>
+          <p style={{ fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 16 }}>
+            Seleziona un'immagine PNG o JPG da inserire comodamente al centro del design del QR Code.
+          </p>
+          <input type="file" ref={logoRef} accept="image/png, image/jpeg" style={{ display: "none" }} onChange={handleLogoUpload} />
+          
+          <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
+            <button 
+              onClick={() => logoRef.current?.click()} 
+              disabled={uploadingLogo} 
+              className="btn-primary" 
+              style={{ width: "100%", justifyContent: "center" }}
+            >
+              {uploadingLogo ? "Caricamento in corso..." : (qrSpot.customLogoPath ? "Sostituisci Logo" : "Carica Logo")}
+            </button>
+            
+            {qrSpot.customLogoPath && (
+               <button 
+                 onClick={handleRemoveLogo} 
+                 disabled={uploadingLogo} 
+                 className="btn-secondary" 
+                 style={{ width: "100%", justifyContent: "center", color: "hsl(340 82% 65%)" }}
+               >
+                 Rimuovi Logo
+               </button>
+            )}
           </div>
         </div>
       </div>

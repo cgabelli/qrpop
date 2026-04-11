@@ -88,6 +88,7 @@ model QRSpot {
   type                 String       // 'image' | 'video' | 'pdf' | 'free'
   status               String       @default("inactive") // 'active' | 'inactive' | 'expired'
   redirectUrl          String?
+  customLogoPath       String?
   stripeSubscriptionId String?
   stripePriceId        String?
   expiresAt            DateTime?
