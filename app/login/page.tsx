@@ -25,14 +25,15 @@ function LoginForm() {
       email,
       password,
       redirect: false,
+      callbackUrl: "/dashboard",
     });
 
     if (res?.error) {
       setError("Email o password non corretti.");
       setLoading(false);
     } else if (res?.ok) {
-      router.push("/dashboard");
-      router.refresh();
+      // Force hard navigation so the session cookie is read fresh
+      window.location.href = "/dashboard";
     } else {
       setError("Errore durante l'accesso. Riprova.");
       setLoading(false);
