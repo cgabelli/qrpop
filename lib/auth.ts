@@ -20,7 +20,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (user) {
         token.id = user.id;
         token.slug = (user as { slug?: string }).slug;
-        token.plan = (user as { plan?: string }).plan;
         token.businessName = (user as { businessName?: string }).businessName;
       }
       return token;
@@ -29,7 +28,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
       if (token) {
         session.user.id = token.id as string;
         (session.user as { slug?: string }).slug = token.slug as string;
-        (session.user as { plan?: string }).plan = token.plan as string;
         (session.user as { businessName?: string }).businessName = token.businessName as string;
       }
       return session;
@@ -62,7 +60,6 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
           email: user.email,
           name: user.businessName,
           slug: user.slug,
-          plan: user.plan,
           businessName: user.businessName,
         };
       },
