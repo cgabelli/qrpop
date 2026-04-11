@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import bcrypt from "bcryptjs";
 import { prisma } from "@/lib/db";
-import { PLAN_TYPES, PlanId } from "@/lib/plans";
 import crypto from "crypto";
 import { sendVerificationEmail } from "@/lib/email";
 
@@ -9,14 +8,14 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { 
-      email, password, plan,
+      email, password,
       isCompany, businessName, firstName, lastName,
       address, city, province, zipCode, phone,
       fiscalCode, vatNumber, sdiCode 
     } = data;
 
     // Validazione base
-    if (!email || !password || !plan || !address || !city || !zipCode || !province) {
+    if (!email || !password || !address || !city || !zipCode || !province) {
       return NextResponse.json({ error: "Compila tutti i campi obbligatori dell'indirizzo e account" }, { status: 400 });
     }
 
@@ -28,10 +27,6 @@ export async function POST(req: NextRequest) {
       if (!firstName || !lastName || !fiscalCode) {
         return NextResponse.json({ error: "Nome, Cognome e Codice Fiscale sono obbligatori per i privati" }, { status: 400 });
       }
-    }
-
-    if (!PLAN_TYPES[plan as PlanId]) {
-      return NextResponse.json({ error: "Piano non valido" }, { status: 400 });
     }
     
     if (password.length < 8) {
@@ -66,9 +61,6 @@ export async function POST(req: NextRequest) {
         email,
         password: passwordHash,
         slug,
-        plan,
-        billingInterval: "annual",
-        uploadResetDate: new Date(),
         isActive: true,
         businessName: isCompany ? businessName : `${firstName} ${lastName}`,
         isCompany,
