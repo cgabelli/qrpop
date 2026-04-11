@@ -47,6 +47,7 @@ export default async function DashboardLayout({
           {[
             { href: "/dashboard", label: "Panoramica", icon: "⬡" },
             { href: "/dashboard/abbonamento", label: "QR Spot", icon: "◈" },
+            { href: "/dashboard/impostazioni", label: "Impostazioni", icon: "⚙" },
           ].map((item) => (
             <Link
               key={item.href}
