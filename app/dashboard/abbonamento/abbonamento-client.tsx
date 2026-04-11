@@ -18,6 +18,24 @@ export default function AbbonamentoClient({
   const [loadingSpot, setLoadingSpot] = useState<string | null>(null);
 
   async function handleBuyNewSpot(spotTypeId: string) {
+    if (spotTypeId === "free") {
+      setLoadingSpot(spotTypeId);
+      try {
+        const res = await fetch("/api/qrspot/free", { method: "POST" });
+        if (res.ok) {
+          window.location.reload();
+        } else {
+          const data = await res.json();
+          alert(data.error || "Errore nella comunicazione");
+          setLoadingSpot(null);
+        }
+      } catch (err) {
+        alert("Errore di rete");
+        setLoadingSpot(null);
+      }
+      return;
+    }
+
     setLoadingSpot(spotTypeId);
     try {
       const res = await fetch("/api/stripe/checkout", {
@@ -39,7 +57,7 @@ export default function AbbonamentoClient({
   }
 
   // Prendi i tipi configurati rimuovendo il piano "free" se non ha un prezzo Stripe definito per l'acquisto
-  const SPOT_OPTIONS = Object.values(QR_SPOT_TYPES).filter((s: any) => s.price !== undefined && s.price > 0);
+  const SPOT_OPTIONS = Object.values(QR_SPOT_TYPES);
 
   return (
     <div style={{ padding: "40px 48px", maxWidth: 1000 }}>
@@ -117,7 +135,7 @@ export default function AbbonamentoClient({
                <div style={{ fontSize: 13, color: "hsl(240 5% 55%)", marginBottom: 16, minHeight: 40 }}>{spot.description}</div>
                
                <div style={{ fontSize: 32, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif", marginBottom: 24 }}>
-                 €{spot.price}<span style={{ fontSize: 14, color: "hsl(240 5% 55%)", fontWeight: 500 }}>/anno</span>
+                 {spot.price === 0 ? "Gratis" : `€${spot.price}`}<span style={{ fontSize: 14, color: "hsl(240 5% 55%)", fontWeight: 500 }}>/anno</span>
                </div>
                
                <div style={{ flex: 1 }}>
@@ -133,13 +151,16 @@ export default function AbbonamentoClient({
                <button
                   onClick={() => handleBuyNewSpot(spot.id)}
                   disabled={loadingSpot !== null}
-                  className="btn-primary"
+                  className={spot.price === 0 ? "btn-secondary" : "btn-primary"}
                   style={{
                     width: "100%", padding: "12px 0", fontSize: 14, borderRadius: 12,
                     opacity: loadingSpot ? 0.7 : 1, pointerEvents: loadingSpot ? "none" : "auto",
+                    background: spot.price === 0 ? "rgba(255,255,255,0.05)" : undefined,
+                    border: spot.price === 0 ? "1px solid rgba(255,255,255,0.1)" : undefined,
+                    color: spot.price === 0 ? "white" : undefined,
                   }}
                >
-                 {loadingSpot === spot.id ? "Apertura Checkout..." : `Acquista QR ${spot.name}`}
+                 {loadingSpot === spot.id ? "Apertura..." : spot.price === 0 ? `Attiva QR ${spot.name}` : `Acquista QR ${spot.name}`}
                </button>
             </div>
           )

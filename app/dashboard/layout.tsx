@@ -46,9 +46,7 @@ export default async function DashboardLayout({
         <nav style={{ display: "flex", flexDirection: "column", gap: 4, flex: 1 }}>
           {[
             { href: "/dashboard", label: "Panoramica", icon: "⬡" },
-            { href: "/dashboard/creativita", label: "Creatività", icon: "🎨" },
-            { href: "/dashboard/qrcode", label: "Il mio QR", icon: "◈" },
-            { href: "/dashboard/abbonamento", label: "Abbonamento", icon: "💳" },
+            { href: "/dashboard/abbonamento", label: "QR Spot", icon: "◈" },
           ].map((item) => (
             <Link
               key={item.href}

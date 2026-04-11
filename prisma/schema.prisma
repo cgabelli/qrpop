@@ -85,8 +85,9 @@ model QRSpot {
   userId               String
   slug                 String       @unique
   name                 String
-  type                 String       // 'image' | 'video' | 'pdf'
+  type                 String       // 'image' | 'video' | 'pdf' | 'free'
   status               String       @default("inactive") // 'active' | 'inactive' | 'expired'
+  redirectUrl          String?
   stripeSubscriptionId String?
   stripePriceId        String?
   expiresAt            DateTime?

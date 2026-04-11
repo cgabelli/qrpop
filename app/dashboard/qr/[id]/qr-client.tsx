@@ -1,0 +1,228 @@
+"use client";
+
+import { useState, useRef, useEffect } from "react";
+import QRCode from "qrcode";
+
+function formatBytes(bytes: number) {
+  if (bytes < 1024) return `${bytes} B`;
+  if (bytes < 1024 * 1024) return `${(bytes / 1024).toFixed(1)} KB`;
+  return `${(bytes / (1024 * 1024)).toFixed(1)} MB`;
+}
+
+export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
+  const [downloading, setDownloading] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement>(null);
+  
+  // Stili Form e Generici
+  const [updatingName, setUpdatingName] = useState(false);
+  const [nameVal, setNameVal] = useState(qrSpot.name);
+  
+  // Free Type
+  const [redirectUrl, setRedirectUrl] = useState(qrSpot.redirectUrl || "");
+  const [savingUrl, setSavingUrl] = useState(false);
+
+  // Upload (Altri)
+  const [uploading, setUploading] = useState(false);
+  const [error, setError] = useState("");
+  const fileRef = useRef<HTMLInputElement>(null);
+  const [dragOver, setDragOver] = useState(false);
+
+  useEffect(() => {
+    if (canvasRef.current && publicUrl) {
+      QRCode.toCanvas(canvasRef.current, publicUrl, {
+        width: 200,
+        margin: 2,
+        color: { dark: "#000000", light: "#ffffff" },
+      }, (err) => {
+        if (err) console.error("Errore generazione QR", err);
+      });
+    }
+  }, [publicUrl]);
+
+  async function downloadQR() {
+    if (!canvasRef.current) return;
+    setDownloading(true);
+    const dataUrl = canvasRef.current.toDataURL("image/png");
+    const link = document.createElement("a");
+    link.href = dataUrl;
+    link.download = `QR_${qrSpot.slug}.png`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    setDownloading(false);
+  }
+
+  async function handleUpdateField(field: string, val: string) {
+    if (field === "name" && val === qrSpot.name) return;
+    if (field === "redirectUrl" && val === qrSpot.redirectUrl) return;
+
+    if (field === "name") setUpdatingName(true);
+    if (field === "redirectUrl") setSavingUrl(true);
+    setError("");
+
+    try {
+      const res = await fetch(`/api/qrspot/${qrSpot.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ [field]: val })
+      });
+      const data = await res.json();
+      if (!res.ok) setError(data.error);
+    } catch {
+      setError("Errore di rete");
+    }
+
+    if (field === "name") setUpdatingName(false);
+    if (field === "redirectUrl") setSavingUrl(false);
+  }
+
+  async function handleUpload(e: React.FormEvent | React.DragEvent, droppedFile?: File) {
+    if (e.type !== "drop") e.preventDefault();
+    const targetFile = droppedFile || (fileRef.current?.files ? fileRef.current.files[0] : null);
+    if (!targetFile) return;
+
+    setUploading(true);
+    setError("");
+
+    const fd = new FormData();
+    fd.append("file", targetFile);
+    fd.append("qrSpotId", qrSpot.id);
+
+    try {
+      const res = await fetch("/api/creativita", { method: "POST", body: fd });
+      if (res.ok) {
+        window.location.reload();
+      } else {
+        const data = await res.json();
+        setError(data.error || "Errore upload");
+      }
+    } catch {
+      setError("Errore di rete");
+    }
+    setUploading(false);
+    if (fileRef.current) fileRef.current.value = "";
+  }
+
+  async function handleDeleteFile(id: string) {
+    if (!confirm("Sei sicuro di voler eliminare questo file? Il QR diventerà vuoto.")) return;
+    await fetch(`/api/creativita/${id}`, { method: "DELETE" });
+    window.location.reload();
+  }
+
+  function handleDrop(e: React.DragEvent) {
+    e.preventDefault();
+    setDragOver(false);
+    const file = e.dataTransfer.files[0];
+    if (file) handleUpload(e, file);
+  }
+
+  return (
+    <div style={{ display: "grid", gridTemplateColumns: "300px 1fr", gap: 32 }}>
+      {/* Colonna SX: Configurazione QR */}
+      <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
+        {/* QR Code Anteprima */}
+        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 24, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <canvas ref={canvasRef} style={{ borderRadius: 12, marginBottom: 20 }}></canvas>
+          <button onClick={downloadQR} disabled={downloading} className="btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
+            {downloading ? "Download..." : "⬇ Scarica .PNG"}
+          </button>
+        </div>
+
+        {/* Impostazioni Base */}
+        <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Impostazioni QR</h3>
+          <div style={{ marginBottom: 16 }}>
+             <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Nome Identificativo</label>
+             <div style={{ display: "flex", gap: 8 }}>
+                <input 
+                  className="input-field" 
+                  value={nameVal} 
+                  onChange={(e) => setNameVal(e.target.value)} 
+                  placeholder="Es. QR Tavolo 5" 
+                />
+                <button onClick={() => handleUpdateField("name", nameVal)} disabled={updatingName || nameVal === qrSpot.name} className="btn-secondary">
+                  Salva
+                </button>
+             </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Colonna DX: Gestione Contenuto */}
+      <div>
+        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>Contenuto Collegato</h2>
+        
+        {error && <div style={{ padding: 12, background: "rgba(225,29,72,0.1)", border: "1px solid rgba(225,29,72,0.25)", color: "hsl(340 82% 65%)", borderRadius: 8, fontSize: 14, marginBottom: 24 }}>{error}</div>}
+
+        {qrSpot.type === "free" ? (
+           <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
+              <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 20 }}>Questo è un QR Code di tipo Free (Redirect). Inserisci il link a cui desideri che le persone vengano portate quando inquadrano il QR Code.</p>
+              <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>URL Esterno (es: https://www.tuosito.it)</label>
+              <div style={{ display: "flex", gap: 8, maxWidth: 500 }}>
+                <input 
+                  className="input-field" 
+                  type="url"
+                  value={redirectUrl} 
+                  onChange={(e) => setRedirectUrl(e.target.value)} 
+                  placeholder="https://" 
+                />
+                <button onClick={() => handleUpdateField("redirectUrl", redirectUrl)} disabled={savingUrl || redirectUrl === qrSpot.redirectUrl} className="btn-primary">
+                  {savingUrl ? "..." : "Applica"}
+                </button>
+              </div>
+           </div>
+        ) : (
+           <>
+              <div 
+                onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
+                onDragLeave={() => setDragOver(false)}
+                onDrop={handleDrop}
+                style={{
+                  border: `2px dashed ${dragOver ? "hsl(262 83% 72%)" : "rgba(255,255,255,0.15)"}`,
+                  background: dragOver ? "rgba(262, 83%, 72%, 0.05)" : "transparent",
+                  borderRadius: 20, padding: "40px 20px", textAlign: "center", marginBottom: 32,
+                  transition: "all 0.2s"
+                }}
+              >
+                <div style={{ fontSize: 32, marginBottom: 12 }}>📤</div>
+                <p style={{ color: "hsl(240 5% 65%)", fontSize: 15, marginBottom: 16 }}>
+                  Trascina qui il tuo file {qrSpot.type.toUpperCase()} oppure usa il bottone.
+                </p>
+                <input type="file" ref={fileRef} style={{ display: "none" }} onChange={(e) => { if (e.target.files?.[0]) handleUpload(e as any); }} />
+                <button onClick={() => fileRef.current?.click()} className="btn-primary" disabled={uploading}>
+                  {uploading ? "Caricamento in corso..." : "Scegli File Dal Dispositivo"}
+                </button>
+              </div>
+
+              {/* Lista Creatività Caricate */}
+              <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
+                {qrSpot.creativita?.map((file: any) => (
+                  <div key={file.id} style={{
+                    background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px",
+                    display: "flex", alignItems: "center", justifyContent: "space-between"
+                  }}>
+                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+                       <div style={{ fontSize: 24 }}>{file.type === "image" ? "🖼️" : file.type === "video" ? "🎥" : "📄"}</div>
+                       <div>
+                         <div style={{ fontWeight: 500, fontSize: 15, marginBottom: 2 }}>{file.fileName || file.title || "File"}</div>
+                         <div style={{ fontSize: 13, color: "hsl(240 5% 55%)" }}>{formatBytes(file.fileSize)} • {new Date(file.createdAt).toLocaleDateString()}</div>
+                       </div>
+                    </div>
+                    <div style={{ display: "flex", gap: 12 }}>
+                      <a href={file.filePath} target="_blank" className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13 }}>Apri File</a>
+                      <button onClick={() => handleDeleteFile(file.id)} className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13, color: "hsl(340 82% 65%)" }}>Rimuovi</button>
+                    </div>
+                  </div>
+                ))}
+                {(!qrSpot.creativita || qrSpot.creativita.length === 0) && (
+                  <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, fontStyle: "italic", padding: 20 }}>
+                    Nessun {qrSpot.type} associato a questo QR. Inquadrandolo, non mostrerà nulla!
+                  </div>
+                )}
+              </div>
+           </>
+        )}
+      </div>
+    </div>
+  );
+}

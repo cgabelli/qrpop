@@ -1,5 +1,5 @@
 import { prisma } from "@/lib/db";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import type { Metadata } from "next";
 
 interface Props {
@@ -8,50 +8,82 @@ interface Props {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params;
-  const user = await prisma.user.findUnique({ where: { slug, isActive: true } });
-  if (!user) return { title: "QRpop" };
+  const qrSpot = await prisma.qRSpot.findUnique({ 
+    where: { slug },
+    include: { user: true }
+  });
+  
+  if (!qrSpot || qrSpot.status !== "active") return { title: "QRpop" };
+  
   return {
-    title: `${user.businessName} | QRpop`,
-    description: `Contenuti di ${user.businessName} su QRpop`,
+    title: `${qrSpot.name} | ${qrSpot.user.businessName}`,
+    description: `Contenuti di ${qrSpot.user.businessName} su QRpop`,
   };
 }
 
 export const revalidate = 30; // Revalida ogni 30 secondi
 
-async function getActiveContent(slug: string) {
-  const user = await prisma.user.findUnique({
-    where: { slug, isActive: true },
+async function getActiveSpot(slug: string) {
+  const qrSpot = await prisma.qRSpot.findUnique({
+    where: { slug },
+    include: { user: true }
   });
-  if (!user) return null;
+  
+  if (!qrSpot || qrSpot.status !== "active" || !qrSpot.user.isActive) return null;
 
   const now = new Date();
 
   // Attiva scheduled
   await prisma.creativita.updateMany({
-    where: { userId: user.id, status: "scheduled", publishAt: { lte: now } },
+    where: { qrSpotId: qrSpot.id, status: "scheduled", publishAt: { lte: now } },
     data: { status: "active" },
   });
   // Scade attivi
   await prisma.creativita.updateMany({
-    where: { userId: user.id, status: "active", expiresAt: { lt: now } },
+    where: { qrSpotId: qrSpot.id, status: "active", expiresAt: { lt: now } },
     data: { status: "expired" },
   });
 
   const creativita = await prisma.creativita.findFirst({
-    where: { userId: user.id, status: "active" },
+    where: { qrSpotId: qrSpot.id, status: "active" },
     orderBy: { publishAt: "desc" },
   });
 
-  return { user, creativita };
+  return { qrSpot, creativita };
 }
 
 export default async function ScanPage({ params }: Props) {
   const { slug } = await params;
-  const result = await getActiveContent(slug);
+  const result = await getActiveSpot(slug);
 
-  if (!result) notFound();
+  if (!result) {
+    // Spot non trovato o inattivo
+    return (
+      <div style={{ minHeight: "100dvh", background: "#000", color: "white", display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
+        <h1 style={{ fontSize: 24, fontWeight: "bold", marginBottom: 12 }}>QR Code Non Attivo</h1>
+        <p style={{ color: "hsl(240 5% 65%)", maxWidth: 400 }}>Questo contenuto non è attualmente disponibile o il servizio è scaduto.</p>
+        <div style={{ marginTop: 40 }}>
+           <div style={{ background: "rgba(255,255,255,0.05)", padding: "12px 24px", borderRadius: 30, fontSize: 14, fontWeight: "bold", display: "inline-block" }}>
+             Powered by <span style={{ color: "hsl(262 83% 72%)" }}>QRpop</span>
+           </div>
+        </div>
+      </div>
+    );
+  }
 
-  const { user, creativita } = result;
+  const { qrSpot, creativita } = result;
+
+  if (qrSpot.type === "free") {
+    if (qrSpot.redirectUrl) {
+       redirect(qrSpot.redirectUrl);
+    } else {
+      return (
+        <div style={{ minHeight: "100dvh", background: "#000", color: "white", display: "flex", alignContent: "center", justifyContent: "center", padding: 24 }}>
+          <p>Nessun link configurato per questo QR.</p>
+        </div>
+      );
+    }
+  }
 
   return (
     <div
@@ -72,7 +104,7 @@ export default async function ScanPage({ params }: Props) {
             // eslint-disable-next-line @next/next/no-img-element
             <img
               src={creativita.filePath}
-              alt={creativita.title ?? user.businessName}
+              alt={creativita.title ?? qrSpot.name}
               style={{
                 position: "absolute",
                 inset: 0,
@@ -81,7 +113,7 @@ export default async function ScanPage({ params }: Props) {
                 objectFit: "cover",
               }}
             />
-          ) : (
+          ) : creativita.type === "video" ? (
             <video
               src={creativita.filePath}
               autoPlay
@@ -96,78 +128,48 @@ export default async function ScanPage({ params }: Props) {
                 objectFit: "cover",
               }}
             />
+          ) : (
+             <embed src={creativita.filePath} type="application/pdf" width="100%" height="100%" style={{ position: "absolute", inset: 0 }} />
           )}
 
-          {/* Overlay gradient bottom */}
+          {/* Footer "Powered By" */}
           <div
             style={{
               position: "absolute",
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: "30%",
-              background: "linear-gradient(to top, rgba(0,0,0,0.7), transparent)",
-            }}
-          />
-
-          {/* QRpop badge */}
-          <div
-            style={{
-              position: "absolute",
-              bottom: 20,
-              right: 20,
+              bottom: 24,
+              left: "50%",
+              transform: "translateX(-50%)",
+              background: "rgba(0,0,0,0.6)",
+              backdropFilter: "blur(10px)",
+              padding: "10px 20px",
+              borderRadius: 30,
               display: "flex",
               alignItems: "center",
-              gap: 6,
-              padding: "6px 12px",
-              borderRadius: 999,
-              background: "rgba(0,0,0,0.5)",
-              backdropFilter: "blur(10px)",
-              border: "1px solid rgba(255,255,255,0.15)",
+              gap: 8,
+              boxShadow: "0 8px 32px rgba(0,0,0,0.2)",
+              border: "1px solid rgba(255,255,255,0.1)",
+              zIndex: 10,
             }}
           >
-            <img src="/logo-negative.svg" alt="QRpop" style={{ height: 16, width: "auto" }} />
+            <div
+              style={{
+                width: 20,
+                height: 20,
+                borderRadius: "50%",
+                background: "linear-gradient(135deg, hsl(262 83% 65%), hsl(262 83% 50%))",
+              }}
+            />
+            <span style={{ color: "white", fontSize: 13, fontWeight: "500", letterSpacing: "-0.02em" }}>
+              Powered by <span style={{ fontWeight: "700" }}>QRpop</span>
+            </span>
           </div>
         </>
       ) : (
-        /* Fallback: no active content */
-        <div
-          style={{
-            textAlign: "center",
-            padding: "40px 24px",
-            maxWidth: 380,
-          }}
-        >
-          {/* Animated background */}
-          <div style={{
-            position: "absolute", inset: 0,
-            background: "radial-gradient(ellipse at center, rgba(124,58,237,0.2) 0%, transparent 70%)",
-            animation: "pulse 4s ease-in-out infinite",
-          }} />
-
-          <div style={{ position: "relative", zIndex: 1 }}>
-            <div style={{ textAlign: "center", marginBottom: 32 }}>
-               <img src="/logo-negative.svg" alt="QRpop" style={{ height: 64, width: "auto" }} />
-            </div>
-            <h1 style={{ fontSize: 28, fontWeight: 800, marginBottom: 12, color: "white" }}>
-              {user.businessName}
-            </h1>
-            <p style={{ color: "rgba(255,255,255,0.5)", fontSize: 16, lineHeight: 1.6, marginBottom: 32 }}>
-              Al momento non ci sono contenuti attivi. Torna a breve!
-            </p>
-            <div style={{ fontSize: 12, color: "rgba(255,255,255,0.25)", display: "flex", alignItems: "center", justifyContent: "center", gap: 6 }}>
-              Powered by <img src="/logo-negative.svg" alt="QRpop" style={{ height: 14, width: "auto", opacity: 0.6 }} />
-            </div>
-          </div>
+        <div style={{ color: "white", textAlign: "center", padding: 24 }}>
+          <h2 style={{ fontSize: 24, fontWeight: "bold", marginBottom: 12 }}>{qrSpot.name}</h2>
+          <p style={{ color: "hsl(240 5% 65%)" }}>Non c'è ancora nessun contenuto attivo in questo momento.</p>
         </div>
       )}
-
-      <style>{`
-        @keyframes pulse {
-          0%, 100% { opacity: 0.5; }
-          50% { opacity: 1; }
-        }
-      `}</style>
     </div>
   );
 }
