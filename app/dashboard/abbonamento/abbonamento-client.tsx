@@ -39,7 +39,7 @@ export default function AbbonamentoClient({
   }
 
   // Prendi i tipi configurati rimuovendo il piano "free" se non ha un prezzo Stripe definito per l'acquisto
-  const SPOT_OPTIONS = Object.values(QR_SPOT_TYPES).filter(s => s.annualPrice !== undefined && s.price > 0);
+  const SPOT_OPTIONS = Object.values(QR_SPOT_TYPES).filter((s: any) => s.price !== undefined && s.price > 0);
 
   return (
     <div style={{ padding: "40px 48px", maxWidth: 1000 }}>
