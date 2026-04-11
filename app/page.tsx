@@ -3,33 +3,66 @@
 import Link from "next/link";
 import { useState, useEffect } from "react";
 
-const PLANS = [
+const QR_SPOT_TYPES = [
   {
-    id: "media_annual",
-    name: "Media",
-    type: "Img & Video",
-    annualPrice: 49,
-    description: "Ideale per i menu e le promozioni",
-    features: ["10 upload all'anno", "Supporto Immagini e Video", "QR code dinamico intelligente", "Link permanente"],
+    id: "free",
+    emoji: "🔗",
+    name: "Link Redirect",
+    type: "Gratis",
+    annualPrice: 0,
+    description: "Prova senza impegno",
+    features: ["Redirect verso qualsiasi URL", "Facebook, Instagram, sito web", "QR code dinamico", "Durata 1 anno"],
     popular: false,
+    highlight: false,
+    cta: "Crea gratis",
   },
   {
-    id: "pdf_annual",
+    id: "image",
+    emoji: "🖼️",
+    name: "Immagine",
+    type: "Foto & GIF",
+    annualPrice: 19,
+    description: "Menu foto e promozioni visive",
+    features: ["Upload illimitati", "Formati: JPG, PNG, GIF", "QR code dinamico", "Durata 1 anno"],
+    popular: false,
+    highlight: false,
+    cta: "Acquista",
+  },
+  {
+    id: "video",
+    emoji: "🎥",
+    name: "Video",
+    type: "Filmati",
+    annualPrice: 29,
+    description: "Promo video in loop sui tavoli",
+    features: ["Upload illimitati", "Formato MP4 ottimizzato", "Autoplay e loop", "Durata 1 anno"],
+    popular: false,
+    highlight: false,
+    cta: "Acquista",
+  },
+  {
+    id: "pdf",
+    emoji: "📄",
     name: "PDF",
     type: "Documenti",
-    annualPrice: 99,
-    description: "Per chi gestisce cataloghi strutturati",
-    features: ["20 upload all'anno", "Supporto PDF (max 50MB)", "QR code dinamico intelligente", "Link permanente"],
+    annualPrice: 49,
+    description: "Menù e cataloghi professionali",
+    features: ["Upload illimitati", "PDF multipagina fino a 50MB", "Visualizzatore integrato", "Durata 1 anno"],
     popular: true,
+    highlight: true,
+    cta: "Acquista",
   },
   {
-    id: "unlimited_annual",
+    id: "unlimited",
+    emoji: "🌟",
     name: "Unlimited",
-    type: "Tutto illimitato",
-    annualPrice: 149,
-    description: "Libertà totale creativa e di upload",
-    features: ["Upload illimitati all'anno", "Multi-formato (Immagini, Video, PDF)", "Gestione prioritaria", "Analytics completi"],
+    type: "Tutto incluso",
+    annualPrice: 99,
+    description: "Nessun vincolo, massima libertà",
+    features: ["Upload illimitati", "Tutti i formati (JPG, MP4, PDF)", "Cambia contenuto liberamente", "Durata 1 anno"],
     popular: false,
+    highlight: false,
+    cta: "Acquista",
   },
 ];
 
@@ -503,26 +536,29 @@ function PricingSection() {
             Prezzi
           </div>
           <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 16 }}>
-            Zero sorprese, fatturazione annuale.
+            Un QR per ogni esigenza.
           </h2>
-          <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 500, margin: "0 auto 36px" }}>
-            Scegli il piano più adatto al tuo locale. Nessun costo nascosto, setup immediato.
+          <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 560, margin: "0 auto 16px" }}>
+            Crea un account gratis, poi aggiungi i QR che ti servono. Ogni postazione ha il suo contenuto e la sua URL univoca.
+          </p>
+          <p style={{ fontSize: 14, color: "hsl(142 71% 45%)", margin: "0 auto 48px" }}>
+            ✓ Upload illimitati &nbsp;·&nbsp; ✓ Durata annuale &nbsp;·&nbsp; ✓ Nessun abbonamento mensile
           </p>
         </div>
 
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: 24 }}>
-          {PLANS.map((plan) => (
+        <div style={{ display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(220px, 1fr))", gap: 20 }}>
+          {QR_SPOT_TYPES.map((plan) => (
             <div
               key={plan.id}
               style={{
-                background: plan.popular ? "rgba(124,58,237,0.1)" : "hsl(240 6% 8%)",
-                border: plan.popular ? "1px solid rgba(124,58,237,0.5)" : "1px solid hsl(240 5% 15%)",
-                borderRadius: 20, padding: 32, position: "relative",
+                background: plan.highlight ? "rgba(124,58,237,0.12)" : "hsl(240 6% 8%)",
+                border: plan.highlight ? "1px solid rgba(124,58,237,0.5)" : "1px solid hsl(240 5% 15%)",
+                borderRadius: 20, padding: 28, position: "relative",
                 transition: "transform 0.2s, box-shadow 0.2s",
               }}
               onMouseEnter={e => {
                 (e.currentTarget as HTMLDivElement).style.transform = "translateY(-4px)";
-                (e.currentTarget as HTMLDivElement).style.boxShadow = plan.popular
+                (e.currentTarget as HTMLDivElement).style.boxShadow = plan.highlight
                   ? "0 20px 60px rgba(124,58,237,0.3)" : "0 20px 60px rgba(0,0,0,0.3)";
               }}
               onMouseLeave={e => {
@@ -540,49 +576,52 @@ function PricingSection() {
                 </div>
               )}
 
-              <div style={{
-                display: "inline-flex", alignItems: "center", padding: "6px 12px", borderRadius: 8,
-                background: plan.type === "Documenti" ? "rgba(219,39,119,0.15)" : "rgba(124,58,237,0.15)",
-                color: plan.type === "Documenti" ? "hsl(330 81% 70%)" : "hsl(262 83% 75%)",
-                fontSize: 12, fontWeight: 700, marginBottom: 20,
-              }}>
-                {plan.type === "Documenti" ? "📄" : "🚀"} {plan.type}
-              </div>
+              <div style={{ fontSize: 28, marginBottom: 12 }}>{plan.emoji}</div>
 
-              <div style={{ fontSize: 22, fontWeight: 700, marginBottom: 4 }}>{plan.name}</div>
-              <div style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24 }}>{plan.description}</div>
+              <div style={{ fontSize: 20, fontWeight: 700, marginBottom: 4 }}>{plan.name}</div>
+              <div style={{ color: "hsl(240 5% 55%)", fontSize: 13, marginBottom: 20 }}>{plan.description}</div>
 
-              {/* Price display */}
-              <div style={{ marginBottom: 32 }}>
-                <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
-                  <span style={{ fontSize: 48, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif" }}>
-                    €{plan.annualPrice}
-                  </span>
-                  <span style={{ color: "hsl(240 5% 55%)", fontSize: 15 }}>/anno</span>
-                </div>
-                <div style={{ fontSize: 13, color: "hsl(142 71% 55%)", marginTop: 4 }}>
-                  ≈ €{Math.round((plan.annualPrice / 12) * 10) / 10}/mese
-                </div>
+              <div style={{ marginBottom: 24 }}>
+                {plan.annualPrice === 0 ? (
+                  <div style={{ fontSize: 40, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif" }}>
+                    Gratis
+                    <div style={{ fontSize: 13, color: "hsl(240 5% 55%)", fontWeight: 400, marginTop: 2 }}>per 1 anno</div>
+                  </div>
+                ) : (
+                  <div>
+                    <div style={{ display: "flex", alignItems: "baseline", gap: 4 }}>
+                      <span style={{ fontSize: 40, fontWeight: 800, fontFamily: "Space Grotesk, sans-serif" }}>
+                        €{plan.annualPrice}
+                      </span>
+                      <span style={{ color: "hsl(240 5% 55%)", fontSize: 14 }}>/anno</span>
+                    </div>
+                    <div style={{ fontSize: 12, color: "hsl(142 71% 45%)", marginTop: 2 }}>
+                      ≈ €{Math.round((plan.annualPrice / 12) * 10) / 10}/mese
+                    </div>
+                  </div>
+                )}
               </div>
 
               <Link
-                href={`/register?plan=${plan.id}`}
+                href={plan.annualPrice === 0 ? "/register" : `/register?spot=${plan.id}`}
                 className="btn-primary"
                 style={{
-                  display: "block", textAlign: "center", textDecoration: "none", marginBottom: 32,
-                  background: plan.popular
+                  display: "block", textAlign: "center", textDecoration: "none", marginBottom: 24,
+                  padding: "12px 20px", fontSize: 14,
+                  background: plan.highlight
                     ? "linear-gradient(135deg, hsl(262 83% 58%), hsl(330 81% 60%))"
-                    : "rgba(255,255,255,0.07)",
-                  boxShadow: plan.popular ? "0 4px 24px rgba(124,58,237,0.4)" : "none",
+                    : plan.annualPrice === 0 ? "rgba(255,255,255,0.05)" : "rgba(255,255,255,0.07)",
+                  boxShadow: plan.highlight ? "0 4px 24px rgba(124,58,237,0.4)" : "none",
+                  border: plan.annualPrice === 0 ? "1px solid rgba(255,255,255,0.1)" : "none",
                 }}
               >
-                Inizia ora
+                {plan.cta}
               </Link>
 
-              <ul style={{ display: "flex", flexDirection: "column", gap: 12, listStyle: "none" }}>
+              <ul style={{ display: "flex", flexDirection: "column", gap: 10, listStyle: "none" }}>
                 {plan.features.map((f, i) => (
-                  <li key={i} style={{ display: "flex", alignItems: "center", gap: 10, fontSize: 14, color: "hsl(240 5% 80%)" }}>
-                    <span style={{ color: "hsl(142 71% 45%)", fontSize: 16 }}>✓</span>
+                  <li key={i} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13, color: "hsl(240 5% 75%)" }}>
+                    <span style={{ color: "hsl(142 71% 45%)", fontSize: 14, flexShrink: 0 }}>✓</span>
                     {f}
                   </li>
                 ))}
@@ -590,6 +629,10 @@ function PricingSection() {
             </div>
           ))}
         </div>
+
+        <p style={{ textAlign: "center", marginTop: 40, fontSize: 14, color: "hsl(240 5% 45%)" }}>
+          💡 Aggiungi quanti QR Spot vuoi allo stesso account — ogni postazione ha la sua URL e il suo contenuto indipendente.
+        </p>
       </div>
     </section>
   );

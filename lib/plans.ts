@@ -1,86 +1,109 @@
-export const PLAN_TYPES = {
-  media: {
-    id: "media",
-    name: "Media",
-    type: "video" as const, // Allows jpg, gif, mp4
-    limit: 10,
-    description: "10 upload all'anno (JPG, GIF, MP4)",
+// Tipi di QR Spot acquistabili a consumo
+export const QR_SPOT_TYPES = {
+  free: {
+    id: "free",
+    name: "Link Redirect",
+    emoji: "🔗",
+    description: "Reindirizza a qualsiasi URL esterno",
     features: [
-      "10 upload all'anno",
-      "Formati supportati: JPG, GIF, MP4",
-      "QR code statico dedicato",
-      "Scheduling contenuti",
+      "Redirect verso qualsiasi URL",
+      "Pagina Facebook, Instagram, sito web",
+      "QR code dinamico (modificabile)",
+      "Durata 1 anno",
+      "Badge 'Powered by QRpop'",
     ],
-    price: 49,
-    stripePriceId: process.env.STRIPE_PRICE_MEDIA_ANNUAL,
-    addon: {
-      price: 15,
-      amount: 10,
-      stripePriceId: process.env.STRIPE_PRICE_MEDIA_ADDON,
-    }
+    allowedTypes: ["redirect"],
+    price: 0,
+    stripePriceId: null, // Gratuito, gestito internamente
+    expiresInDays: 365,
+  },
+  image: {
+    id: "image",
+    name: "Immagine",
+    emoji: "🖼️",
+    description: "Mostra foto e animazioni a schermo intero",
+    features: [
+      "Upload illimitati",
+      "Formati: JPG, PNG, GIF",
+      "Visualizzazione fullscreen",
+      "QR code dinamico (modificabile)",
+      "Durata 1 anno",
+    ],
+    allowedTypes: ["image"],
+    price: 19,
+    stripePriceId: process.env.STRIPE_PRICE_IMAGE_ANNUAL,
+    expiresInDays: 365,
+  },
+  video: {
+    id: "video",
+    name: "Video",
+    emoji: "🎥",
+    description: "Riproduci video promozionali in loop",
+    features: [
+      "Upload illimitati",
+      "Formato MP4 ottimizzato",
+      "Autoplay e loop automatico",
+      "QR code dinamico (modificabile)",
+      "Durata 1 anno",
+    ],
+    allowedTypes: ["video"],
+    price: 29,
+    stripePriceId: process.env.STRIPE_PRICE_VIDEO_ANNUAL,
+    expiresInDays: 365,
   },
   pdf: {
     id: "pdf",
-    name: "Pdf",
-    type: "pdf" as const, // Allows jpg, gif, mp4, pdf
-    limit: 20,
-    description: "20 upload all'anno (Incluso PDF)",
+    name: "PDF",
+    emoji: "📄",
+    description: "Condividi menù e cataloghi in PDF",
     features: [
-      "20 upload all'anno",
-      "Supporto file PDF per Menu",
-      "Modifica contenuti fluida",
-      "Video autoplay mobile",
+      "Upload illimitati",
+      "PDF multipagina fino a 50MB",
+      "Visualizzatore integrato",
+      "QR code dinamico (modificabile)",
+      "Durata 1 anno",
     ],
-    price: 99,
+    allowedTypes: ["pdf"],
+    price: 49,
     stripePriceId: process.env.STRIPE_PRICE_PDF_ANNUAL,
-    addon: {
-      price: 25,
-      amount: 10,
-      stripePriceId: process.env.STRIPE_PRICE_PDF_ADDON,
-    }
+    expiresInDays: 365,
   },
   unlimited: {
     id: "unlimited",
     name: "Unlimited",
-    type: "pdf" as const,
-    limit: null,
-    description: "Upload illimitati (qualunque formato)",
+    emoji: "🌟",
+    description: "Tutti i formati, nessun limite",
     features: [
-      "Upload illimitati totali",
-      "Tutti i formati (Inclusi PDF Multi-pagina)",
-      "QR code statico dedicato",
-      "Analytics e report (Prossimamente)",
+      "Upload illimitati",
+      "Tutti i formati (JPG, PNG, GIF, MP4, PDF)",
+      "Cambia tipo contenuto liberamente",
+      "QR code dinamico (modificabile)",
+      "Durata 1 anno",
     ],
-    price: 149,
+    allowedTypes: ["image", "video", "pdf", "redirect"],
+    price: 99,
     stripePriceId: process.env.STRIPE_PRICE_UNLIMITED_ANNUAL,
-    addon: null
+    expiresInDays: 365,
   },
 } as const;
 
-export type PlanId = keyof typeof PLAN_TYPES;
+export type QRSpotTypeId = keyof typeof QR_SPOT_TYPES;
 
-export function getPlan(planId: string) {
-  return PLAN_TYPES[planId as PlanId] ?? PLAN_TYPES.media;
+export function getQRSpotType(typeId: string) {
+  return QR_SPOT_TYPES[typeId as QRSpotTypeId] ?? QR_SPOT_TYPES.image;
 }
 
-export function getStripePriceId(planId: string, isAddon: boolean = false): string | undefined {
-  const plan = getPlan(planId);
-  return isAddon && plan.addon ? plan.addon.stripePriceId : plan.stripePriceId;
+export function canUploadType(spotType: string, fileType: "image" | "video" | "pdf" | "redirect"): boolean {
+  const spot = getQRSpotType(spotType);
+  return (spot.allowedTypes as readonly string[]).includes(fileType);
 }
 
-export function getPlanPrice(planId: string, isAddon: boolean = false): number {
-  const plan = getPlan(planId);
-  return isAddon && plan.addon ? plan.addon.price : plan.price;
+export function getStripePriceId(spotTypeId: string): string | undefined {
+  return getQRSpotType(spotTypeId).stripePriceId ?? undefined;
 }
 
-export function canUpload(
-  planId: string,
-  baseCredits: number,
-  purchasedCredits: number
-): boolean {
-  const plan = getPlan(planId);
-  if (plan.limit === null) return true;
-  return (baseCredits + purchasedCredits) > 0;
-}
-
-export const PLANS = PLAN_TYPES;
+// Re-esport per compatibilità temporanea con il codice legacy
+export const PLAN_TYPES = QR_SPOT_TYPES;
+export const PLANS = QR_SPOT_TYPES;
+export type PlanId = QRSpotTypeId;
+export function getPlan(planId: string) { return getQRSpotType(planId); }
