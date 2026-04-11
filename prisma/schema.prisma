@@ -68,28 +68,41 @@ model User {
   passwordResetToken    String?   @unique
   passwordResetExpires  DateTime?
 
-  plan            String     @default("basic_image")
-  billingInterval String     @default("monthly")
   isActive        Boolean    @default(true)
-  baseCredits     Int        @default(0)
-  purchasedCredits Int       @default(0)
-  uploadResetDate DateTime   @default(now())
-  
   stripeCustomerId     String?
-  stripeSubscriptionId String?
   createdAt    DateTime   @default(now())
   updatedAt    DateTime   @updatedAt
 
   accounts     Account[]
   sessions     Session[]
-  creativita   Creativita[]
+  qrSpots      QRSpot[]
 }
 
+model QRSpot {
+  id                   String       @id @default(cuid())
+  userId               String
+  slug                 String       @unique
+  name                 String
+  type                 String       // 'image' | 'video' | 'pdf'
+  status               String       @default("inactive") // 'active' | 'inactive' | 'expired'
+  stripeSubscriptionId String?
+  stripePriceId        String?
+  expiresAt            DateTime?
+  createdAt            DateTime     @default(now())
+  updatedAt            DateTime     @updatedAt
+  
+  user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  creativita           Creativita[]
+}
 model Creativita {
   id            String    @id @default(cuid())
-  userId        String
+  userId        String    // Mantenuto per non rompere la storicità
+  qrSpotId      String?   // Opzionale finché la migrazione non è completata
+  
   user          User      @relation(fields: [userId], references: [id], onDelete: Cascade)
-  type          String    // 'image' | 'video'
+  qrSpot        QRSpot?   @relation(fields: [qrSpotId], references: [id], onDelete: SetNull)
+  
+  type          String    // 'image' | 'video' | 'pdf'
   filePath      String
   thumbnailPath String?
   publishAt     DateTime?
