@@ -465,10 +465,18 @@ function Footer() {
   return (
     <footer style={{ borderTop: "1px solid #e2e8f0", background: "white", padding: "60px 24px", textAlign: "center", color: "#64748b", fontSize: 15 }}>
       <div style={{ maxWidth: 1200, margin: "0 auto", display: "flex", justifyContent: "space-between", alignItems: "center", flexWrap: "wrap", gap: 24 }}>
-        <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
-          <span style={{ fontWeight: 900, color: "#0f172a", fontSize: 20, letterSpacing: -1 }}>QRpop</span>
-          <span style={{ color: "#cbd5e1" }}>—</span>
-          <span style={{ fontWeight: 500 }}>© {new Date().getFullYear()} Tutti i diritti riservati</span>
+        <div style={{ display: "flex", flexDirection: "column", gap: 8, textAlign: "left" }}>
+          <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
+            <span style={{ fontWeight: 900, color: "#0f172a", fontSize: 20, letterSpacing: -1 }}>QRpop</span>
+            <span style={{ color: "#cbd5e1" }}>—</span>
+            <span style={{ fontWeight: 500 }}>© {new Date().getFullYear()} Tutti i diritti riservati</span>
+          </div>
+          <div style={{ fontSize: 13, color: "#94a3b8", lineHeight: 1.6 }}>
+            <strong>Springfield S.r.l.</strong><br/>
+            Via N. Tartaglia 5, 20154, Milano<br/>
+            P. IVA: 11801090967<br/>
+            <a href="mailto:info@springfield.srl" style={{ color: "inherit", textDecoration: "none" }}>info@springfield.srl</a> | <a href="https://www.springfield.srl" target="_blank" rel="noopener noreferrer" style={{ color: "inherit", textDecoration: "none" }}>www.springfield.srl</a>
+          </div>
         </div>
         <div style={{ display: "flex", gap: 24, fontWeight: 600, flexWrap: "wrap", justifyContent: "center" }}>
           <Link href="/privacy" style={{ color: "#475569", textDecoration: "none" }}>Privacy Policy</Link>
