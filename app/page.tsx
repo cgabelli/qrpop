@@ -214,7 +214,7 @@ function HeroSection() {
           lineHeight: 1.7,
         }}
       >
-        Trasforma i tuoi tavoli e le tue grafiche in un motore di marketing. Modifica le landing page, acquisisci lead e traccia le interazioni offline in tempo reale senza mai dover ristampare.
+        Trasforma i tuoi menu e le tue grafiche in un canale di marketing diretto. Modifica la destinazione del QR e promuovi nuove offerte in tempo reale senza dover mai ristampare.
       </p>
 
       <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
@@ -391,7 +391,7 @@ function HeroSection() {
             fontWeight: 800,
             boxShadow: "0 10px 30px rgba(219,39,119,0.3)",
           }}>
-            2. Generi un Lead 🎉
+            2. Vede l'offerta nuova! 🎉
           </div>
         </div>
 
@@ -423,7 +423,7 @@ function HowItWorks() {
     {
       icon: "2️⃣",
       title: "Scegli cosa mostrare",
-      desc: "Imposta una promo, un modulo acquisizione contatti o ospita file PDF e Video ottimizzati per i tuoi clienti in loco.",
+      desc: "Imposta un reindirizzamento o ospita un'offerta, file PDF e Video ottimizzati per i tuoi clienti direttamente all'interno dei tavoli.",
     },
     {
       icon: "3️⃣",
@@ -463,10 +463,10 @@ function HowItWorks() {
           Come funziona
         </div>
         <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 16 }}>
-          Da semplice Link,<br/>a Macchina per Lead.
+          Il nuovo standard <br/> del Marketing Dinamico.
         </h2>
         <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 600, margin: "0 auto" }}>
-          QRpop è lo strumento definitivo di QR Marketing. Acquisisci nuovi contatti, promuovi il tuo brand e traccia l'intelligenza offline tutto da un'unica piattaforma.
+          QRpop è lo strumento definitivo. Mostra offerte sempre aggiornate, promuovi il tuo brand e aggiorna l'esperienza del cliente senza ulteriori costi tipografici.
         </p>
       </div>
 
@@ -654,7 +654,7 @@ function CTASection() {
           <span className="gradient-text">QR code anonimi.</span>
         </h2>
         <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", marginBottom: 40, lineHeight: 1.7 }}>
-          Entra a far parte delle aziende e dei professionisti che usano QRpop per tracciare il comportamento offline e generare lead quotidiani sul punto vendita.
+          Entra a far parte delle aziende e dei professionisti che usano QRpop per proporre offerte sempre fresche ed evitare per sempre i costi della tipografia.
         </p>
         <Link href="/register" className="btn-primary" style={{ padding: "18px 40px", fontSize: 17 }}>
           Inizia gratis il tuo primo QR →
