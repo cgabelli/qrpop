@@ -4,217 +4,217 @@ export interface AiPreset {
   title: string;
   description: string;
   prompt: string;
-  variables: string[]; // Variabili richieste es. ["TOPIC"]
+  variables: string[];
 }
 
 export const AI_PRESETS: AiPreset[] = [
-  // Cluster 1: The Corporate & Data Suite
+  // Cluster 1: Ristorazione Premium & Gourmet
   {
-    id: "corp_1",
-    cluster: "The Corporate & Data Suite",
-    title: "La Storia dei Dati Minimalista",
-    description: "Design pulito e minimalista ispirato al design svizzero.",
-    prompt: "Crea un'infografica verticale poster ad alta risoluzione, no testo leggibile, per {{TOPIC}}. Stile: Pulito Minimalista. Layout: Da 4 a 6 sezioni di contenitori vettoriali vuoti. Visual: Sfondo neutro morbido, icone monocromatiche minimali. Nessun disordine, nessun gradiente. Focalizzati sullo spazio negativo.",
+    id: "premium_1",
+    cluster: "Ristorazione Premium & Gourmet",
+    title: "Eleganza Minimalista",
+    description: "Sfondo scuro con luci morbide, ideale per cene di gala e degustazioni.",
+    prompt: "Crea uno sfondo fotografico ad altissima risoluzione per un ristorante. Tema: {{TOPIC}}. Stile: Fine dining, elegante, minimalista. Fotografia dark mood con illuminazione d'accento drammatica, toni caldi del ristorante sfocati sullo sfondo (bokeh). Grande area vuota centrale per posizionare il testo. Nessun testo né lettere leggibili.",
     variables: ["TOPIC"]
   },
   {
-    id: "corp_2",
-    cluster: "The Corporate & Data Suite",
-    title: "Il Cruscotto Aziendale",
-    description: "Stile Cruscotto SaaS, modalità scura.",
-    prompt: "Progetta un'infografica di sfondo in stile aziendale (SaaS dashboard) per {{TOPIC}}. Layout: Cruscotto basato su griglia con schede vuote per metriche. Visual: Design piatto, grafici astratti semplici. Palette: Sfondo grigio scuro con accenti blu elettrico e verde smeraldo. No testo leggibile vero.",
+    id: "premium_2",
+    cluster: "Ristorazione Premium & Gourmet",
+    title: "Texture Materica",
+    description: "Marmo e materiali nobili per un look lussuoso.",
+    prompt: "Sfondo grafico vettoriale astratto per ristorante di lusso. Tema: {{TOPIC}}. Stile: Marmo nero o ardesia con sottili venature in oro lucido. Macro fotografia o render 3D di materiali nobili. Nessun testo vero. Perfetto per menù eleganti.",
     variables: ["TOPIC"]
   },
   {
-    id: "corp_3",
-    cluster: "The Corporate & Data Suite",
-    title: "La Mappa Temporale",
-    description: "Timeline lineare vettoriale.",
-    prompt: "Genera uno sfondo infografica per mappa temporale su {{TOPIC}}. Layout: Linea di progresso lineare con nodi di traguardo. Visual: Stile vettoriale isometrico pulito. Palette: Gradazione professionale (Blu a Viola). Stile artistico vettoriale ad alta definizione. Solo contenitori base, no testo reale.",
+    id: "premium_3",
+    cluster: "Ristorazione Premium & Gourmet",
+    title: "Cantina & Sommelier",
+    description: "Caldo e avvolgente, perfetto per le serate del vino.",
+    prompt: "Sfondo fotografico fotorealistico per enoteca o degustazione. Tema: {{TOPIC}}. Focus su botti di legno o dettagli di vino. Caldo, sfumature bordeaux e rovere. Sfocatura artistica marcata nella metà inferiore per permettere sovrascrittura di testi. Zero tipografia.",
     variables: ["TOPIC"]
   },
   {
-    id: "corp_4",
-    cluster: "The Corporate & Data Suite",
-    title: "Il Confronto a Due Colonne",
-    description: "Stile pro/contro a schermo diviso.",
-    prompt: "Crea un'infografica di sfondo a confronto schermo diviso per il mercato di: {{TOPIC}}. Layout: Griglia simmetrica a due colonne. Visual: Il lato sinistro e destro con due colori in contrasto elegante. L'asse centrale presenta sfumature. Stile: Vettoriale moderno piatto. Rigorosamente organizzato, no testo.",
+    id: "premium_4",
+    cluster: "Ristorazione Premium & Gourmet",
+    title: "Sushi & Asian Fusion",
+    description: "Linee geometriche zen e contrasti forti (rosso/nero).",
+    prompt: "Sfondo ispirato all'oriente moderno e sushi bar. Tema: {{TOPIC}}. Stile: Architettura asiatica minimale, contrasto forte tra rosso rubino e nero opaco. Texture lisce, luci a neon rosse o lanterne sfocate sullo sfondo. Nessun carattere scritto, spazio negativo ampio per graphic design.",
     variables: ["TOPIC"]
   },
   {
-    id: "corp_5",
-    cluster: "The Corporate & Data Suite",
-    title: "Grafico Statistico a Barre",
-    description: "Preciso, numerico con grafici vettoriali 3D.",
-    prompt: "Progetta uno sfondo con grafico a barre astratto e professionale per argomento: {{TOPIC}}. Layout: Barre orizzontali in ordine decrescente. Visual: Barre opache 3D morbide, ombre tenui. Annotazioni: fumetti vuoti fluttuanti. Palette: Sfondo bianco elegante con colori energetici per i punti dati. Nessun testo intellegibile.",
-    variables: ["TOPIC"]
-  },
-
-  // Cluster 2: The Editorial & Magazine Suite
-  {
-    id: "mag_1",
-    cluster: "The Editorial & Magazine Suite",
-    title: "L'Editoriale Audace",
-    description: "Stile Wired Magazine asimmetrico ad alto impatto.",
-    prompt: "Un'illustrazione grafica audace in stile pagina rivista editoriale per il tema: {{TOPIC}}. Stile: Alto impatto Wired/Vox. Visual: Griglia asimmetrica, blocchi di colore ad alto contrasto. Incorpora elementi stile collage vettoriale astratto. Sovrapposizione di texture granulose. Nessun testo leggibile grande, solo forme letterali astratte.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "mag_2",
-    cluster: "The Editorial & Magazine Suite",
-    title: "Tech Cyberpunk",
-    description: "Neon tech, UI futuristica.",
-    prompt: "Uno sfondo elegante modalità scura tech cyberpunk ispirato al tema: {{TOPIC}}. Stile: Interfaccia UI futuristica pulita. Sfondo: Nero charcoal. Accenti: Neon Ciano e Magenta luminosi. Effetti glassmorphism sulle schede, linee sottili vettoriali in stile disegno tecnico. No testo ingombrante.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "mag_3",
-    cluster: "The Editorial & Magazine Suite",
-    title: "Funnel Vettoriale 3D",
-    description: "Ideale per marketing funnel.",
-    prompt: "Uno sfondo grafico verticale che esplora il tema del Funnel e conversione nel mercato: {{TOPIC}}. Visual: Una forma di imbuto stratificato in 3D che fluttua al centro. Gradiente fluido e luminoso in stile brand moderni. Rendering pulito ad alta brillantezza, strati vuoti per contenere testo. No parole scritte.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "mag_4",
-    cluster: "The Editorial & Magazine Suite",
-    title: "Bento Box Fatti Rapidi",
-    description: "Griglia per brevi consigli stile Instagram Carousel.",
-    prompt: "Progetta un background a griglia stile bento-box. Tema generale: {{TOPIC}}. Layout: Piastrelle arrotondate contenenti pattern o icone piatte oversize stile Big Tech. Palette: Sfondo pastello fresco, riquadri a contrasto. Moderno e amichevole, pronto come template per scriverci sopra. No font veri.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "mag_5",
-    cluster: "The Editorial & Magazine Suite",
-    title: "La Piramide Gerarchica",
-    description: "Piramide geometrica stilizzata.",
-    prompt: "Genera uno sfondo con piramide geometrica a strati per argomentazione: {{TOPIC}}. Visual: Piramide 3D minimale o stilizzata vettoriale piana. Gradiente moderno luminoso. Spazi laterali per poter permettere all'utente di metterci del testo. Sfondo astratto minimale.",
+    id: "premium_5",
+    cluster: "Ristorazione Premium & Gourmet",
+    title: "Bistrot Parigino",
+    description: "Illustrazione calda, stile acquerello o pittura morbida.",
+    prompt: "Sfondo per bistrot elegante. Tema: {{TOPIC}}. Stile: Illustrazione ad acquerello o pittura morbida francese, toni pastello caldi, dettagli di tavolini all'aperto o caffè. Il centro deve essere sfumato o vuoto come una tela neutra per poterci scrivere sopra. Senza parole scritte.",
     variables: ["TOPIC"]
   },
 
-  // Cluster 3: The Educational & Explainer Suite
+  // Cluster 2: Casual Dining, Pizzeria & Fast Food
   {
-    id: "edu_1",
-    cluster: "The Educational & Explainer Suite",
-    title: "Educativo Soft Pastel",
-    description: "Amichevole, accessibile, colori delicati.",
-    prompt: "Immagine vettoriale educativa stile libro amichevole, senza testo vero. Tema del background: {{TOPIC}}. Palette: Colori pastello morbidi (Lavanda, Pesca, Menta). Forme arrotondate in vettoriale 2.0. Estetica rilassante e pulita con grandi spazi vuoti per overlay.",
+    id: "casual_1",
+    cluster: "Casual Dining & Street Food",
+    title: "Esplosione Pop (Urbano)",
+    description: "Colori sgargianti vettoriali, ideale per Burger o Street Food.",
+    prompt: "Sfondo grafico verticale in stile Pop Art / Vettoriale esplosivo. Tema: {{TOPIC}}. Colori sgargianti, contrasto forte (Giallo, Arancio, Rosso intenso). Grafica in stile fumetto o street food moderno, senza testo, il centro dell'immagine deve avere un grosso riquadro vuoto o macchia di colore per scriverci sopra.",
     variables: ["TOPIC"]
   },
   {
-    id: "edu_2",
-    cluster: "The Educational & Explainer Suite",
-    title: "Manuale d'Istruzioni",
-    description: "Passo dopo passo in stile illustrazione piatta 2.0.",
-    prompt: "Uno sfondo di guida al processo per la nicchia di: {{TOPIC}}. Stile: Illustrazione vettoriale piatta d'istruzione. Un percorso visuale a 'S' che scende lungo una canvas vuota. Colori primari puliti e luminosi in un mondo bianco. No scritte, solo l'infrastruttura visuale (scatole / step geometrici).",
+    id: "casual_2",
+    cluster: "Casual Dining & Street Food",
+    title: "Il Forno a Legna",
+    description: "Texture fotorealistica di farina, legna e pietra. Classico Pizzeria.",
+    prompt: "Sfondo fotografico premium in stile pizzeria/forno. Tema: {{TOPIC}}. Macro dettaglio stilizzato di una superficie in pietra o marmo cosparsa di strisce di farina e pomodorini sfocati ai lati o fiamme sfocate del forno a legna. Fortemente de-centrato, centro vuoto, zero testo.",
     variables: ["TOPIC"]
   },
   {
-    id: "edu_3",
-    cluster: "The Educational & Explainer Suite",
-    title: "La Checklist",
-    description: "Foglio in stile clipboard per listare to-do.",
-    prompt: "Progetta un poster vettoriale che simula una elegante checkbox board moderna per il settore: {{TOPIC}}. Sfondo: Stilizzazione accattivante di un clipboard o carta morbida al tratto vettoriale. Spazi vuoti verticali pronti dove l'utente potrà scriverci su checklist. Senza parole e minimale.",
+    id: "casual_3",
+    cluster: "Casual Dining & Street Food",
+    title: "American Diner Anni '50",
+    description: "Piastrelle a scacchi e colori menta/ciliegia.",
+    prompt: "Sfondo grafico per tavola calda/diner in stile retrò anni '50. Tema: {{TOPIC}}. Stile: Piastrelle a scacchi prospettiche in basso, muro color verde menta o rosso ciliegia vintage in alto. Spazio molto pulito e vuoto. Nesuna tipografia, no lettere.",
     variables: ["TOPIC"]
   },
   {
-    id: "edu_4",
-    cluster: "The Educational & Explainer Suite",
-    title: "Il Diagramma del Framework",
-    description: "Pensiero sistemico con schema circolare.",
-    prompt: "Immagine vettoriale di un diagramma vuoto astratto per rappresentare un framework. Tema d'ispirazione estetica: {{TOPIC}}. Layout: Diagramma concentrico a ciambella. Precisione matematica pulita, colori flat vettoriali moderni senza alcun testo sovra-impresso.",
+    id: "casual_4",
+    cluster: "Casual Dining & Street Food",
+    title: "Griglia & Fuoco 3D",
+    description: "Fiamme 3D e carboni ardenti per Steakhouse.",
+    prompt: "Sfondo spettacolare 3D per steakhouse / braceria. Tema: {{TOPIC}}. Fiamme vive ad alta definizione, brace ardente alla base dell'immagine e fumo realistico scuro nella parte alta, creando lo spazio nero naturale per scriverci su in bianco. Effetto drammatico, nessun testo.",
     variables: ["TOPIC"]
   },
   {
-    id: "edu_5",
-    cluster: "The Educational & Explainer Suite",
-    title: "Layout Esplicativo a Bande",
-    description: "Struttura a righe orizzontali distinte.",
-    prompt: "Genera uno sfondo canvas lungo e astratto che usa bande di colore morbido (colorati orizzontali) dedicate al mercato di: {{TOPIC}}. In ogni riga piccoli tocchi isometrici illustrativi astratti, stile the New York Times infographics senza numeri né testo reale. Colori terrosi e maturi.",
-    variables: ["TOPIC"]
-  },
-
-  // Cluster 4: The Creative & Conceptual Suite
-  {
-    id: "cre_1",
-    cluster: "The Creative & Conceptual",
-    title: "Sketchnote Disegnato a Mano",
-    description: "Matematica da tovagliolo e schemi a mano liberi.",
-    prompt: "Crea uno sfondo finto disegnato a pennarello e schizzi veloci per spiegare in stile creativo il tema: {{TOPIC}}. Sfondo: Carta quadrettata molto chiara o texture stropicciata. Elementi: freccie disegnate a mano libere, scarabocchi creativi astratti ai bordi lasciando il centro vuoto per posizionarci testi digitali. Vibe da brain storming geniale.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "cre_2",
-    cluster: "The Creative & Conceptual",
-    title: "La Mappa Mentale Rete Neurale",
-    description: "Albero logico per concetti organici e complessi.",
-    prompt: "Genera uno sfondo raffigurante una fitta rete neurale vettoriale bioluminescente o moderna in tema: {{TOPIC}}. Nodi astratti trasparenti di forma organica connessi tra loro, pronti per essere sovrascritti. UI biologica minimalista. Alta risoluzione pulita, assenza totale di tipografia.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "cre_3",
-    cluster: "The Creative & Conceptual",
-    title: "Storyboard Cinematografico",
-    description: "Pannelli tipo fumetto per narrare viaggi.",
-    prompt: "Layout a pannelli rettangolari vuoti in stile storyboard o concept art fumetto. Atmosfera incentrata su: {{TOPIC}}. Un layout per narrazione visuale 3x2 dove all'interno dei riquadri vi sono solo pennellate suggestive ed ambienti. Lo spazio centrale/inferiore è sgombro per ospitare del copy. Semirealistico e moderno.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "cre_4",
-    cluster: "The Creative & Conceptual",
-    title: "Diagramma Flusso Ingegneristico",
-    description: "Progetto logico su blueprint.",
-    prompt: "Uno sfondo vettoriale da blueprint (carta blu architettonica con linee logiche bianche/ciano) dedicato alla tecnologia o workflow del ramo: {{TOPIC}}. Linee che si intersecano a 90 gradi con diamanti geometrici svuotati senza testo. Estetica da progetto tecnico preciso ad alta risoluzione.",
-    variables: ["TOPIC"]
-  },
-  {
-    id: "cre_5",
-    cluster: "The Creative & Conceptual",
-    title: "Diagramma di Venn Elegante",
-    description: "Cerchi color-blend per mostrare l'intersezione.",
-    prompt: "Generazione di sfondo vettoriale poster layout: Una splendida composizione di cerchi di Venn giganti e trasparenti sovrapposti. Tema di ispirazione cromatico: {{TOPIC}}. Effetti di colore blend additivo, design pulito minimale vettoriale. I cerchi sono vuoti e accolgono virtualmente le informazioni future. Nessun font presente.",
+    id: "casual_5",
+    cluster: "Casual Dining & Street Food",
+    title: "Pattern Pattern Vettoriale",
+    description: "Un pattern continuo in flat design, hipster style.",
+    prompt: "Background a pattern grafico vettoriale piatto. Tema: icone minimali legate a {{TOPIC}}. Stile Hipster, palette colori moderna bicolore (es. Giallo e Crema). Al centro sfoca in un grande cerchio o rettangolo vuoto a tinta unita per permettere ai designer di apporci testi sopra. Nessuna scritta.",
     variables: ["TOPIC"]
   },
 
-  // Cluster 5: The Bonus Creative Suite
+  // Cluster 3: Bar, Club & Nightlife
   {
-    id: "bon_1",
-    cluster: "The Bonus Creative Suite",
-    title: "Poster Blockbuster Cinematografico",
-    description: "Illuminazione hollywoodiana e texture fotografica.",
-    prompt: "Un poster senza scritte fotorealistico stile locandina blockbuster hollywoodiana. Trama: {{TOPIC}}. Illuminazione drammatica ciano e rosso/arancio, soggetto de-centrato scuro e stilizzato per lasciare spazio vuoto per il titolo (che sarà aggiunto poi). Texture da pellicola cinematografica premium, lens flare. NESSUN TESTO NÉ TIPOGRAFIA DI ALCUN TIPO, SOLO BACKGROUND EPIC.",
+    id: "night_1",
+    cluster: "Bar, Club & Nightlife",
+    title: "Atmosfera Neon Cyberpunk",
+    description: "Ideale per Cocktail, serate tematiche o pub serali.",
+    prompt: "Sfondo fotorealistico di un vicolo dark o club con tubi al neon brillanti sfocati. Tema: {{TOPIC}}. Illuminazione drammatica rosa fucsia e ciano. L'area centrale deve essere completamente buia o sfumata in un muro di mattoni neri anonimo, per scrivere testo. Assenza totale di scritte reali sui neon.",
     variables: ["TOPIC"]
   },
   {
-    id: "bon_2",
-    cluster: "The Bonus Creative Suite",
-    title: "Startup Whiteboard",
-    description: "Lavagna realistica da ufficio.",
-    prompt: "Sfondo fotorealistico di una lavagna bianca e pulita in una stanza creativa da start-up e uffici tecnologici, illuminazione naturale o neo fredda. Il tema accennato in minuscoli doodle sul bordo della lavagna riguarda: {{TOPIC}}. Al centro la lavagna è totalmente illibata. Dettaglio di pennarelli cancellabili alla base.",
+    id: "night_2",
+    cluster: "Bar, Club & Nightlife",
+    title: "Speakeasy Glamour",
+    description: "Velluto scuro e riflessi color oro. DJ Set o Cocktail di lusso.",
+    prompt: "Sfondo avvolgente e misterioso da locale Speakeasy esclusivo. Tema: {{TOPIC}}. Texture di drappi di velluto scuro, riflessi color rame o oro di bicchieri tagliati in cristallo fuori fuoco. Lusso decadente. Completamente pulito, senza tipografia.",
     variables: ["TOPIC"]
   },
   {
-    id: "bon_3",
-    cluster: "The Bonus Creative Suite",
-    title: "Retro 8-Bit Nintendo",
-    description: "Pixel art e vibe arcade anni 80.",
-    prompt: "Background in squisita pixel art a 8-bit stile Nintendo. Vibe retro gaming. Tema del background: {{TOPIC}}. Layout: Una schermata pulita di interfaccia RPG retro dove il centro e l'area inferiore ha uno spazio per dialog box enormi ma la box all'interno è vuota per fargliela compilare all'utente in seguito. Palette limitata NES. No testo reale.",
+    id: "night_3",
+    cluster: "Bar, Club & Nightlife",
+    title: "Onda Laser (Retrowave)",
+    description: "Estetica synthwave per serate anni '80 o gaming bar.",
+    prompt: "Sfondo vettoriale stile Synthwave / anni 80 retrowave per evento: {{TOPIC}}. Griglia a pavimento luminosa fucsia, orizzonte e tramonto vettoriale geometrico, palette oscura. Lascia grande vuoto creativo, zero testi artificiali o parole intere.",
     variables: ["TOPIC"]
   },
   {
-    id: "bon_4",
-    cluster: "The Bonus Creative Suite",
-    title: "Viaggio Vintage Art Deco",
-    description: "Parchi Nazionali e geometrie spazzolate.",
-    prompt: "Sensazionale illustrazione poster stile Parchi Nazionali / Art Deco anni 30 di grande impatto visivo. Scenografia/Ispirazione: {{TOPIC}}. Ampi blocchi di colore, pennellate stese, no sfumature artificiali. Layout verticale con metà spazio cielo sgombro, idoneo per apporre font grandissimi in post-produzione. Assenza di qualsiasi scritta nativa nell'immagine.",
+    id: "night_4",
+    cluster: "Bar, Club & Nightlife",
+    title: "Liquid Smoke",
+    description: "Fumo liquido colorato che danza, molto astratto e suggestivo.",
+    prompt: "Sfondo artistico astratto ad alta definizione. Tema da discoteca: {{TOPIC}}. Nubi di fumo coloratissimo e liquido (blu, viola, rosa) che fluttuano su uno sfondo nero pece o blu profondo. Misterioso, ultra HD. Perfetto come tela, no tipografia.",
     variables: ["TOPIC"]
   },
   {
-    id: "bon_5",
-    cluster: "The Bonus Creative Suite",
-    title: "Insegna Neon Noir",
-    description: "Tubi in vetro fosforescente su muro di pietra.",
-    prompt: "Fotorealistico sfondo 3D dark di un vicolo fumoso cyber/noir. Tema dell'insegna suggerita e ambiente: {{TOPIC}}. C'è un'imponente sagoma rettangolare vuota in tubature neon rosa elettrico o ciano spenta sul muro di mattoni scuri bagnati, progettata proprio affinché possa farci scrivere graficamente al di sopra l'utente senza accavallare testo pre-renderizzato. Molto cinematografico.",
+    id: "night_5",
+    cluster: "Bar, Club & Nightlife",
+    title: "Il Bancone Ghiacciato",
+    description: "Riflessi di ghiaccio e gocce, per drink estivi o pestati.",
+    prompt: "Sfondo fotografico macro. Tema: freschezza, drink, {{TOPIC}}. Superficie bagnata o coperta di brina, foglie di menta sfocate in primissimo piano. Lo sfondo diverge verso un colore a tinta unita (verde acqua, azzurro). Spazio negativato al 70%. Zero lettere.",
+    variables: ["TOPIC"]
+  },
+
+  // Cluster 4: Caffetteria, Gelateria & Bakery
+  {
+    id: "cafe_1",
+    cluster: "Caffetteria, Gelateria & Bakery",
+    title: "Mattino Morbido",
+    description: "Luce solare naturale che filtra dalla finestra su legno chiaro.",
+    prompt: "Sfondo fotorealistico per colazioni o caffetteria. Tema: {{TOPIC}}. Taglio di luce mattutina che filtra in una stanza, tavolo in legno chiaro in primissimo piano fuori fuoco. Vibe Hygge, accogliente e soffuso. Area superiore pulita per font.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "cafe_2",
+    cluster: "Caffetteria, Gelateria & Bakery",
+    title: "Illustrazione Botanica Flat",
+    description: "Disegno minimal chic con foglie e chicchi di caffè.",
+    prompt: "Sfondo vettoriale minimalista e botanico. Tema: {{TOPIC}}. Silhouette di foglie boho e dettagli tenui. Palette terrosa (beige, terracotta, salvia). Estetica boho-chic in stile moderno vettoriale piatto. Delicato e privo di tipografia o scritte umane.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "cafe_3",
+    cluster: "Caffetteria, Gelateria & Bakery",
+    title: "Spruzzi di Cioccolato/Gelato",
+    description: "Textures fluide, 3D cremoso.",
+    prompt: "Sfondo 3D astratto cremoso e setoso. Tema mercato dolci/gelateria: {{TOPIC}}. Forme morbide e liquide increspate di panna o cioccolato in alta lucentezza 3D stile CGI art. Rende acquolina. No elementi di testo in nessuna parte della scena.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "cafe_4",
+    cluster: "Caffetteria, Gelateria & Bakery",
+    title: "Lavagna Classica al Gesso",
+    description: "La tradizionale lavagna in ardesia del bar.",
+    prompt: "Sfondo texture fotorealistica di una lavagna in ardesia nera piallata. Tema: {{TOPIC}}. Qualche fine sbavatura di polvere di gesso bianco sui bordi, leggeri disegnini di tazzine piccolissimi, ma per il 90% del centro l'immagine deve essere una lavagna nera perfetta e vuota per potervi in seguito scrivere sopra.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "cafe_5",
+    cluster: "Caffetteria, Gelateria & Bakery",
+    title: "Acquerello Fruttato (Estati)",
+    description: "Pennellate sgargianti per brunch o smoothie.",
+    prompt: "Sfondo pennellato in stile acquerello vivido. Tema estate, succhi, frullati: {{TOPIC}}. Tonalità calde (arancio pesca, giallo limone, rosa anguria) che si sfumano verso il bianco. Estremamente vibrante ed estivo. Nessuna lettera e nessuna grafica invasiva centrale.",
+    variables: ["TOPIC"]
+  },
+
+  // Cluster 5: Eventi e Promozioni Generiche
+  {
+    id: "fest_1",
+    cluster: "Eventi e Festività Stagionali",
+    title: "Festività & Scintille",
+    description: "Fuochi d'artificio, Capodanno o Anniversari.",
+    prompt: "Sfondo fotografico festivo per evento speciale: {{TOPIC}}. Scintille sfuocate dorate tipo bokeh o fuochi d'artificio soffusi su uno sfondo notturno raffinato. Molto celebrativo. Scena molto ariosa che favorisce un posizionamento del testo centrale.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "fest_2",
+    cluster: "Eventi e Festività Stagionali",
+    title: "Festa Estiva (Tropical Vibe)",
+    description: "Foglie di palma, tramonti e summer party.",
+    prompt: "Sfondo stile estate tropicale. Tema dell'evento: {{TOPIC}}. Foglie di monstera o palme ombrose sfuocate sui margini, un cielo rosa corallo o arancione tramonto al centro con enorme prevalenza di spazio vuoto. Graficamente puro, zero testo tipografico o parole finte.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "fest_3",
+    cluster: "Eventi e Festività Stagionali",
+    title: "San Valentino & Amore",
+    description: "Romantico, astratto e soffuso.",
+    prompt: "Sfondo per promozione di coppia/romanticismo per evento: {{TOPIC}}. Seta rossa fluente, o petali di rosa fuori fuoco che fluttuano in modo super-rallentato con sfondo bordeaux scuro elegante e profondo. Vuoto tipografico assoluto.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "fest_4",
+    cluster: "Eventi e Festività Stagionali",
+    title: "Halloween / Horror Soft",
+    description: "Nebbia, mistero, ma elegante.",
+    prompt: "Sfondo suggestivo, misterioso e oscuro per promozioni legate a {{TOPIC}}. Una nebbia fitta color viola scuro/arancio pallido vicino a terra, foresta sfuocata o castello in lontananza. Grande area cielo livido per scrivere il titolo. Stile cinematografico di qualità premium, no scritte.",
+    variables: ["TOPIC"]
+  },
+  {
+    id: "fest_5",
+    cluster: "Eventi e Festività Stagionali",
+    title: "Super Promozione Scontata",
+    description: "Attirare l'attenzione (Black Friday style), colori decisi.",
+    prompt: "Sfondo grafico vettoriale aggressivo e iper-visibile, tipico da Black Friday / Mega saldi. Tema vendita forte: {{TOPIC}}. Contrasto tra Nero assoluto e Giallo Limone/Rosso neon. Linee cinetiche direzionali vettoriali e forme spigolose piatte. Privo di numeri e privo di lettere leggibili, concepito per sovra-impressioni di titoli 3D in un secondo momento.",
     variables: ["TOPIC"]
   }
 ];
