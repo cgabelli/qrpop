@@ -41,78 +41,17 @@ export default function ImpostazioniClient({ utente }: { utente: any }) {
 
       <div style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 32 }}>
         <h2 style={{ fontSize: 20, fontWeight: 600, display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-          <Key size={20} color="hsl(262 83% 68%)" /> Integrazione AI (Bring Your Own Key)
+          Informazioni Account
         </h2>
         <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24, lineHeight: 1.6 }}>
-          QRpop Studio ti permette di usare l'intelligenza artificiale per farti scrivere in autonomia i testi promozionali (Copywriting) perfetti per il tuo business. Per far questo, utilizza la tua chiave personale per abbattere ogni costo mensile. Seleziona il tuo provider preferito.
+          Attualmente non ci sono integrazioni esterne configurabili necessarie per l'utilizzo della piattaforma. Il tuo QRpop funziona out-of-the-box.
         </p>
-
-        <div style={{ display: "flex", gap: 12, marginBottom: 24 }}>
-           <button 
-             onClick={() => setAiProvider("openai")}
-             style={{ flex: 1, padding: 16, borderRadius: 12, border: aiProvider === "openai" ? "2px solid hsl(262 83% 68%)" : "1px solid rgba(255,255,255,0.1)", background: aiProvider === "openai" ? "rgba(124,58,237,0.1)" : "rgba(255,255,255,0.02)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, transition: "all 0.2s" }}
-           >
-             <span style={{ fontSize: 16, fontWeight: 600, color: "white" }}>OpenAI</span>
-             <span style={{ fontSize: 12, color: "hsl(240 5% 60%)" }}>ChatGPT 4o-mini</span>
-           </button>
-
-           <button 
-             onClick={() => setAiProvider("gemini")}
-             style={{ flex: 1, padding: 16, borderRadius: 12, border: aiProvider === "gemini" ? "2px solid #3b82f6" : "1px solid rgba(255,255,255,0.1)", background: aiProvider === "gemini" ? "rgba(59,130,246,0.1)" : "rgba(255,255,255,0.02)", cursor: "pointer", display: "flex", flexDirection: "column", alignItems: "center", gap: 8, transition: "all 0.2s" }}
-           >
-             <span style={{ fontSize: 16, fontWeight: 600, color: "white" }}>Google Gemini</span>
-             <span style={{ fontSize: 12, color: "hsl(240 5% 60%)" }}>Gemini 1.5 Flash</span>
-           </button>
-        </div>
-
-        {aiProvider === "openai" && (
-          <div>
-            <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8, color: "white" }}>
-              Chiave API OpenAI Segreta
-            </label>
-            <input 
-              type="password"
-              className="input-field"
-              placeholder="sk-proj-..."
-              value={openAiKey}
-              onChange={(e) => setOpenAiKey(e.target.value)}
-              style={{ width: "100%", marginBottom: 8 }}
-            />
-            <p style={{ fontSize: 13, color: "hsl(240 5% 60%)", marginBottom: 20 }}>
-              Puoi generare la tua chiave segreta registrandoti sul <a href="https://platform.openai.com/api-keys" target="_blank" style={{ color: "hsl(262 83% 68%)", textDecoration: "underline" }} rel="noreferrer">portale sviluppatori di OpenAI</a>. Assicurati che abbia credito (tier a pagamento).
-            </p>
-          </div>
-        )}
-
-        {aiProvider === "gemini" && (
-          <div>
-            <label style={{ display: "block", fontSize: 14, fontWeight: 500, marginBottom: 8, color: "white" }}>
-              Chiave API Google Gemini
-            </label>
-            <input 
-              type="password"
-              className="input-field"
-              placeholder="AIzaSy..."
-              value={geminiKey}
-              onChange={(e) => setGeminiKey(e.target.value)}
-              style={{ width: "100%", marginBottom: 8 }}
-            />
-            <p style={{ fontSize: 13, color: "hsl(240 5% 60%)", marginBottom: 20 }}>
-              Puoi ottenere una chiave di prova gratuita accedendo alla console di <a href="https://aistudio.google.com/app/apikey" target="_blank" style={{ color: "#3b82f6", textDecoration: "underline" }} rel="noreferrer">Google AI Studio</a>.
-            </p>
-          </div>
-        )}
 
         {message && (
           <div style={{ padding: 12, background: message.includes("Errore") ? "rgba(225,29,72,0.1)" : "rgba(34,197,94,0.1)", color: message.includes("Errore") ? "hsl(340 82% 65%)" : "hsl(142 71% 45%)", borderRadius: 8, fontSize: 14, marginBottom: 20 }}>
             {message}
           </div>
         )}
-
-        <button onClick={handleSave} disabled={saving} className="btn-primary" style={{ display: "flex", alignItems: "center", gap: 8 }}>
-          <Save size={16} />
-          {saving ? "Salvataggio..." : "Salva Impostazioni"}
-        </button>
 
       </div>
     </div>
