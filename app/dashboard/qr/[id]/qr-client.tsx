@@ -330,9 +330,9 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
               {/* Banner Istruzioni */}
               <div style={{ background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 12, marginBottom: 20, fontSize: 13, color: "hsl(240 5% 70%)" }}>
                 <div style={{ fontWeight: 600, color: "white", marginBottom: 8 }}>💡 Istruzioni Caricamento</div>
-                {qrSpot.type === "image" && "Formati supportati: JPG, PNG, GIF (Max 5MB). Dimensioni consigliate: 1080x1920px (verticale) per riempire lo schermo dei telefoni."}
-                {qrSpot.type === "video" && "Formati supportati: MP4, MOV (Max 50MB). Dimensioni consigliate: 1080x1920px (Formato Reels/TikTok) per la massima resa immersiva."}
-                {qrSpot.type === "pdf" && "Formati supportati: PDF (Max 50MB). Consigliamo di progettare il PDF con testi ampi per agevolare la navigazione verticale da smartphone."}
+                {(qrSpot.type === "image" || qrSpot.type === "unlimited") && <div style={{ marginBottom: 4 }}>• <strong>Immagini:</strong> JPG, PNG, GIF (Max 5MB). Dimensioni consigliate 1080x1920px (verticale).</div>}
+                {(qrSpot.type === "video" || qrSpot.type === "unlimited") && <div style={{ marginBottom: 4 }}>• <strong>Video:</strong> MP4, MOV (Max 50MB). Consigliato 1080x1920px (Formato Reels/TikTok).</div>}
+                {(qrSpot.type === "pdf" || qrSpot.type === "unlimited")   && <div>• <strong>Documenti:</strong> PDF (Max 50MB). Usa testi ampi per agevolare la lettura da smartphone.</div>}
               </div>
 
               <div 
