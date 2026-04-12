@@ -309,12 +309,14 @@ export default function CanvasCore({ qrSpot }: any) {
            <span style={{ fontSize: 10, color: "hsl(240 5% 60%)", marginTop: 6, fontWeight: 600 }}>Testo</span>
          </button>
 
-         <button className="tool-btn" onClick={() => setAiWizardOpen(true)}>
+         <button className="tool-btn" onClick={() => setAiWizardOpen(true)} style={{ position: "relative" }}>
+           <div style={{ position: "absolute", top: -6, right: 4, background: "hsl(262 83% 58%)", color: "white", fontSize: 8, fontWeight: 800, padding: "2px 4px", borderRadius: 4 }}>BETA</div>
            <Wand2 size={24} color="hsl(262 83% 68%)" />
            <span style={{ fontSize: 10, color: "hsl(262 83% 68%)", marginTop: 6, fontWeight: 700 }}>AI Copy</span>
          </button>
 
-         <button className="tool-btn" onClick={() => setAiImageWizardOpen(true)}>
+         <button className="tool-btn" onClick={() => setAiImageWizardOpen(true)} style={{ position: "relative" }}>
+           <div style={{ position: "absolute", top: -6, right: -4, background: "#3b82f6", color: "white", fontSize: 8, fontWeight: 800, padding: "2px 4px", borderRadius: 4 }}>BETA</div>
            <Paintbrush size={24} color="#3b82f6" />
            <span style={{ fontSize: 10, color: "#3b82f6", marginTop: 6, fontWeight: 700 }}>AI Sfondo</span>
          </button>
