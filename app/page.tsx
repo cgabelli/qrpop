@@ -187,7 +187,7 @@ function HeroSection() {
         }}
       >
         <span style={{ width: 6, height: 6, borderRadius: "50%", background: "hsl(262 83% 68%)", animation: "pulse 2s infinite" }} />
-        Ora disponibile su qrpop.it
+        Il QR Marketing Made in Italy 🇮🇹
       </div>
 
       <h1
