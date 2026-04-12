@@ -59,7 +59,7 @@ const QR_SPOT_TYPES = [
     type: "Tutto incluso",
     annualPrice: 99,
     description: "Nessun vincolo, massima libertà",
-    features: ["Upload illimitati", "Tutti i formati (JPG, MP4, PDF)", "Modulo Fidelity Card & CRM", "Durata 1 anno"],
+    features: ["Upload illimitati", "Tutti i formati (JPG, MP4, PDF)", "Cambia contenuto liberamente", "Durata 1 anno"],
     popular: false,
     highlight: false,
     cta: "Acquista",
@@ -197,7 +197,7 @@ function HeroSection() {
             lineHeight: 1.7,
             fontWeight: 500,
           }}>
-          Trasforma i tuoi menu e le tue grafiche in un canale di marketing diretto. Modifica la destinazione del QR e promuovi nuove offerte in tempo reale senza dover mai ristampare, ed evoca Carte Fedeltà nel Wallet dei clienti!
+          Trasforma i tuoi menu e le tue grafiche in un canale di marketing diretto. Modifica la destinazione del QR e promuovi nuove offerte in tempo reale senza dover mai ristampare.
         </p>
 
         <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
@@ -303,7 +303,7 @@ function HowItWorks() {
     {
       icon: "2️⃣",
       title: "Scegli cosa mostrare",
-      desc: "Imposta un reindirizzamento o ospita un'offerta, file PDF, Video o il nuovo modulo Fidelity Card direttamente nei tuoi tavoli.",
+      desc: "Imposta un reindirizzamento o ospita un'offerta, file PDF o Video direttamente nei tuoi tavoli.",
     },
     {
       icon: "3️⃣",
