@@ -76,8 +76,11 @@ export default function ImpostazioniClient({ utente }: { utente: any }) {
               placeholder="sk-proj-..."
               value={openAiKey}
               onChange={(e) => setOpenAiKey(e.target.value)}
-              style={{ width: "100%", marginBottom: 20 }}
+              style={{ width: "100%", marginBottom: 8 }}
             />
+            <p style={{ fontSize: 13, color: "hsl(240 5% 60%)", marginBottom: 20 }}>
+              Puoi generare la tua chiave segreta registrandoti sul <a href="https://platform.openai.com/api-keys" target="_blank" style={{ color: "hsl(262 83% 68%)", textDecoration: "underline" }} rel="noreferrer">portale sviluppatori di OpenAI</a>. Assicurati che abbia credito (tier a pagamento).
+            </p>
           </div>
         )}
 
@@ -92,8 +95,11 @@ export default function ImpostazioniClient({ utente }: { utente: any }) {
               placeholder="AIzaSy..."
               value={geminiKey}
               onChange={(e) => setGeminiKey(e.target.value)}
-              style={{ width: "100%", marginBottom: 20 }}
+              style={{ width: "100%", marginBottom: 8 }}
             />
+            <p style={{ fontSize: 13, color: "hsl(240 5% 60%)", marginBottom: 20 }}>
+              Puoi ottenere una chiave di prova gratuita accedendo alla console di <a href="https://aistudio.google.com/app/apikey" target="_blank" style={{ color: "#3b82f6", textDecoration: "underline" }} rel="noreferrer">Google AI Studio</a>.
+            </p>
           </div>
         )}
 
