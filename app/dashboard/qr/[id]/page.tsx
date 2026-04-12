@@ -21,7 +21,8 @@ export default async function QRSpotPage({
     include: {
        creativita: {
           orderBy: { createdAt: "desc" }
-       }
+       },
+       walletTemplate: true
     }
   });
 

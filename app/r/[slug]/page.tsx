@@ -52,6 +52,8 @@ async function getActiveSpot(slug: string) {
   return { qrSpot, creativita };
 }
 
+import WalletForm from "./wallet-form";
+
 export default async function ScanPage({ params }: Props) {
   const { slug } = await params;
   const result = await getActiveSpot(slug);
@@ -89,7 +91,7 @@ export default async function ScanPage({ params }: Props) {
     <div
       style={{
         minHeight: "100dvh",
-        background: "#000",
+        background: qrSpot.type === "wallet" ? (qrSpot as any).walletTemplate?.backgroundColor || "#000" : "#000",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -98,7 +100,9 @@ export default async function ScanPage({ params }: Props) {
         overflow: "hidden",
       }}
     >
-      {creativita ? (
+      {qrSpot.type === "wallet" ? (
+         <WalletForm qrSpotId={qrSpot.id} template={(qrSpot as any).walletTemplate} />
+      ) : creativita ? (
         <>
           {creativita.type === "image" ? (
             // eslint-disable-next-line @next/next/no-img-element

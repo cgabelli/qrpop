@@ -22,6 +22,27 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
   const [redirectUrl, setRedirectUrl] = useState(qrSpot.redirectUrl || "");
   const [savingUrl, setSavingUrl] = useState(false);
 
+  // Wallet Type
+  const [walletBg, setWalletBg] = useState(qrSpot.walletTemplate?.backgroundColor || "#7c3aed");
+  const [walletText, setWalletText] = useState(qrSpot.walletTemplate?.textColor || "#ffffff");
+  const [walletBrand, setWalletBrand] = useState(qrSpot.walletTemplate?.brandName || "");
+  const [savingWallet, setSavingWallet] = useState(false);
+
+  async function handleSaveWallet() {
+    setSavingWallet(true);
+    try {
+      await fetch(`/api/qrspot/${qrSpot.id}/wallet`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ backgroundColor: walletBg, textColor: walletText, brandName: walletBrand })
+      });
+      alert("Template Wallet salvato!");
+    } catch {
+      alert("Errore salvataggio template");
+    }
+    setSavingWallet(false);
+  }
+
   // Upload (Altri)
   const [uploading, setUploading] = useState(false);
   const [error, setError] = useState("");
@@ -275,6 +296,32 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
                   {savingUrl ? "..." : "Applica"}
                 </button>
               </div>
+           </div>
+        ) : qrSpot.type === "wallet" ? (
+           <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
+              <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24 }}>
+                <strong>Personalizza la tua Wallet Card.</strong> Mostra ai tuoi clienti una tessera fedeltà brandizzata per Apple/Google Wallet in cambio della loro email.
+              </p>
+              
+              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Colore Sfondo</label>
+                  <input type="color" value={walletBg} onChange={(e) => setWalletBg(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "none" }} />
+                </div>
+                <div>
+                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Colore Testo</label>
+                  <input type="color" value={walletText} onChange={(e) => setWalletText(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "none" }} />
+                </div>
+              </div>
+
+              <div style={{ marginBottom: 24 }}>
+                <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Nome Brand (Testo in alto a sinistra sulla carta)</label>
+                <input className="input-field" value={walletBrand} onChange={(e) => setWalletBrand(e.target.value)} placeholder="Es: Pizzeria Bella" />
+              </div>
+
+              <button onClick={handleSaveWallet} disabled={savingWallet} className="btn-primary" style={{ width: "100%", justifyContent: "center" }}>
+                {savingWallet ? "Salvataggio..." : "Salva Template Wallet"}
+              </button>
            </div>
         ) : (
            <>
