@@ -327,6 +327,14 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
            <>
 
 
+              {/* Banner Istruzioni */}
+              <div style={{ background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 12, marginBottom: 20, fontSize: 13, color: "hsl(240 5% 70%)" }}>
+                <div style={{ fontWeight: 600, color: "white", marginBottom: 8 }}>💡 Istruzioni Caricamento</div>
+                {qrSpot.type === "image" && "Formati supportati: JPG, PNG, GIF (Max 5MB). Dimensioni consigliate: 1080x1920px (verticale) per riempire lo schermo dei telefoni."}
+                {qrSpot.type === "video" && "Formati supportati: MP4, MOV (Max 50MB). Dimensioni consigliate: 1080x1920px (Formato Reels/TikTok) per la massima resa immersiva."}
+                {qrSpot.type === "pdf" && "Formati supportati: PDF (Max 50MB). Consigliamo di progettare il PDF con testi ampi per agevolare la navigazione verticale da smartphone."}
+              </div>
+
               <div 
                 onDragOver={(e) => { e.preventDefault(); setDragOver(true); }}
                 onDragLeave={() => setDragOver(false)}
@@ -351,22 +359,7 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
               {/* Lista Creatività Caricate */}
               <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
                 {qrSpot.creativita?.map((file: any) => (
-                  <div key={file.id} style={{
-                    background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px",
-                    display: "flex", alignItems: "center", justifyContent: "space-between"
-                  }}>
-                    <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-                       <div style={{ fontSize: 24 }}>{file.type === "image" ? "🖼️" : file.type === "video" ? "🎥" : "📄"}</div>
-                       <div>
-                         <div style={{ fontWeight: 500, fontSize: 15, marginBottom: 2 }}>{file.fileName || file.title || "File"}</div>
-                         <div style={{ fontSize: 13, color: "hsl(240 5% 55%)" }}>{formatBytes(file.fileSize)} • {new Date(file.createdAt).toLocaleDateString()}</div>
-                       </div>
-                    </div>
-                    <div style={{ display: "flex", gap: 12 }}>
-                      <a href={file.filePath} target="_blank" className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13 }}>Apri File</a>
-                      <button onClick={() => handleDeleteFile(file.id)} className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13, color: "hsl(340 82% 65%)" }}>Rimuovi</button>
-                    </div>
-                  </div>
+                  <CreativitaItem key={file.id} file={file} onDelete={handleDeleteFile} />
                 ))}
                 {(!qrSpot.creativita || qrSpot.creativita.length === 0) && (
                   <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, fontStyle: "italic", padding: 20 }}>
@@ -376,6 +369,71 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
               </div>
            </>
         )}
+      </div>
+    </div>
+  );
+}
+
+function CreativitaItem({ file, onDelete }: { file: any, onDelete: (id: string)=>void }) {
+  const getLocalDatetime = (dateString?: string) => {
+    if (!dateString) return "";
+    const d = new Date(dateString);
+    return new Date(d.getTime() - d.getTimezoneOffset() * 60000).toISOString().slice(0, 16);
+  };
+
+  const [publishAt, setPublishAt] = useState(getLocalDatetime(file.publishAt));
+  const [expiresAt, setExpiresAt] = useState(getLocalDatetime(file.expiresAt));
+  const [saving, setSaving] = useState(false);
+
+  async function handleSaveDates() {
+    setSaving(true);
+    try {
+      await fetch(`/api/creativita/${file.id}`, {
+        method: "PATCH",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ 
+          publishAt: publishAt ? new Date(publishAt).toISOString() : null, 
+          expiresAt: expiresAt ? new Date(expiresAt).toISOString() : null 
+        })
+      });
+      alert("Date salvate con successo.");
+    } catch {
+      alert("Errore durante il salvataggio.");
+    }
+    setSaving(false);
+  }
+
+  return (
+    <div style={{
+      background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px",
+      display: "flex", flexDirection: "column", gap: 16
+    }}>
+      <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
+        <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
+           <div style={{ fontSize: 24 }}>{file.type === "image" ? "🖼️" : file.type === "video" ? "🎥" : "📄"}</div>
+           <div>
+             <div style={{ fontWeight: 500, fontSize: 15, marginBottom: 2 }}>{file.fileName || file.title || "File"}</div>
+             <div style={{ fontSize: 13, color: "hsl(240 5% 55%)" }}>{formatBytes(file.fileSize)} • Caricato il {new Date(file.createdAt).toLocaleDateString()}</div>
+           </div>
+        </div>
+        <div style={{ display: "flex", gap: 12 }}>
+          <a href={file.filePath} target="_blank" rel="noopener noreferrer" className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13 }}>Apri File</a>
+          <button onClick={() => onDelete(file.id)} className="btn-secondary" style={{ padding: "8px 12px", fontSize: 13, color: "hsl(340 82% 65%)" }}>Rimuovi</button>
+        </div>
+      </div>
+      
+      <div style={{ display: "flex", gap: 16, alignItems: "flex-end", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 16, marginTop: 4 }}>
+        <div style={{ flex: 1 }}>
+          <label style={{ display: "block", fontSize: 12, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Inizio Campagna (opzionale)</label>
+          <input type="datetime-local" className="input-field" value={publishAt} onChange={e => setPublishAt(e.target.value)} />
+        </div>
+        <div style={{ flex: 1 }}>
+          <label style={{ display: "block", fontSize: 12, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Fine Campagna (opzionale)</label>
+          <input type="datetime-local" className="input-field" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} />
+        </div>
+        <button onClick={handleSaveDates} disabled={saving} className="btn-secondary" style={{ height: 42 }}>
+           {saving ? "..." : "Salva Date"}
+        </button>
       </div>
     </div>
   );
