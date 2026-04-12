@@ -49,7 +49,9 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
           const ctx = canvasRef.current.getContext("2d");
           if (!ctx) return;
           const img = new Image();
-          img.crossOrigin = "anonymous";
+          if (qrSpot.customLogoPath.startsWith("http")) {
+            img.crossOrigin = "anonymous";
+          }
           img.onload = () => {
              // Il logo è garantito essere quadrato (150x150) dall'API
              // Dipingiamo il quadrato nel centro del canvas di 200px.
@@ -63,7 +65,8 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
              
              ctx.drawImage(img, center - logoSize/2, center - logoSize/2, logoSize, logoSize);
           };
-          img.src = qrSpot.customLogoPath;
+          // Forza refetch bypassando cache problematica di next
+          img.src = `${qrSpot.customLogoPath}?t=${Date.now()}`;
         }
       });
     }
