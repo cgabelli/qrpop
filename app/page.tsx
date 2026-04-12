@@ -200,8 +200,8 @@ function HeroSection() {
           maxWidth: 900,
         }}
       >
-        QR Code <span className="gradient-text">Dinamici</span>
-        {" "}per il tuo business.
+        Il tuo QR Code <br/>
+        <span className="gradient-text">Parla da Solo.</span>
       </h1>
 
       <p
@@ -214,7 +214,7 @@ function HeroSection() {
           lineHeight: 1.7,
         }}
       >
-        Stampa una volta, aggiorna all'infinito. Inserisci il logo della tua azienda e usalo per rimandare al tuo sito web gratis, oppure usalo come vetrina cloud per il tuo Menu PDF o Video Promozionali.
+        Trasforma i tuoi tavoli e le tue grafiche in un motore di marketing. Modifica le landing page, acquisisci lead e traccia le interazioni offline in tempo reale senza mai dover ristampare.
       </p>
 
       <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
@@ -270,7 +270,7 @@ function HeroSection() {
           }}>
             <div style={{ flex: 1, width: "100%", display: "flex", flexDirection: "column", alignItems: "center" }}>
               <div style={{ color: "#333", fontWeight: 800, fontSize: 18, marginBottom: 12, textAlign: "center", lineHeight: 1.2 }}>
-                ORDINA QUI<br/><span style={{ color: "hsl(262 83% 58%)", fontSize: 14 }}>& Scopri le offerte</span>
+                RICEVI IL 10%<br/><span style={{ color: "hsl(262 83% 58%)", fontSize: 14 }}>Iscriviti al Club</span>
               </div>
               
               {/* High Contrast QR Code */}
@@ -324,7 +324,7 @@ function HeroSection() {
             fontWeight: 800,
             boxShadow: "0 10px 30px rgba(124,58,237,0.3)"
           }}>
-            <span>1. Il cliente inquadra</span>
+            <span>1. Offri un incentivo</span>
           </div>
         </div>
 
@@ -391,7 +391,7 @@ function HeroSection() {
             fontWeight: 800,
             boxShadow: "0 10px 30px rgba(219,39,119,0.3)",
           }}>
-            2. Vede la tua offerta! 🎉
+            2. Generi un Lead 🎉
           </div>
         </div>
 
@@ -423,7 +423,7 @@ function HowItWorks() {
     {
       icon: "2️⃣",
       title: "Scegli cosa mostrare",
-      desc: "Imposta un Link esterno (Gratis) o ospita file PDF, Video e Foto comodamente sui nostri server rapidi.",
+      desc: "Imposta una promo, un modulo acquisizione contatti o ospita file PDF e Video ottimizzati per i tuoi clienti in loco.",
     },
     {
       icon: "3️⃣",
@@ -432,8 +432,8 @@ function HowItWorks() {
     },
     {
       icon: "4️⃣",
-      title: "Cambia live",
-      desc: "Vuoi aggiornare il menu o la promo natalizia? Fallo con un clic dalla tua dashboard. Il QR fisico rimane identico.",
+      title: "Traccia & Modifica live",
+      desc: "Analizza quando e dove convertono i clienti. Aggiorna l'offerta in tempo reale senza mai dover ristampare il cartaceo.",
     },
   ];
 
@@ -463,10 +463,10 @@ function HowItWorks() {
           Come funziona
         </div>
         <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 16 }}>
-          Stampa una volta,<br/>decidi tu cosa mostrare.
+          Da semplice Link,<br/>a Macchina per Lead.
         </h2>
         <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", maxWidth: 600, margin: "0 auto" }}>
-          Un solo QR code fisico per infiniti utilizzi. Modifica la destinazione dalla dashboard aziendale in tempo reale senza dover cambiare la grafica plastificata al tavolo.
+          QRpop è lo strumento definitivo di QR Marketing. Acquisisci nuovi contatti, promuovi il tuo brand e traccia l'intelligenza offline tutto da un'unica piattaforma.
         </p>
       </div>
 
@@ -650,11 +650,11 @@ function CTASection() {
           ◈
         </div>
         <h2 style={{ fontSize: "clamp(2rem, 5vw, 3.5rem)", fontWeight: 800, marginBottom: 20 }}>
-          Smetti di ristampare{" "}
-          <span className="gradient-text">QR vecchi.</span>
+          Smetti di usare{" "}
+          <span className="gradient-text">QR code anonimi.</span>
         </h2>
         <p style={{ fontSize: 18, color: "hsl(240 5% 65%)", marginBottom: 40, lineHeight: 1.7 }}>
-          Unisciti ad agenzie e ristoratori che evitano costi di tipografia controllando i propri QR a distanza da una dashboard centralizzata.
+          Entra a far parte delle aziende e dei professionisti che usano QRpop per tracciare il comportamento offline e generare lead quotidiani sul punto vendita.
         </p>
         <Link href="/register" className="btn-primary" style={{ padding: "18px 40px", fontSize: 17 }}>
           Inizia gratis il tuo primo QR →
