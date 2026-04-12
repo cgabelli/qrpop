@@ -64,6 +64,19 @@ const QR_SPOT_TYPES = [
     highlight: false,
     cta: "Acquista",
   },
+  {
+    id: "wallet",
+    emoji: "🪪",
+    name: "Fidelity Card",
+    type: "CRM Addon",
+    annualPrice: "—",
+    description: "Il nuovo modulo per Apple Wallet",
+    features: ["Acquisisci Lead dal tavolo", "Design Personalizzabile", "Push Notifications CRM", "Statistiche Dedicate"],
+    popular: false,
+    highlight: false,
+    cta: "Coming Soon",
+    comingSoon: true,
+  },
 ];
 
 function NavBar() {
@@ -399,6 +412,11 @@ function PricingSection() {
                     Gratis
                     <div style={{ fontSize: 16, color: "#64748b", fontWeight: 500, marginTop: 4 }}>per 1 anno</div>
                   </div>
+                ) : typeof plan.annualPrice === "string" ? (
+                  <div style={{ fontSize: 56, fontWeight: 900, color: "#0f172a", letterSpacing: -2 }}>
+                    {plan.annualPrice}
+                    <div style={{ fontSize: 16, color: "#64748b", fontWeight: 500, marginTop: 4 }}>Disponibile a breve</div>
+                  </div>
                 ) : (
                   <div>
                     <div style={{ display: "flex", alignItems: "baseline", gap: 8 }}>
@@ -412,13 +430,15 @@ function PricingSection() {
               </div>
 
               <Link
-                href={plan.annualPrice === 0 ? "/register" : `/register?spot=${plan.id}`}
+                href={plan.comingSoon ? "#" : plan.annualPrice === 0 ? "/register" : `/register?spot=${plan.id}`}
                 style={{
                   display: "flex", alignItems: "center", justifyContent: "center", textDecoration: "none", marginBottom: 48,
                   padding: "20px 24px", fontSize: 18, fontWeight: 800, borderRadius: 16,
                   width: "100%",
-                  background: plan.highlight ? "#0f172a" : "#f1f5f9",
-                  color: plan.highlight ? "white" : "#0f172a",
+                  background: plan.comingSoon ? "#f1f5f9" : plan.highlight ? "#0f172a" : "#f1f5f9",
+                  color: plan.comingSoon ? "#94a3b8" : plan.highlight ? "white" : "#0f172a",
+                  cursor: plan.comingSoon ? "default" : "pointer",
+                  pointerEvents: plan.comingSoon ? "none" : "auto",
                   transition: "all 0.2s ease"
                 }}
               >
