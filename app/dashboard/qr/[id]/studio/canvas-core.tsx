@@ -2,7 +2,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { Stage, Layer, Text, Image as KonvaImage, Rect, Transformer } from "react-konva";
 import useImage from "use-image";
 import { v4 as uuidv4 } from "uuid";
-import { Copy, Trash2, Type, Image as ImageIcon, Square, UploadCloud, Save, ChevronLeft, Wand2, X, Sparkles } from "lucide-react";
+import { Download, Plus, Square, Type, Image as ImageIcon, Settings2, Sparkles, X, Wand2, Paintbrush, Trash2, Save, UploadCloud } from "lucide-react";
+import { AI_PRESETS } from "@/lib/ai-presets";
 
 const GOOGLE_FONTS = [
   "Inter",
@@ -164,15 +165,17 @@ export default function CanvasCore({ qrSpot }: any) {
   const [aiForm, setAiForm] = useState({ target: "", vantaggio: "", obiettivo: "Acquisto / Ordine", tono: "Accattivante e Persuasivo" });
   const [aiLoading, setAiLoading] = useState(false);
   
-  // Format: Instagram Story Portrait (1080x1920) scaled for UI
+  const [aiImageWizardOpen, setAiImageWizardOpen] = useState(false);
+  const [selectedPresetId, setSelectedPresetId] = useState<string | null>(null);
+  const [imgTopic, setImgTopic] = useState("");
+  const [aiImgLoading, setAiImgLoading] = useState(false);
+  
   const CANVAS_WIDTH = 1080;
   const CANVAS_HEIGHT = 1920;
   
-  // Responsive Scale Logic
   const containerRef = useRef<HTMLDivElement>(null);
   const [stageScale, setStageScale] = useState(0.3);
 
-  // Load Fonts
   useEffect(() => {
     const link = document.createElement("link");
     link.href = `https://fonts.googleapis.com/css2?${GOOGLE_FONTS.map(f => `family=${f.replace(/ /g, "+")}:wght@400;600;800`).join("&")}&display=swap`;
@@ -185,7 +188,6 @@ export default function CanvasCore({ qrSpot }: any) {
     const handleResize = () => {
       if (containerRef.current) {
         const { width, height } = containerRef.current.getBoundingClientRect();
-        // Calculate fit containing 90% of available space
         const scaleX = (width * 0.9) / CANVAS_WIDTH;
         const scaleY = (height * 0.9) / CANVAS_HEIGHT;
         setStageScale(Math.min(scaleX, scaleY));
@@ -255,9 +257,7 @@ export default function CanvasCore({ qrSpot }: any) {
         alert(data.error || "Errore AI");
       } else {
         const { titolo, sottotitolo } = data.data;
-        // Inject Titolo
         addElement({ type: "text", text: titolo, x: 100, y: 400, fontSize: 120, fontFamily: "Bebas Neue", fill: "#ffffff" });
-        // Inject Sottotitolo
         setTimeout(() => {
            addElement({ type: "text", text: sottotitolo, x: 100, y: 550, fontSize: 50, fontFamily: "Montserrat", fill: "#ffffff" });
         }, 100);
@@ -270,10 +270,38 @@ export default function CanvasCore({ qrSpot }: any) {
     setAiLoading(false);
   };
 
+  const handleGenerateImage = async () => {
+    if (!selectedPresetId || !imgTopic) return;
+    const preset = AI_PRESETS.find(p => p.id === selectedPresetId);
+    if (!preset) return;
+
+    setAiImgLoading(true);
+    try {
+      const finalPrompt = preset.prompt.replace("{{TOPIC}}", imgTopic);
+      const res = await fetch("/api/ai/generate-image", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ prompt: finalPrompt })
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        alert(data.error || "Errore Generazione Immagine");
+      } else {
+        const { base64 } = data;
+        addElement({ type: "image", src: base64, x: 0, y: 0, width: CANVAS_WIDTH, height: CANVAS_HEIGHT });
+        setAiImageWizardOpen(false);
+        setSelectedPresetId(null);
+        setImgTopic("");
+      }
+    } catch (e) {
+      alert("Errore di rete con OpenAI");
+    }
+    setAiImgLoading(false);
+  };
+
   return (
     <div style={{ flex: 1, display: "flex", overflow: "hidden", background: "hsl(240 10% 4%)" }}>
       
-      {/* LEFT SIDEBAR (TOOLS) */}
       <div style={{ width: 80, background: "hsl(240 6% 6%)", borderRight: "1px solid rgba(255,255,255,0.06)", display: "flex", flexDirection: "column", alignItems: "center", padding: "24px 0", zIndex: 20, gap: 24 }}>
          
          <button className="tool-btn" onClick={() => addElement({ type: "text", text: "INSERISCI TESTO", x: 100, y: 100, fontSize: 80, fontFamily: "Montserrat", fill: "#ffffff" })}>
@@ -284,6 +312,11 @@ export default function CanvasCore({ qrSpot }: any) {
          <button className="tool-btn" onClick={() => setAiWizardOpen(true)}>
            <Wand2 size={24} color="hsl(262 83% 68%)" />
            <span style={{ fontSize: 10, color: "hsl(262 83% 68%)", marginTop: 6, fontWeight: 700 }}>AI Copy</span>
+         </button>
+
+         <button className="tool-btn" onClick={() => setAiImageWizardOpen(true)}>
+           <Paintbrush size={24} color="#3b82f6" />
+           <span style={{ fontSize: 10, color: "#3b82f6", marginTop: 6, fontWeight: 700 }}>AI Sfondo</span>
          </button>
          
          <button className="tool-btn" onClick={() => addElement({ type: "image", src: "https://images.unsplash.com/photo-1513104890138-7c749659a591?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w1NTM1NDB8MHwxfHNlYXJjaHwxfHxwaXp6YXxlbnwwfHx8fDE3MTI4MzE2MzZ8MA&ixlib=rb-4.0.3&q=80&w=1080", x: 0, y: 0, width: CANVAS_WIDTH })}>
@@ -301,17 +334,13 @@ export default function CanvasCore({ qrSpot }: any) {
          <button onClick={handleExportAndSave} disabled={saving || elements.length === 0} style={{ display: "flex", flexDirection: "column", alignItems: "center", background: "none", border: "none", cursor: "pointer", opacity: (saving || elements.length===0) ? 0.3 : 1 }}>
            <div style={{ width: 44, height: 44, borderRadius: "50%", background: "linear-gradient(135deg, hsl(262 83% 58%), hsl(330 81% 60%))", display: "flex", alignItems: "center", justifyContent: "center", boxShadow: "0 4px 15px rgba(219,39,119,0.4)" }}>
              {saving ? <UploadCloud size={20} color="white" /> : <Save size={20} color="white" />}
-             
            </div>
            <span style={{ fontSize: 10, color: "white", marginTop: 8, fontWeight: 700 }}>SALVA</span>
          </button>
-
       </div>
 
-      {/* MAIN AREA */}
       <div style={{ flex: 1, display: "flex", flexDirection: "column", position: "relative" }}>
         
-        {/* CONTEXTUAL TOP BAR */}
         <div style={{ height: 60, background: "rgba(9, 9, 11, 0.8)", backdropFilter: "blur(20px)", borderBottom: "1px solid rgba(255,255,255,0.06)", display: "flex", alignItems: "center", padding: "0 24px", gap: 20, zIndex: 10 }}>
           {selectedElement ? (
             <>
@@ -327,7 +356,6 @@ export default function CanvasCore({ qrSpot }: any) {
                       {GOOGLE_FONTS.map(f => <option key={f} value={f} style={{ color: "black", fontFamily: f }}>{f}</option>)}
                     </select>
                   </div>
-                  
                   <div style={{ width: 1, height: 24, background: "rgba(255,255,255,0.1)" }} />
                 </>
               )}
@@ -355,7 +383,6 @@ export default function CanvasCore({ qrSpot }: any) {
           )}
         </div>
 
-        {/* WORKSPACE CANVAS */}
         <div ref={containerRef} style={{ flex: 1, position: "relative", display: "flex", alignItems: "center", justifyContent: "center", 
           backgroundImage: "radial-gradient(circle, rgba(255,255,255,0.05) 1px, transparent 1px)", backgroundSize: "20px 20px" }}>
           
@@ -394,7 +421,6 @@ export default function CanvasCore({ qrSpot }: any) {
           </div>
         </div>
 
-        {/* DOUBLE TAP TEXT EDITOR OVERLAY */}
         {selectedElement?.type === "text" && (
            <div style={{ position: "absolute", bottom: 24, left: "50%", transform: "translateX(-50%)", background: "rgba(9, 9, 11, 0.9)", backdropFilter: "blur(20px)", padding: 16, borderRadius: 16, border: "1px solid rgba(255,255,255,0.1)", display: "flex", flexDirection: "column", gap: 12, width: "90%", maxWidth: 500, zIndex: 30, boxShadow: "0 20px 40px rgba(0,0,0,0.5)"}}>
               <div style={{ fontSize: 12, color: "hsl(240 5% 65%)", fontWeight: 600 }}>Cosa vuoi scrivere?</div>
@@ -406,7 +432,6 @@ export default function CanvasCore({ qrSpot }: any) {
            </div>
         )}
 
-        {/* AI WIZARD MODAL */}
         {aiWizardOpen && (
           <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
             <div style={{ background: "hsl(240 6% 10%)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, width: "100%", maxWidth: 460, padding: 32, position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.5)" }}>
@@ -469,6 +494,84 @@ export default function CanvasCore({ qrSpot }: any) {
           </div>
         )}
 
+        {aiImageWizardOpen && (
+          <div style={{ position: "absolute", top: 0, left: 0, right: 0, bottom: 0, background: "rgba(0,0,0,0.8)", backdropFilter: "blur(5px)", zIndex: 50, display: "flex", alignItems: "center", justifyContent: "center" }}>
+            <div style={{ background: "hsl(240 6% 10%)", border: "1px solid rgba(255,255,255,0.1)", borderRadius: 24, width: "95%", maxWidth: 1000, height: "85vh", padding: 32, position: "relative", boxShadow: "0 20px 60px rgba(0,0,0,0.5)", display: "flex", flexDirection: "column" }}>
+              <button 
+                onClick={() => setAiImageWizardOpen(false)} 
+                style={{ position: "absolute", top: 24, right: 24, background: "none", border: "none", color: "hsl(240 5% 60%)", cursor: "pointer", zIndex: 10 }}
+              >
+                <X size={20} />
+              </button>
+              
+              <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
+                <div style={{ width: 40, height: 40, borderRadius: "50%", background: "rgba(59,130,246,0.1)", display: "flex", alignItems: "center", justifyContent: "center" }}>
+                  <Paintbrush size={20} color="#3b82f6" />
+                </div>
+                <h2 style={{ fontSize: 20, fontWeight: 700, color: "white" }}>Generatore Sfondi DALL-E 3</h2>
+              </div>
+              <p style={{ color: "hsl(240 5% 65%)", fontSize: 13, marginBottom: 24 }}>Seleziona un'estetica visiva dalla nostra libreria e genera uno sfondo vettoriale fotorealistico in altissima definizione.</p>
+
+              <div style={{ display: "flex", gap: 32, flex: 1, minHeight: 0 }}>
+                 
+                 <div style={{ flex: 2, overflowY: "auto", paddingRight: 8, display: "grid", gridTemplateColumns: "1fr 1fr", gap: 12, alignContent: "start" }}>
+                    {AI_PRESETS.map((preset) => (
+                       <div 
+                         key={preset.id}
+                         onClick={() => setSelectedPresetId(preset.id)}
+                         style={{ 
+                            padding: 16, 
+                            borderRadius: 12, 
+                            border: selectedPresetId === preset.id ? "2px solid #3b82f6" : "1px solid rgba(255,255,255,0.05)",
+                            background: selectedPresetId === preset.id ? "rgba(59,130,246,0.05)" : "rgba(255,255,255,0.02)",
+                            cursor: "pointer",
+                            transition: "all 0.2s"
+                         }}
+                       >
+                          <div style={{ fontSize: 10, color: "#3b82f6", fontWeight: 700, marginBottom: 4 }}>{preset.cluster.toUpperCase()}</div>
+                          <div style={{ fontSize: 14, fontWeight: 600, color: "white", marginBottom: 6 }}>{preset.title}</div>
+                          <div style={{ fontSize: 12, color: "hsl(240 5% 60%)" }}>{preset.description}</div>
+                       </div>
+                    ))}
+                 </div>
+
+                 <div style={{ flex: 1, background: "rgba(0,0,0,0.2)", borderRadius: 16, padding: 24, display: "flex", flexDirection: "column" }}>
+                    {selectedPresetId ? (
+                       <>
+                         <h3 style={{ fontSize: 16, fontWeight: 600, color: "white", marginBottom: 8 }}>Hai selezionato:</h3>
+                         <div style={{ fontSize: 14, color: "#3b82f6", fontWeight: 600, marginBottom: 24 }}>{AI_PRESETS.find(p => p.id === selectedPresetId)?.title}</div>
+                         
+                         <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 70%)", marginBottom: 8 }}>Di cosa deve trattare lo sfondo? (Topic)</label>
+                         <input 
+                           type="text" 
+                           className="input-field" 
+                           placeholder="Es. Palestra / CyberSecurity / Fast Food" 
+                           value={imgTopic} 
+                           onChange={e => setImgTopic(e.target.value)} 
+                           style={{ width: "100%", marginBottom: 24 }} 
+                         />
+
+                         <div style={{ flex: 1 }} />
+                         
+                         <button 
+                           onClick={handleGenerateImage} 
+                           disabled={aiImgLoading || !imgTopic} 
+                           className="btn-primary" 
+                           style={{ width: "100%", padding: 14, background: "#3b82f6", justifyContent: "center", display: "flex", alignItems: "center", gap: 8 }}
+                         >
+                           {aiImgLoading ? "Creazione (Server OpenAI in elaborazione)..." : "Genera Immagine HD"}
+                         </button>
+                       </>
+                    ) : (
+                       <div style={{ display: "flex", flex: 1, alignItems: "center", justifyContent: "center", color: "hsl(240 5% 40%)", fontSize: 14, textAlign: "center", padding: 32 }}>
+                          Seleziona uno stile dalla galleria a sinistra per iniziare.
+                       </div>
+                    )}
+                 </div>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <style dangerouslySetInnerHTML={{__html: `
         .tool-btn {
