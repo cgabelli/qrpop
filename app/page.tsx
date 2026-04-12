@@ -5,40 +5,64 @@ import { useState, useEffect } from "react";
 
 const QR_SPOT_TYPES = [
   {
-    id: "wallet",
-    emoji: "🪪",
-    name: "Wallet Card",
-    type: "CRM",
-    annualPrice: 79,
-    description: "Crea e rilascia carte fedeltà per Apple Wallet",
-    features: ["Acquisisci Lead", "Template personalizzato", "Notifiche e Timbri", "Database CRM incluso"],
-    popular: true,
-    highlight: true,
-    cta: "Inizia a fidelizzare",
+    id: "free",
+    emoji: "🔗",
+    name: "Link Redirect",
+    type: "Gratis",
+    annualPrice: 0,
+    description: "Prova senza impegno",
+    features: ["Redirect verso qualsiasi URL", "Facebook, Instagram, sito web", "QR code dinamico", "Durata 1 anno"],
+    popular: false,
+    highlight: false,
+    cta: "Crea gratis",
   },
   {
-    id: "unlimited",
-    emoji: "🌟",
-    name: "Unlimited",
-    type: "Marketing",
-    annualPrice: 99,
-    description: "Piattaforma marketing totale illimitata",
-    features: ["Wallet Cards incluse", "Formati visivi (Video/PDF)", "Statistiche avanzate", "Cambia offerta Live"],
+    id: "image",
+    emoji: "🖼️",
+    name: "Immagine",
+    type: "Foto & GIF",
+    annualPrice: 19,
+    description: "Menu foto e promozioni visive",
+    features: ["Upload illimitati", "Formati: JPG, PNG, GIF", "QR code dinamico", "Durata 1 anno"],
     popular: false,
     highlight: false,
     cta: "Acquista",
   },
   {
-    id: "free",
-    emoji: "🔗",
-    name: "Starter Link",
-    type: "Gratis",
-    annualPrice: 0,
-    description: "Reindirizza e scopri la piattaforma",
-    features: ["Redirect base", "QR code dinamico", "Statistiche limitate"],
+    id: "video",
+    emoji: "🎥",
+    name: "Video",
+    type: "Filmati",
+    annualPrice: 29,
+    description: "Promo video in loop sui tavoli",
+    features: ["Upload illimitati", "Formato MP4 ottimizzato", "Autoplay e loop", "Durata 1 anno"],
     popular: false,
     highlight: false,
-    cta: "Inizia Gratis",
+    cta: "Acquista",
+  },
+  {
+    id: "pdf",
+    emoji: "📄",
+    name: "PDF",
+    type: "Documenti",
+    annualPrice: 49,
+    description: "Menù e cataloghi professionali",
+    features: ["Upload illimitati", "PDF multipagina fino a 50MB", "Visualizzatore integrato", "Durata 1 anno"],
+    popular: true,
+    highlight: true,
+    cta: "Acquista",
+  },
+  {
+    id: "unlimited",
+    emoji: "🌟",
+    name: "Unlimited",
+    type: "Tutto incluso",
+    annualPrice: 99,
+    description: "Nessun vincolo, massima libertà",
+    features: ["Upload illimitati", "Tutti i formati (JPG, MP4, PDF)", "Modulo Fidelity Card & CRM", "Durata 1 anno"],
+    popular: false,
+    highlight: false,
+    cta: "Acquista",
   },
 ];
 
@@ -151,7 +175,7 @@ function HeroSection() {
             marginBottom: 32,
             letterSpacing: "-0.01em"
           }}>
-          <span style={{ marginRight: 8 }}>🏅</span> La Piattaforma Marketing per Locali
+          <span style={{ marginRight: 8 }}>🏅</span> Il QR Marketing Made in Italy 🇮🇹
         </div>
 
         <h1 className="animate-fade-up-delay-1" style={{
@@ -161,8 +185,8 @@ function HeroSection() {
             marginBottom: 24,
             color: "#0f172a",
           }}>
-          Da passante a <br/>
-          <span className="gradient-text-hero">Cliente Fedele in un tap.</span>
+          Il tuo QR Code <br/>
+          <span className="gradient-text-hero">Parla da Solo.</span>
         </h1>
 
         <p className="animate-fade-up-delay-2" style={{
@@ -173,15 +197,15 @@ function HeroSection() {
             lineHeight: 1.7,
             fontWeight: 500,
           }}>
-          Trasforma i tuoi tavoli in un CRM automatico. QRpop emette <strong style={{ color:"#0f172a" }}>Carte Fedeltà su Apple Wallet</strong> in cambio di contatti reali, permettendoti di lanciare campagne push mirate.
+          Trasforma i tuoi menu e le tue grafiche in un canale di marketing diretto. Modifica la destinazione del QR e promuovi nuove offerte in tempo reale senza dover mai ristampare, ed evoca Carte Fedeltà nel Wallet dei clienti!
         </p>
 
         <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
           <Link href="/register" className="btn-primary" style={{ padding: "18px 40px", fontSize: 17 }}>
-            Costruisci il tuo CRM →
+            Crea QR Gratis →
           </Link>
           <a href="#come-funziona" className="btn-ghost" style={{ padding: "18px 40px", fontSize: 17 }}>
-            Scopri il Funnel
+            Scopri di più
           </a>
         </div>
 
@@ -214,12 +238,12 @@ function HeroSection() {
 
              <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 24, marginBottom: 32 }}>
                 <div className="glass-panel" style={{ padding: 24, borderRadius: 20 }}>
-                   <div style={{ fontSize: 14, color: "#64748b", fontWeight: 600, marginBottom: 8 }}>Nuovi Lead Oggi</div>
+                   <div style={{ fontSize: 14, color: "#64748b", fontWeight: 600, marginBottom: 8 }}>Scansioni Menu Oggi</div>
                    <div style={{ fontSize: 40, fontWeight: 800, color: "#0f172a" }}>+124</div>
                 </div>
                 <div className="glass-panel" style={{ padding: 24, borderRadius: 20 }}>
-                   <div style={{ fontSize: 14, color: "#64748b", fontWeight: 600, marginBottom: 8 }}>Push Converions</div>
-                   <div style={{ fontSize: 40, fontWeight: 800, color: "#10b981" }}>38%</div>
+                   <div style={{ fontSize: 14, color: "#64748b", fontWeight: 600, marginBottom: 8 }}>Acquisizioni Lead Fidelity</div>
+                   <div style={{ fontSize: 40, fontWeight: 800, color: "#10b981" }}>42</div>
                 </div>
              </div>
 
@@ -231,39 +255,38 @@ function HeroSection() {
              </div>
           </div>
 
-          {/* Overlapping Floating Wallet Card */}
+          {/* Overlapping Video Demo / Phone */}
           <div className="hover-lift" style={{
               position: "absolute",
               right: 20, bottom: -40,
-              width: 300, height: 460,
+              width: 250, height: 460,
               borderRadius: 32,
-              background: "linear-gradient(145deg, #1e293b, #0f172a)",
+              background: "#0f172a",
+              border: "1px solid rgba(255,255,255,0.2)",
               boxShadow: "0 40px 80px rgba(0,0,0,0.3), inset 0 2px 4px rgba(255,255,255,0.1)",
-              padding: 24,
-              color: "white",
               transform: "rotate(-6deg)",
               zIndex: 10,
-              display: "flex",
-              flexDirection: "column"
+              overflow: "hidden"
             }}>
-             <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-                <div style={{ fontSize: 14, fontWeight: 600, opacity: 0.8 }}>Apple Wallet</div>
-                <div style={{ width: 32, height: 32, background: "rgba(255,255,255,0.1)", borderRadius: "50%" }} />
-             </div>
-             <div style={{ marginTop: 32, flex: 1 }}>
-                <div style={{ width: 60, height: 60, background: "linear-gradient(135deg, #fced8b, #f59e0b)", borderRadius: 16, marginBottom: 20 }} />
-                <div style={{ fontSize: 26, fontWeight: 800, lineHeight: 1.1 }}>Premium<br/>Membership</div>
-                
-                <div style={{ marginTop: 40, background: "rgba(255,255,255,0.05)", borderRadius: 16, padding: 20, border: "1px solid rgba(255,255,255,0.1)" }}>
-                   <div style={{ fontSize: 12, textTransform: "uppercase", letterSpacing: 1, opacity: 0.6 }}>Saldo Punti</div>
-                   <div style={{ fontSize: 44, fontWeight: 800, color: "#f59e0b" }}>850</div>
-                </div>
-             </div>
-             
-             {/* Fake barcode */}
-             <div style={{ width: "100%", height: 40, background: "repeating-linear-gradient(90deg, #fff, #fff 4px, transparent 4px, transparent 8px, #fff 8px, #fff 14px, transparent 14px, transparent 16px)", opacity: 0.5, borderRadius: 4, marginTop: 20 }} />
+             {/* Notch */}
+             <div style={{
+               position: "absolute", top: 12, left: "50%", transform: "translateX(-50%)",
+               width: 60, height: 16, borderRadius: 10,
+               background: "#020617", zIndex: 10,
+             }} />
+             <video
+               autoPlay
+               loop
+               muted
+               playsInline
+               style={{ width: "100%", height: "100%", objectFit: "cover", display: "block" }}
+               onError={(e) => {
+                 (e.currentTarget as HTMLVideoElement).style.display = "none";
+               }}
+             >
+               <source src="/hero-video.mp4" type="video/mp4" />
+             </video>
           </div>
-
         </div>
       </div>
     </section>
@@ -273,24 +296,24 @@ function HeroSection() {
 function HowItWorks() {
   const steps = [
     {
-      icon: "🎯",
-      title: "Inquadratura",
-      desc: "Il cliente inquadra rapidamente il pannello premium in acrilico situato sul suo tavolo.",
+      icon: "1️⃣",
+      title: "Crea e carica il Logo",
+      desc: "QRpop innesca in automatico la correzione errori 'H'. Inserisci il logo aziendale al centro del codice senza perdere leggibilità.",
     },
     {
-      icon: "⚡",
-      title: "Iscrizione Fluida",
-      desc: "Viene accolto da una stupenda interfaccia che richiede solo Nome ed Email per continuare.",
+      icon: "2️⃣",
+      title: "Scegli cosa mostrare",
+      desc: "Imposta un reindirizzamento o ospita un'offerta, file PDF, Video o il nuovo modulo Fidelity Card direttamente nei tuoi tavoli.",
     },
     {
-      icon: "📲",
-      title: "Apple Wallet",
-      desc: "La carta fedeltà viene generata crittograficamente e aggiunta al suo smartphone.",
+      icon: "3️⃣",
+      title: "Stampa ed esponi",
+      desc: "Scarica il QR in formato HD, stampalo e mettilo sui tavoli, volantini o vetrine. Non dovrai mai più ristamparlo.",
     },
     {
-      icon: "📈",
-      title: "Retention Automatica",
-      desc: "Da questo momento puoi stimolare il suo ritorno nel locale con notifiche mirate e promozioni.",
+      icon: "4️⃣",
+      title: "Traccia & Modifica live",
+      desc: "Analizza quando e dove convertono i clienti. Aggiorna l'offerta in tempo reale senza mai dover ristampare il cartaceo.",
     },
   ];
 
@@ -298,10 +321,10 @@ function HowItWorks() {
     <section id="come-funziona" style={{ padding: "160px 24px", position: "relative", background: "white" }}>
       <div style={{ textAlign: "center", marginBottom: 80, maxWidth: 800, margin: "0 auto 80px" }}>
         <h2 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, marginBottom: 24, color: "#0f172a" }}>
-          Un'acquisizione <span className="gradient-text-hero">invisibile.</span>
+          Il nuovo standard del <span className="gradient-text-hero">Marketing Dinamico.</span>
         </h2>
         <p style={{ fontSize: 20, color: "#475569", lineHeight: 1.6, fontWeight: 500 }}>
-          Raccogli i dati reali dei tuoi consumatori senza fargli scaricare app pesanti. Un tap e la tua azienda vive permanentemente nel loro telefono.
+          QRpop è lo strumento definitivo. Mostra offerte sempre aggiornate, promuovi il tuo brand e aggiorna l'esperienza del cliente senza ulteriori costi tipografici.
         </p>
       </div>
 
@@ -332,10 +355,13 @@ function PricingSection() {
       <div style={{ maxWidth: 1200, margin: "0 auto" }}>
         <div style={{ textAlign: "center", marginBottom: 80 }}>
           <h2 style={{ fontSize: "clamp(2.5rem, 5vw, 4rem)", fontWeight: 800, marginBottom: 24, color: "#0f172a" }}>
-            Massimizza lo <br/> Scontrino Medio.
+            Un QR per <br/> ogni esigenza.
           </h2>
           <p style={{ fontSize: 20, color: "#475569", maxWidth: 640, margin: "0 auto", fontWeight: 500 }}>
-            Inizia oggi stesso a prelevare il petrolio del XXI secolo: l'anagrafica dei tuoi clienti.
+            Crea un account gratis, poi aggiungi i QR che ti servono. Ogni postazione ha il suo contenuto e la sua URL univoca.
+          </p>
+          <p style={{ fontSize: 16, color: "#2563eb", margin: "20px auto 0", fontWeight: 700 }}>
+            ✓ Upload illimitati &nbsp;·&nbsp; ✓ Durata annuale &nbsp;·&nbsp; ✓ Nessun abbonamento mensile
           </p>
         </div>
 
@@ -359,7 +385,7 @@ function PricingSection() {
                   borderRadius: 999, fontSize: 14, fontWeight: 800, color: "white",
                   boxShadow: "0 10px 20px rgba(37,99,235,0.3)"
                 }}>
-                  Scelta Strategica
+                  ⭐ Più scelto
                 </div>
               )}
 
@@ -371,6 +397,7 @@ function PricingSection() {
                 {plan.annualPrice === 0 ? (
                   <div style={{ fontSize: 56, fontWeight: 900, color: "#0f172a", letterSpacing: -2 }}>
                     Gratis
+                    <div style={{ fontSize: 16, color: "#64748b", fontWeight: 500, marginTop: 4 }}>per 1 anno</div>
                   </div>
                 ) : (
                   <div>
@@ -421,10 +448,11 @@ function Footer() {
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <span style={{ fontWeight: 900, color: "#0f172a", fontSize: 20, letterSpacing: -1 }}>QRpop</span>
           <span style={{ color: "#cbd5e1" }}>—</span>
-          <span style={{ fontWeight: 500 }}>Software B2B per Imprenditori</span>
+          <span style={{ fontWeight: 500 }}>© {new Date().getFullYear()} Tutti i diritti riservati</span>
         </div>
         <div style={{ display: "flex", gap: 32, fontWeight: 600 }}>
-          <Link href="/login" style={{ color: "#475569", textDecoration: "none" }}>Accesso Partner</Link>
+          <Link href="/login" style={{ color: "#475569", textDecoration: "none" }}>Accedi</Link>
+          <Link href="/register" style={{ color: "#475569", textDecoration: "none" }}>Registrati</Link>
         </div>
       </div>
     </footer>
