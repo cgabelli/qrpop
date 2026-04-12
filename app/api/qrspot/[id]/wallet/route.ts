@@ -18,11 +18,15 @@ export async function POST(req: NextRequest, { params }: { params: { id: string 
     const template = await prisma.walletTemplate.upsert({
       where: { qrSpotId: params.id },
       update: {
-        fidelityCardUrl: data.fidelityCardUrl
+        backgroundColor: data.backgroundColor,
+        textColor: data.textColor,
+        brandName: data.brandName
       },
       create: {
         qrSpotId: params.id,
-        fidelityCardUrl: data.fidelityCardUrl
+        backgroundColor: data.backgroundColor || "#7c3aed",
+        textColor: data.textColor || "#ffffff",
+        brandName: data.brandName || "My Brand"
       }
     });
 
