@@ -470,7 +470,10 @@ function Footer() {
           <span style={{ color: "#cbd5e1" }}>—</span>
           <span style={{ fontWeight: 500 }}>© {new Date().getFullYear()} Tutti i diritti riservati</span>
         </div>
-        <div style={{ display: "flex", gap: 32, fontWeight: 600 }}>
+        <div style={{ display: "flex", gap: 24, fontWeight: 600, flexWrap: "wrap", justifyContent: "center" }}>
+          <Link href="/privacy" style={{ color: "#475569", textDecoration: "none" }}>Privacy Policy</Link>
+          <Link href="/cookie" style={{ color: "#475569", textDecoration: "none" }}>Cookie</Link>
+          <Link href="/termini" style={{ color: "#475569", textDecoration: "none" }}>Termini</Link>
           <Link href="/login" style={{ color: "#475569", textDecoration: "none" }}>Accedi</Link>
           <Link href="/register" style={{ color: "#475569", textDecoration: "none" }}>Registrati</Link>
         </div>
