@@ -78,7 +78,16 @@ function NavBar() {
         }}
       >
         <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-          <div style={{ fontSize: 26, fontWeight: 900, letterSpacing: -1.5, color: "#0f172a" }}>QRpop</div>
+          <img 
+            src="/logo-negative.svg" 
+            alt="QRpop Logo" 
+            style={{ 
+              height: 32, 
+              width: "auto", 
+              marginLeft: -8, 
+              filter: "brightness(0) drop-shadow(0 2px 4px rgba(0,0,0,0.05))" 
+            }} 
+          />
         </div>
 
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
