@@ -101,7 +101,6 @@ model QRSpot {
   user                 User         @relation(fields: [userId], references: [id], onDelete: Cascade)
   creativita           Creativita[]
   walletTemplate       WalletTemplate?
-  leads                CustomerLead[]
 }
 model Creativita {
   id            String    @id @default(cuid())
@@ -127,27 +126,9 @@ model Creativita {
 model WalletTemplate {
   id            String    @id @default(cuid())
   qrSpotId      String    @unique
-  backgroundColor String  @default("#7c3aed")
-  textColor       String  @default("#ffffff")
-  logoPath        String?
-  iconPath        String?
-  brandName       String?
+  fidelityCardUrl String? // Il link univoco di iscrizione fornito da FidelityCards.eu
   createdAt       DateTime @default(now())
   updatedAt       DateTime @updatedAt
-
-  qrSpot        QRSpot    @relation(fields: [qrSpotId], references: [id], onDelete: Cascade)
-}
-
-model CustomerLead {
-  id            String    @id @default(cuid())
-  qrSpotId      String
-  firstName     String
-  lastName      String?
-  email         String
-  passSerial    String?   @unique
-  points        Int       @default(0)
-  createdAt     DateTime  @default(now())
-  updatedAt     DateTime  @updatedAt
 
   qrSpot        QRSpot    @relation(fields: [qrSpotId], references: [id], onDelete: Cascade)
 }

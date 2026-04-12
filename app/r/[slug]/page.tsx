@@ -52,8 +52,6 @@ async function getActiveSpot(slug: string) {
   return { qrSpot, creativita };
 }
 
-import WalletForm from "./wallet-form";
-
 export default async function ScanPage({ params }: Props) {
   const { slug } = await params;
   const result = await getActiveSpot(slug);
@@ -87,11 +85,24 @@ export default async function ScanPage({ params }: Props) {
     }
   }
 
+  if (qrSpot.type === "wallet") {
+    const url = (qrSpot as any).walletTemplate?.fidelityCardUrl;
+    if (url) {
+      redirect(url);
+    } else {
+      return (
+        <div style={{ minHeight: "100dvh", background: "#000", color: "white", display: "flex", alignContent: "center", justifyContent: "center", padding: 24, textAlign: "center" }}>
+          <p>La Wallet Card non è ancora stata associata a un link di FidelityCards.</p>
+        </div>
+      );
+    }
+  }
+
   return (
     <div
       style={{
         minHeight: "100dvh",
-        background: qrSpot.type === "wallet" ? (qrSpot as any).walletTemplate?.backgroundColor || "#000" : "#000",
+        background: "#000",
         display: "flex",
         flexDirection: "column",
         alignItems: "center",
@@ -100,9 +111,7 @@ export default async function ScanPage({ params }: Props) {
         overflow: "hidden",
       }}
     >
-      {qrSpot.type === "wallet" ? (
-         <WalletForm qrSpotId={qrSpot.id} template={(qrSpot as any).walletTemplate} />
-      ) : creativita ? (
+      {creativita ? (
         <>
           {creativita.type === "image" ? (
             // eslint-disable-next-line @next/next/no-img-element
