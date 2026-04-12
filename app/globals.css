@@ -3,16 +3,23 @@
 @import "tailwindcss";
 
 :root {
-  --brand: 262 83% 58%;
-  --brand-dark: 262 83% 48%;
-  --brand-light: 262 83% 68%;
-  --accent: 330 81% 60%;
-  --bg: 240 10% 3.9%;
-  --bg-card: 240 6% 8%;
-  --bg-card-hover: 240 6% 10%;
-  --border: 240 5% 15%;
-  --text: 0 0% 98%;
-  --text-muted: 240 5% 60%;
+  /* Electric Blue & Indigo */
+  --brand: 221 83% 53%; 
+  --brand-dark: 221 83% 40%;
+  --brand-light: 221 83% 73%;
+  --accent: 250 84% 54%; 
+  
+  /* Light Theme Slates */
+  --bg: 210 40% 98%; /* Slate 50 */
+  --bg-card: 0 0% 100%; /* Pure White */
+  --bg-card-hover: 210 40% 96%; /* Slate 100 */
+  --border: 214 32% 91%; /* Slate 200 */
+  
+  /* Text */
+  --text: 222 47% 11%; /* Slate 900 */
+  --text-muted: 215 16% 40%; /* Slate 600 */
+  
+  /* States */
   --success: 142 71% 45%;
   --warning: 38 92% 50%;
   --danger: 0 72% 51%;
@@ -42,12 +49,13 @@ h1, h2, h3, h4, h5, h6 {
   letter-spacing: -0.02em;
 }
 
-/* Glassmorphism card */
+/* Glassmorphism card (Light) */
 .glass {
-  background: rgba(255, 255, 255, 0.04);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
+  background: rgba(255, 255, 255, 0.75);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
 }
 
 /* Brand gradient */
