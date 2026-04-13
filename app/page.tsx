@@ -192,14 +192,14 @@ function HeroSection() {
         </div>
 
         <h1 className="animate-fade-up-delay-1" style={{
-            fontSize: "clamp(3.5rem, 8vw, 6rem)",
+            fontSize: "clamp(3.5rem, 8vw, 5.5rem)",
             fontWeight: 800,
             lineHeight: 1.05,
             marginBottom: 24,
             color: "#0f172a",
           }}>
-          Il tuo QR Code <br/>
-          <span className="gradient-text-hero">Parla da Solo.</span>
+          Un solo QR Code.<br/>
+          <span className="gradient-text-hero" style={{ fontSize: "clamp(2.5rem, 5.5vw, 4rem)" }}>Infinite possibilità di marketing.</span>
         </h1>
 
         <p className="animate-fade-up-delay-2" style={{
