@@ -45,6 +45,9 @@ jobs:
             NEXTAUTH_URL=https://qrpop.it
             NEXT_PUBLIC_APP_URL=https://qrpop.it
             NODE_ENV=production
+            SMTP_HOST=localhost
+            SMTP_PORT=25
+            SMTP_FROM=noreply@qrpop.it
             ENVEOF
 
             npm install --legacy-peer-deps
