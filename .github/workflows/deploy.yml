@@ -47,6 +47,13 @@ jobs:
               'SMTP_HOST=localhost' \
               'SMTP_PORT=25' \
               'SMTP_FROM=noreply@qrpop.it' \
+              'STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}' \
+              'STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}' \
+              'STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}' \
+              'STRIPE_PRICE_IMAGE_ANNUAL=${{ secrets.STRIPE_PRICE_IMAGE_ANNUAL }}' \
+              'STRIPE_PRICE_VIDEO_ANNUAL=${{ secrets.STRIPE_PRICE_VIDEO_ANNUAL }}' \
+              'STRIPE_PRICE_PDF_ANNUAL=${{ secrets.STRIPE_PRICE_PDF_ANNUAL }}' \
+              'STRIPE_PRICE_UNLIMITED_ANNUAL=${{ secrets.STRIPE_PRICE_UNLIMITED_ANNUAL }}' \
               > .env
 
             npm install --legacy-peer-deps
