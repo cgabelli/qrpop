@@ -210,7 +210,7 @@ function HeroSection() {
             lineHeight: 1.7,
             fontWeight: 500,
           }}>
-          Con QRpop, il QR Code non è più solo un link al tuo menu. È un canale di interazione continuo e una vera esperienza di marketing per i tuoi clienti: promuovi il piatto del giorno, le offerte della settimana, iscrizioni a form e carte fedeltà. <br/><strong style={{color: "#0f172a"}}>Un solo QR, tante soluzioni.</strong>
+          Con QRpop il QR Code non è più solo il link al tuo menu. È un canale di interazione continuo. È un'esperienza di marketing per il cliente: piatto del giorno, offerta della settimana, registrazione a un form, fidelity card... <br/><strong style={{color: "#0f172a"}}>Un solo QR, tante soluzioni.</strong>
         </p>
 
         <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
