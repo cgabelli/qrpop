@@ -38,7 +38,7 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           SOURCE: "./"
           TARGET: "/var/www/vhosts/qrpop.it/app"
-          EXCLUDE: "/node_modules/, /.git/, /.env*, /.next/"
+          EXCLUDE: "/node_modules/, /.git/, /.env*/"
           ARGS: "-rltgoDzvO --delete"
 
       - name: Restart PM2 & Setup DB
@@ -53,5 +53,5 @@ jobs:
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             npm install --omit=dev --legacy-peer-deps
             npx prisma db push --accept-data-loss
-            pm2 start ecosystem.config.cjs || pm2 restart qrpop-web
+            pm2 restart qrpop-web || pm2 start ecosystem.config.cjs
             pm2 save
