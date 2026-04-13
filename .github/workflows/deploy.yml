@@ -51,7 +51,8 @@ jobs:
             DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma generate
             DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma db push --accept-data-loss
             DATABASE_URL="${{ secrets.DATABASE_URL }}" NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" NEXT_PUBLIC_APP_URL="https://qrpop.it" npm run build
-            # Force PM2 to restart from the new directory
+            # Kill ALL old PM2 processes to free port 3000
+            pm2 delete qrpop 2>/dev/null || true
             pm2 delete qrpop-web 2>/dev/null || true
             pm2 start /var/www/vhosts/qrpop.it/httpdocs/ecosystem.config.cjs
             pm2 save
