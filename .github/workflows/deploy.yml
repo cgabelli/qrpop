@@ -20,7 +20,7 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           SOURCE: "./"
           TARGET: "/var/www/vhosts/qrpop.it/httpdocs"
-          EXCLUDE: "/node_modules/, /.git/, /.next/, /.env*/"
+          EXCLUDE: "/node_modules/, /.git/, /.next/, /.env*"
           ARGS: "-rltgoDzvO --delete"
 
       - name: Build & Restart on Server
@@ -31,30 +31,30 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           command_timeout: 15m
           script: |
-            # Load NVM (try multiple locations)
+            # Load NVM
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             [ -s "/root/.nvm/nvm.sh" ] && \. "/root/.nvm/nvm.sh"
-            [ -s "/usr/local/nvm/nvm.sh" ] && \. "/usr/local/nvm/nvm.sh"
-            
-            # Show environment for diagnostics
-            echo "Node: $(node -v 2>/dev/null || which node || echo NOT FOUND)"
-            echo "NPM: $(npm -v 2>/dev/null || echo NOT FOUND)"
-            echo "PWD: $(pwd)"
-            
-            # Go to app directory (create if needed)
-            mkdir -p /var/www/vhosts/qrpop.it/httpdocs
+
             cd /var/www/vhosts/qrpop.it/httpdocs
-            echo "In dir: $(pwd), files: $(ls | head -5)"
-            
+
+            # Ricrea sempre il .env con i valori corretti dai secrets
+            cat > .env << 'ENVEOF'
+            DATABASE_URL=${{ secrets.DATABASE_URL }}
+            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
+            NEXTAUTH_URL=https://qrpop.it
+            NEXT_PUBLIC_APP_URL=https://qrpop.it
+            NODE_ENV=production
+            ENVEOF
+
             npm install --legacy-peer-deps
-            DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma generate
-            DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma db push --accept-data-loss
-            DATABASE_URL="${{ secrets.DATABASE_URL }}" NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" NEXT_PUBLIC_APP_URL="https://qrpop.it" npm run build
-            # Kill ALL old PM2 processes to free port 3000
+            npx prisma generate
+            npx prisma db push --accept-data-loss
+            npm run build
+
+            # Riavvia PM2 dal percorso corretto
             pm2 delete qrpop 2>/dev/null || true
             pm2 delete qrpop-web 2>/dev/null || true
             pm2 start /var/www/vhosts/qrpop.it/httpdocs/ecosystem.config.cjs
             pm2 save
-            echo "PM2 status:"
             pm2 list
