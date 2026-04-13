@@ -205,12 +205,12 @@ function HeroSection() {
         <p className="animate-fade-up-delay-2" style={{
             fontSize: "clamp(1.1rem, 2.3vw, 1.3rem)",
             color: "#475569",
-            maxWidth: 700,
+            maxWidth: 750,
             margin: "0 auto 48px",
             lineHeight: 1.7,
             fontWeight: 500,
           }}>
-          Trasforma i tuoi menu e le tue grafiche in un canale di marketing diretto. Modifica la destinazione del QR e promuovi nuove offerte in tempo reale senza dover mai ristampare.
+          <strong>Oltre la semplice destinazione.</strong> Smetti di usare i QR Code come link passivi e trasformali in un canale di interazione commerciale vivo. Guida in tempo reale il tuo pubblico verso nuove offerte, senza mai più costi di ristampa.
         </p>
 
         <div className="animate-fade-up-delay-3" style={{ display: "flex", gap: 16, flexWrap: "wrap", justifyContent: "center" }}>
