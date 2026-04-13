@@ -29,20 +29,27 @@ jobs:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
-          envs: DATABASE_URL,NEXTAUTH_SECRET
-          script_stop: true
+          command_timeout: 15m
           script: |
+            # Load NVM (try multiple locations)
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            [ -s "/root/.nvm/nvm.sh" ] && \. "/root/.nvm/nvm.sh"
+            [ -s "/usr/local/nvm/nvm.sh" ] && \. "/usr/local/nvm/nvm.sh"
+            
+            # Show environment for diagnostics
+            echo "Node: $(node -v 2>/dev/null || which node || echo NOT FOUND)"
+            echo "NPM: $(npm -v 2>/dev/null || echo NOT FOUND)"
+            echo "PWD: $(pwd)"
+            
+            # Go to app directory (create if needed)
+            mkdir -p /var/www/vhosts/qrpop.it/app
             cd /var/www/vhosts/qrpop.it/app
+            echo "In dir: $(pwd), files: $(ls | head -5)"
+            
             npm install --legacy-peer-deps
-            export DATABASE_URL="${DATABASE_URL}"
-            export NEXTAUTH_SECRET="${NEXTAUTH_SECRET}"
-            npx prisma generate
-            npx prisma db push --accept-data-loss
-            npm run build
-            pm2 restart qrpop-web || pm2 start ecosystem.config.cjs
+            DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma generate
+            DATABASE_URL="${{ secrets.DATABASE_URL }}" npx prisma db push --accept-data-loss
+            DATABASE_URL="${{ secrets.DATABASE_URL }}" NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" NEXT_PUBLIC_APP_URL="https://qrpop.it" npm run build
+            pm2 restart qrpop-web 2>/dev/null || pm2 start ecosystem.config.cjs
             pm2 save
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
