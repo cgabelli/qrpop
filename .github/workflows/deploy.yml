@@ -10,12 +10,13 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: Setup Node.js
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: '20'
+          cache: 'npm'
 
       - name: Install dependencies
         run: npm install --legacy-peer-deps
@@ -31,7 +32,7 @@ jobs:
 
       - name: Deploy via SSH/rsync
         uses: easingthemes/ssh-deploy@v5.1.1
-        with:
+        env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
@@ -41,7 +42,7 @@ jobs:
           ARGS: "-rltgoDzvO --delete"
 
       - name: Restart PM2 & Setup DB
-        uses: appleboy/ssh-action@v1.0.0
+        uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
@@ -50,7 +51,7 @@ jobs:
             cd /var/www/vhosts/qrpop.it/app
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            npm install --omit=dev
+            npm install --omit=dev --legacy-peer-deps
             npx prisma db push --accept-data-loss
             pm2 start ecosystem.config.cjs || pm2 restart qrpop-web
             pm2 save
