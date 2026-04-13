@@ -12,25 +12,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
-          cache: 'npm'
-
-      - name: Install dependencies
-        run: npm install --legacy-peer-deps
-
-      - name: Generate Prisma Client & Build Next.js
-        run: |
-          npx prisma generate
-          npm run build
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
-          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
-          NEXT_PUBLIC_APP_URL: "https://qrpop.it"
-
-      - name: Deploy via SSH/rsync
+      - name: Deploy source code via SSH/rsync
         uses: easingthemes/ssh-deploy@v5.1.1
         with:
           SSH_PRIVATE_KEY: ${{ secrets.SERVER_SSH_KEY }}
@@ -38,20 +20,29 @@ jobs:
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           SOURCE: "./"
           TARGET: "/var/www/vhosts/qrpop.it/app"
-          EXCLUDE: "/node_modules/, /.git/, /.env*/"
+          EXCLUDE: "/node_modules/, /.git/, /.next/, /.env*/"
           ARGS: "-rltgoDzvO --delete"
 
-      - name: Restart PM2 & Setup DB
+      - name: Build & Restart on Server
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
           key: ${{ secrets.SERVER_SSH_KEY }}
+          envs: DATABASE_URL,NEXTAUTH_SECRET
+          script_stop: true
           script: |
-            cd /var/www/vhosts/qrpop.it/app
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            npm install --omit=dev --legacy-peer-deps
+            cd /var/www/vhosts/qrpop.it/app
+            npm install --legacy-peer-deps
+            export DATABASE_URL="${DATABASE_URL}"
+            export NEXTAUTH_SECRET="${NEXTAUTH_SECRET}"
+            npx prisma generate
             npx prisma db push --accept-data-loss
+            npm run build
             pm2 restart qrpop-web || pm2 start ecosystem.config.cjs
             pm2 save
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
