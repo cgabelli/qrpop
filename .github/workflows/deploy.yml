@@ -5,10 +5,6 @@ on:
     branches:
       - main
 
-defaults:
-  run:
-    working-directory: web
-
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -39,9 +35,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
-          SOURCE: "web/"
+          SOURCE: "./"
           TARGET: "/var/www/vhosts/qrpop.it/app"
-          EXCLUDE: "/web/node_modules/, /web/.git/, /web/.env*, /web/.next/"
+          EXCLUDE: "/node_modules/, /.git/, /.env*, /.next/"
           ARGS: "-rltgoDzvO --delete"
 
       - name: Restart PM2 & Setup DB
