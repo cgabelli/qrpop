@@ -53,35 +53,6 @@ jobs:
             npx prisma generate
             npm run build
 
-            # Crea/aggiorna account admin (verificationToken null = account verificato)
-            node -e "
-            const {PrismaClient} = require('@prisma/client');
-            const b = require('bcryptjs');
-            const db = new PrismaClient();
-            b.hash('Qrpop2024!', 12).then(h =>
-              db.user.upsert({
-                where:{email:'cgabelli@gmail.com'},
-                update:{password:h, verificationToken:null},
-                create:{
-                  email:'cgabelli@gmail.com',
-                  password:h,
-                  slug:'christian-gabelli',
-                  isActive:true,
-                  businessName:'Christian Gabelli',
-                  isCompany:false,
-                  firstName:'Christian',
-                  lastName:'Gabelli',
-                  address:'Via Roma 1',
-                  city:'Milano',
-                  province:'MI',
-                  zipCode:'20100',
-                  verificationToken:null
-                }
-              })
-            ).then(() => { console.log('Account OK'); db.\$disconnect(); })
-            .catch(e => { console.error('Account error:', e.message); db.\$disconnect(); });
-            "
-
             pm2 delete qrpop 2>/dev/null || true
             pm2 delete qrpop-web 2>/dev/null || true
             pm2 start /var/www/vhosts/qrpop.it/httpdocs/ecosystem.config.cjs
