@@ -99,7 +99,7 @@ export const QR_SPOT_TYPES = {
     ],
     allowedTypes: ["wallet"],
     price: 79,
-    stripePriceId: process.env.STRIPE_PRICE_WALLET_ANNUAL,
+    stripePriceId: null, // Non acquistabile via Stripe — gestito internamente
     expiresInDays: 365,
   },
 } as const;

@@ -37,7 +37,7 @@ export default async function QRSpotPage({
     <div style={{ padding: "40px 48px", maxWidth: 1000 }}>
       {/* Header breadcrumb */}
       <div style={{ marginBottom: 24, display: "flex", alignItems: "center", gap: 12 }}>
-        <Link href="/dashboard/abbonamento" style={{ color: "hsl(240 5% 55%)", textDecoration: "none", fontSize: 14 }}>
+        <Link href="/dashboard/abbonamento" style={{ color: "#475569", textDecoration: "none", fontSize: 14, fontWeight: 600 }}>
           ← Torna agli Spot
         </Link>
       </div>
@@ -45,20 +45,20 @@ export default async function QRSpotPage({
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "flex-start", marginBottom: 32 }}>
         <div>
           <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 8 }}>
-            <h1 style={{ fontSize: 32, fontWeight: 800 }}>{qrSpot.name}</h1>
+            <h1 style={{ fontSize: 32, fontWeight: 800, color: "#0f172a" }}>{qrSpot.name}</h1>
             <div style={{ 
-               padding: "4px 8px", borderRadius: 6, fontSize: 11, fontWeight: 600, textTransform: "uppercase",
+               padding: "4px 8px", borderRadius: 6, fontSize: 11, fontWeight: 700, textTransform: "uppercase",
                background: qrSpot.status === "active" ? "rgba(34,197,94,0.15)" : "rgba(225,29,72,0.15)",
-               color: qrSpot.status === "active" ? "hsl(142 71% 55%)" : "hsl(340 82% 65%)"
+               color: qrSpot.status === "active" ? "hsl(142 71% 40%)" : "hsl(340 82% 60%)"
             }}>
                {qrSpot.status}
             </div>
           </div>
-          <p style={{ color: "hsl(240 5% 65%)", fontSize: 15, display: "flex", alignItems: "center", gap: 8 }}>
+          <p style={{ color: "#475569", fontSize: 15, display: "flex", alignItems: "center", gap: 8, fontWeight: 500 }}>
             <span>{typeDef?.emoji || "📱"}</span>
             <span>QR {typeDef?.name || qrSpot.type}</span>
             <span>•</span>
-            <a href={publicUrl} target="_blank" style={{ color: "hsl(262 83% 72%)" }} rel="noreferrer">
+            <a href={publicUrl} target="_blank" style={{ color: "#2563eb", fontWeight: 700 }} rel="noreferrer">
               {publicUrl}
             </a>
           </p>

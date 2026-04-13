@@ -1,46 +1,56 @@
-name: Deploy to Server
+name: Deploy to AlmaLinux (Plesk)
 
 on:
   push:
-    branches: [main]
-
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+    branches:
+      - main
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v3
 
       - name: Setup Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v3
         with:
-          node-version: '22'
-          cache: 'npm'
-          cache-dependency-path: package-lock.json
+          node-version: '20'
 
       - name: Install dependencies
-        run: npm ci --legacy-peer-deps
+        run: |
+          npm ci
 
-      - name: Generate Prisma Client
+      - name: Generate Prisma Client & Build Next.js
+        run: |
+          npx prisma generate
+          npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
-        run: npx prisma generate
+          NEXT_PUBLIC_APP_URL: "https://qrpop.it"
 
-      - name: Deploy via SSH
-        uses: appleboy/ssh-action@v1
+      - name: Deploy via SSH/rsync
+        uses: easingthemes/ssh-deploy@v5.1.1
+        with:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+          REMOTE_HOST: ${{ secrets.SERVER_HOST }}
+          REMOTE_USER: ${{ secrets.SERVER_USER }}
+          SOURCE: "./"
+          TARGET: "/var/www/vhosts/qrpop.it/app" # Sostituire con il path reale su Plesk
+          EXCLUDE: "/node_modules/, /.git/, /.env*"
+          ARGS: "-rltgoDzvO --delete"
+
+      - name: Restart PM2 & Setup DB
+        uses: appleboy/ssh-action@v1.0.0
         with:
           host: ${{ secrets.SERVER_HOST }}
           username: ${{ secrets.SERVER_USER }}
-          key: ${{ secrets.SERVER_SSH_KEY }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
           script: |
-            cd /var/www/qrpop
-            git pull origin main
-
-            npm ci --legacy-peer-deps
-            npx prisma generate
+            cd /var/www/vhosts/qrpop.it/app
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+            npm install --production
             npx prisma db push --accept-data-loss
-            npm run build
-            pm2 restart qrpop || pm2 start npm --name qrpop -- start
+            pm2 start ecosystem.config.cjs || pm2 restart qrpop-web
+            pm2 save

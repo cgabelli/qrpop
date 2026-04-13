@@ -53,7 +53,7 @@ function ResetPasswordForm() {
         alignItems: "center",
         justifyContent: "center",
         padding: "24px",
-        background: "hsl(240 10% 3.9%)",
+        background: "#f8fafc",
         position: "relative",
         overflow: "hidden",
       }}
@@ -61,43 +61,43 @@ function ResetPasswordForm() {
       <div style={{
         position: "absolute", top: "30%", left: "50%", transform: "translateX(-50%)",
         width: 600, height: 600, borderRadius: "50%",
-        background: "radial-gradient(circle, rgba(124,58,237,0.12) 0%, transparent 70%)",
+        background: "radial-gradient(circle, rgba(37,99,235,0.05) 0%, transparent 70%)",
         pointerEvents: "none",
       }} />
 
       <div style={{ width: "100%", maxWidth: 420, position: "relative", zIndex: 1 }}>
         <div style={{ textAlign: "center", marginBottom: 40 }}>
           <Link href="/" style={{ textDecoration: "none", display: "inline-flex", alignItems: "center", gap: 10 }}>
-            <img src="/logo-negative.svg" alt="QRpop Logo" style={{ height: 36, width: "auto" }} />
+            <div style={{ fontSize: 36, fontWeight: 900, color: "#0f172a", letterSpacing: -1 }}>QRpop</div>
           </Link>
-          <p style={{ marginTop: 8, color: "hsl(240 5% 55%)", fontSize: 14 }}>Reimposta la tua password</p>
+          <p style={{ marginTop: 8, color: "#475569", fontWeight: 500, fontSize: 14 }}>Reimposta la tua password</p>
         </div>
 
-        <div className="card" style={{ padding: 40 }}>
+        <div style={{ padding: 40, background: "white", border: "1px solid #e2e8f0", borderRadius: 24, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" }}>
           {!token ? (
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>⚠️</div>
-              <p style={{ color: "hsl(240 5% 60%)", fontSize: 14, marginBottom: 24 }}>
+              <p style={{ color: "#475569", fontWeight: 500, fontSize: 14, marginBottom: 24 }}>
                 Link non valido. Richiedi un nuovo link di recupero.
               </p>
-              <Link href="/forgot-password" style={{ color: "hsl(262 83% 72%)", fontWeight: 600, textDecoration: "none" }}>
+              <Link href="/forgot-password" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none" }}>
                 Richiedi nuovo link →
               </Link>
             </div>
           ) : done ? (
             <div style={{ textAlign: "center" }}>
               <div style={{ fontSize: 48, marginBottom: 16 }}>✅</div>
-              <h1 style={{ fontSize: 22, fontWeight: 700, marginBottom: 12 }}>Password aggiornata!</h1>
-              <p style={{ color: "hsl(240 5% 60%)", fontSize: 14, lineHeight: 1.7 }}>
+              <h1 style={{ fontSize: 22, fontWeight: 800, color: "#0f172a", marginBottom: 12 }}>Password aggiornata!</h1>
+              <p style={{ color: "#475569", fontWeight: 500, fontSize: 14, lineHeight: 1.7 }}>
                 La tua password è stata reimpostata con successo. Verrai reindirizzato al login tra pochi secondi...
               </p>
             </div>
           ) : (
             <>
-              <h1 style={{ fontSize: 24, fontWeight: 700, marginBottom: 8, textAlign: "center" }}>
+              <h1 style={{ fontSize: 24, fontWeight: 800, color: "#0f172a", marginBottom: 8, textAlign: "center" }}>
                 Nuova password
               </h1>
-              <p style={{ color: "hsl(240 5% 60%)", fontSize: 14, textAlign: "center", marginBottom: 28 }}>
+              <p style={{ color: "#475569", fontWeight: 500, fontSize: 14, textAlign: "center", marginBottom: 28 }}>
                 Scegli una password sicura di almeno 8 caratteri.
               </p>
 
@@ -113,7 +113,7 @@ function ResetPasswordForm() {
 
               <form onSubmit={handleSubmit} style={{ display: "flex", flexDirection: "column", gap: 16 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 8 }}>
                     Nuova password
                   </label>
                   <input
@@ -128,7 +128,7 @@ function ResetPasswordForm() {
                   />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "hsl(240 5% 70%)", marginBottom: 8 }}>
+                  <label style={{ display: "block", fontSize: 13, fontWeight: 600, color: "#475569", marginBottom: 8 }}>
                     Conferma password
                   </label>
                   <input

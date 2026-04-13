@@ -216,18 +216,18 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
       {/* Colonna SX: Configurazione QR */}
       <div style={{ display: "flex", flexDirection: "column", gap: 24 }}>
         {/* QR Code Anteprima */}
-        <div style={{ background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.08)", borderRadius: 20, padding: 24, display: "flex", flexDirection: "column", alignItems: "center" }}>
-          <canvas ref={canvasRef} style={{ borderRadius: 12, marginBottom: 20 }}></canvas>
+        <div style={{ background: "white", border: "1px solid #e2e8f0", boxShadow: "0 10px 20px -10px rgba(0,0,0,0.05)", borderRadius: 20, padding: 24, display: "flex", flexDirection: "column", alignItems: "center" }}>
+          <canvas ref={canvasRef} style={{ borderRadius: 12, marginBottom: 20, border: "1px solid #f1f5f9" }}></canvas>
           <button onClick={downloadQR} disabled={downloading} className="btn-secondary" style={{ width: "100%", justifyContent: "center" }}>
             {downloading ? "Download..." : "⬇ Scarica .PNG"}
           </button>
         </div>
 
         {/* Impostazioni Base */}
-        <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Impostazioni QR</h3>
+        <div style={{ background: "white", border: "1px solid #e2e8f0", boxShadow: "0 10px 20px -10px rgba(0,0,0,0.05)", borderRadius: 20, padding: 24 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>Impostazioni QR</h3>
           <div style={{ marginBottom: 16 }}>
-             <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Nome Identificativo</label>
+             <label style={{ display: "block", fontSize: 13, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Nome Identificativo</label>
              <div style={{ display: "flex", gap: 8 }}>
                 <input 
                   className="input-field" 
@@ -243,9 +243,9 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
         </div>
 
         {/* Add-on Logo */}
-        <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
-          <h3 style={{ fontSize: 16, fontWeight: 600, marginBottom: 16 }}>Stile e Logo</h3>
-          <p style={{ fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 16 }}>
+        <div style={{ background: "white", border: "1px solid #e2e8f0", boxShadow: "0 10px 20px -10px rgba(0,0,0,0.05)", borderRadius: 20, padding: 24 }}>
+          <h3 style={{ fontSize: 16, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>Stile e Logo</h3>
+          <p style={{ fontSize: 13, color: "#475569", fontWeight: 500, marginBottom: 16 }}>
             Seleziona un'immagine PNG o JPG da inserire comodamente al centro del design del QR Code.
           </p>
           <input type="file" ref={logoRef} accept="image/png, image/jpeg" style={{ display: "none" }} onChange={handleLogoUpload} />
@@ -276,14 +276,14 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
 
       {/* Colonna DX: Gestione Contenuto */}
       <div>
-        <h2 style={{ fontSize: 20, fontWeight: 600, marginBottom: 16 }}>Contenuto Collegato</h2>
+        <h2 style={{ fontSize: 20, fontWeight: 800, color: "#0f172a", marginBottom: 16 }}>Contenuto Collegato</h2>
         
         {error && <div style={{ padding: 12, background: "rgba(225,29,72,0.1)", border: "1px solid rgba(225,29,72,0.25)", color: "hsl(340 82% 65%)", borderRadius: 8, fontSize: 14, marginBottom: 24 }}>{error}</div>}
 
         {qrSpot.type === "free" ? (
-           <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
-              <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 20 }}>Questo è un QR Code di tipo Free (Redirect). Inserisci il link a cui desideri che le persone vengano portate quando inquadrano il QR Code.</p>
-              <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>URL Esterno (es: https://www.tuosito.it)</label>
+           <div style={{ background: "white", border: "1px solid #e2e8f0", boxShadow: "0 10px 20px -10px rgba(0,0,0,0.05)", borderRadius: 20, padding: 24 }}>
+              <p style={{ color: "#475569", fontWeight: 500, fontSize: 14, marginBottom: 20 }}>Questo è un QR Code di tipo Free (Redirect). Inserisci il link a cui desideri che le persone vengano portate quando inquadrano il QR Code.</p>
+              <label style={{ display: "block", fontSize: 13, color: "#475569", fontWeight: 600, marginBottom: 6 }}>URL Esterno (es: https://www.tuosito.it)</label>
               <div style={{ display: "flex", gap: 8, maxWidth: 500 }}>
                 <input 
                   className="input-field" 
@@ -298,24 +298,24 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
               </div>
            </div>
         ) : qrSpot.type === "wallet" ? (
-           <div style={{ background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 20, padding: 24 }}>
-              <p style={{ color: "hsl(240 5% 65%)", fontSize: 14, marginBottom: 24 }}>
+           <div style={{ background: "white", border: "1px solid #e2e8f0", boxShadow: "0 10px 20px -10px rgba(0,0,0,0.05)", borderRadius: 20, padding: 24 }}>
+              <p style={{ color: "#475569", fontWeight: 500, fontSize: 14, marginBottom: 24 }}>
                 <strong>Personalizza la tua Wallet Card.</strong> Mostra ai tuoi clienti una tessera fedeltà brandizzata per Apple/Google Wallet in cambio della loro email.
               </p>
               
               <div style={{ display: "grid", gridTemplateColumns: "1fr 1fr", gap: 16, marginBottom: 20 }}>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Colore Sfondo</label>
-                  <input type="color" value={walletBg} onChange={(e) => setWalletBg(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "none" }} />
+                  <label style={{ display: "block", fontSize: 13, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Colore Sfondo</label>
+                  <input type="color" value={walletBg} onChange={(e) => setWalletBg(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "1px solid #cbd5e1" }} />
                 </div>
                 <div>
-                  <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Colore Testo</label>
-                  <input type="color" value={walletText} onChange={(e) => setWalletText(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "none" }} />
+                  <label style={{ display: "block", fontSize: 13, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Colore Testo</label>
+                  <input type="color" value={walletText} onChange={(e) => setWalletText(e.target.value)} style={{ width: "100%", height: 48, borderRadius: 8, cursor: "pointer", border: "1px solid #cbd5e1" }} />
                 </div>
               </div>
 
               <div style={{ marginBottom: 24 }}>
-                <label style={{ display: "block", fontSize: 13, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Nome Brand (Testo in alto a sinistra sulla carta)</label>
+                <label style={{ display: "block", fontSize: 13, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Nome Brand (Testo in alto a sinistra sulla carta)</label>
                 <input className="input-field" value={walletBrand} onChange={(e) => setWalletBrand(e.target.value)} placeholder="Es: Pizzeria Bella" />
               </div>
 
@@ -328,8 +328,8 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
 
 
               {/* Banner Istruzioni */}
-              <div style={{ background: "rgba(255,255,255,0.02)", padding: 16, borderRadius: 12, marginBottom: 20, fontSize: 13, color: "hsl(240 5% 70%)" }}>
-                <div style={{ fontWeight: 600, color: "white", marginBottom: 8 }}>💡 Istruzioni Caricamento</div>
+              <div style={{ background: "#eff6ff", border: "1px solid #bfdbfe", padding: 16, borderRadius: 12, marginBottom: 20, fontSize: 13, color: "#1e3a8a" }}>
+                <div style={{ fontWeight: 800, color: "#1e3a8a", marginBottom: 8 }}>💡 Istruzioni Caricamento</div>
                 {(qrSpot.type === "image" || qrSpot.type === "unlimited") && <div style={{ marginBottom: 4 }}>• <strong>Immagini:</strong> JPG, PNG, GIF (Max 5MB). Dimensioni consigliate 1080x1920px (verticale).</div>}
                 {(qrSpot.type === "video" || qrSpot.type === "unlimited") && <div style={{ marginBottom: 4 }}>• <strong>Video:</strong> MP4, MOV (Max 50MB). Consigliato 1080x1920px (Formato Reels/TikTok).</div>}
                 {(qrSpot.type === "pdf" || qrSpot.type === "unlimited")   && <div>• <strong>Documenti:</strong> PDF (Max 50MB). Usa testi ampi per agevolare la lettura da smartphone.</div>}
@@ -340,14 +340,14 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
                 onDragLeave={() => setDragOver(false)}
                 onDrop={handleDrop}
                 style={{
-                  border: `2px dashed ${dragOver ? "hsl(262 83% 72%)" : "rgba(255,255,255,0.15)"}`,
-                  background: dragOver ? "rgba(262, 83%, 72%, 0.05)" : "transparent",
+                  border: `2px dashed ${dragOver ? "#2563eb" : "#cbd5e1"}`,
+                  background: dragOver ? "#eff6ff" : "white",
                   borderRadius: 20, padding: "40px 20px", textAlign: "center", marginBottom: 32,
                   transition: "all 0.2s"
                 }}
               >
                 <div style={{ fontSize: 32, marginBottom: 12 }}>📤</div>
-                <p style={{ color: "hsl(240 5% 65%)", fontSize: 15, marginBottom: 16 }}>
+                <p style={{ color: "#475569", fontWeight: 500, fontSize: 15, marginBottom: 16 }}>
                   Trascina qui il tuo file {qrSpot.type.toUpperCase()} oppure usa il bottone.
                 </p>
                 <input type="file" ref={fileRef} style={{ display: "none" }} onChange={(e) => { if (e.target.files?.[0]) handleUpload(e as any); }} />
@@ -362,7 +362,7 @@ export default function QRClient({ qrSpot, publicUrl, typeDef }: any) {
                   <CreativitaItem key={file.id} file={file} onDelete={handleDeleteFile} />
                 ))}
                 {(!qrSpot.creativita || qrSpot.creativita.length === 0) && (
-                  <div style={{ color: "rgba(255,255,255,0.3)", fontSize: 14, fontStyle: "italic", padding: 20 }}>
+                  <div style={{ color: "#64748b", fontSize: 14, fontWeight: 500, fontStyle: "italic", padding: 20, background: "#f8fafc", borderRadius: 12, border: "1px dashed #e2e8f0", textAlign: "center" }}>
                     Nessun {qrSpot.type} associato a questo QR. Inquadrandolo, non mostrerà nulla!
                   </div>
                 )}
@@ -405,15 +405,15 @@ function CreativitaItem({ file, onDelete }: { file: any, onDelete: (id: string)=
 
   return (
     <div style={{
-      background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.06)", borderRadius: 16, padding: "16px 20px",
+      background: "white", border: "1px solid #e2e8f0", boxShadow: "0 4px 6px -1px rgba(0,0,0,0.05)", borderRadius: 16, padding: "16px 20px",
       display: "flex", flexDirection: "column", gap: 16
     }}>
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between" }}>
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
-           <div style={{ fontSize: 24 }}>{file.type === "image" ? "🖼️" : file.type === "video" ? "🎥" : "📄"}</div>
+           <div style={{ fontSize: 24, background: "#f1f5f9", width: 48, height: 48, display: "flex", alignItems: "center", justifyContent: "center", borderRadius: 12 }}>{file.type === "image" ? "🖼️" : file.type === "video" ? "🎥" : "📄"}</div>
            <div>
-             <div style={{ fontWeight: 500, fontSize: 15, marginBottom: 2 }}>{file.fileName || file.title || "File"}</div>
-             <div style={{ fontSize: 13, color: "hsl(240 5% 55%)" }}>{formatBytes(file.fileSize)} • Caricato il {new Date(file.createdAt).toLocaleDateString()}</div>
+             <div style={{ fontWeight: 800, color: "#0f172a", fontSize: 15, marginBottom: 2 }}>{file.fileName || file.title || "File"}</div>
+             <div style={{ fontSize: 13, color: "#64748b", fontWeight: 500 }}>{formatBytes(file.fileSize)} • Caricato il {new Date(file.createdAt).toLocaleDateString()}</div>
            </div>
         </div>
         <div style={{ display: "flex", gap: 12 }}>
@@ -422,13 +422,13 @@ function CreativitaItem({ file, onDelete }: { file: any, onDelete: (id: string)=
         </div>
       </div>
       
-      <div style={{ display: "flex", gap: 16, alignItems: "flex-end", borderTop: "1px solid rgba(255,255,255,0.05)", paddingTop: 16, marginTop: 4 }}>
+      <div style={{ display: "flex", gap: 16, alignItems: "flex-end", borderTop: "1px solid #e2e8f0", paddingTop: 16, marginTop: 4 }}>
         <div style={{ flex: 1 }}>
-          <label style={{ display: "block", fontSize: 12, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Inizio Campagna (opzionale)</label>
+          <label style={{ display: "block", fontSize: 12, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Inizio Campagna (opzionale)</label>
           <input type="datetime-local" className="input-field" value={publishAt} onChange={e => setPublishAt(e.target.value)} />
         </div>
         <div style={{ flex: 1 }}>
-          <label style={{ display: "block", fontSize: 12, color: "hsl(240 5% 65%)", marginBottom: 6 }}>Fine Campagna (opzionale)</label>
+          <label style={{ display: "block", fontSize: 12, color: "#475569", fontWeight: 600, marginBottom: 6 }}>Fine Campagna (opzionale)</label>
           <input type="datetime-local" className="input-field" value={expiresAt} onChange={e => setExpiresAt(e.target.value)} />
         </div>
         <button onClick={handleSaveDates} disabled={saving} className="btn-secondary" style={{ height: 42 }}>

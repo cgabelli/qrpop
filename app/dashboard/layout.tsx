@@ -14,14 +14,14 @@ export default async function DashboardLayout({
   const user = session.user as { id: string; email: string; name?: string; slug?: string; businessName?: string };
 
   return (
-    <div style={{ display: "flex", minHeight: "100vh", background: "hsl(240 10% 3.9%)" }}>
+    <div style={{ display: "flex", minHeight: "100vh", background: "#f8fafc" }}>
       {/* Sidebar */}
       <aside
         style={{
           width: 260,
           flexShrink: 0,
-          background: "hsl(240 6% 6%)",
-          borderRight: "1px solid rgba(255,255,255,0.06)",
+          background: "#0f172a",
+          borderRight: "1px solid #1e293b",
           display: "flex",
           flexDirection: "column",
           padding: "24px 16px",
@@ -39,7 +39,7 @@ export default async function DashboardLayout({
             textDecoration: "none", marginBottom: 40, padding: "0 8px",
           }}
         >
-          <img src="/logo-negative.svg" alt="QRpop Logo" style={{ height: 28, width: "auto", marginLeft: -8 }} />
+          <div style={{ fontSize: 24, fontWeight: 900, color: "#ffffff", letterSpacing: -1, marginLeft: 6 }}>QRpop</div>
         </Link>
 
         {/* Nav links */}
@@ -58,8 +58,8 @@ export default async function DashboardLayout({
                 display: "flex", alignItems: "center", gap: 12,
                 padding: "11px 14px", borderRadius: 10,
                 textDecoration: "none",
-                color: "hsl(240 5% 65%)",
-                fontSize: 14, fontWeight: 500,
+                color: "#cbd5e1",
+                fontSize: 15, fontWeight: 600,
                 transition: "all 0.2s",
               }}
               className="sidebar-link"
@@ -72,19 +72,20 @@ export default async function DashboardLayout({
 
         {/* User section */}
         <div style={{
-          borderTop: "1px solid rgba(255,255,255,0.06)",
+          borderTop: "1px solid #1e293b",
           paddingTop: 20,
           marginTop: 20,
         }}>
           <div style={{
             padding: "12px 14px", borderRadius: 10,
-            background: "rgba(255,255,255,0.03)",
+            background: "#1e293b",
             marginBottom: 12,
+            border: "1px solid #334155",
           }}>
-            <div style={{ fontSize: 14, fontWeight: 600, color: "white", marginBottom: 2 }}>
+            <div style={{ fontSize: 14, fontWeight: 700, color: "#ffffff", marginBottom: 2 }}>
               {user.businessName ?? user.name}
             </div>
-            <div style={{ fontSize: 12, color: "hsl(240 5% 50%)" }}>{user.email}</div>
+            <div style={{ fontSize: 12, color: "#94a3b8", fontWeight: 500 }}>{user.email}</div>
           </div>
 
           <form
@@ -100,10 +101,10 @@ export default async function DashboardLayout({
                 padding: "10px 14px",
                 borderRadius: 10,
                 background: "transparent",
-                border: "1px solid rgba(255,255,255,0.08)",
-                color: "hsl(240 5% 55%)",
-                fontSize: 13,
-                fontWeight: 500,
+                border: "1px solid #334155",
+                color: "#cbd5e1",
+                fontSize: 14,
+                fontWeight: 600,
                 cursor: "pointer",
                 display: "flex",
                 alignItems: "center",
@@ -125,8 +126,8 @@ export default async function DashboardLayout({
 
       <style>{`
         .sidebar-link:hover {
-          background: rgba(255,255,255,0.05) !important;
-          color: white !important;
+          background: #1e293b !important;
+          color: #ffffff !important;
         }
       `}</style>
     </div>

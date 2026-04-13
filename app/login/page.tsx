@@ -48,27 +48,24 @@ function LoginForm() {
         flexDirection: "column",
         alignItems: "center",
         justifyContent: "center",
-        background: "hsl(240 10% 4%)",
+        background: "#f8fafc",
         padding: 20,
         fontFamily: "Inter, sans-serif",
       }}
     >
       {/* Logo */}
       <div style={{ marginBottom: 40, textAlign: "center" }}>
-        <img
-          src="/logo-negative.svg"
-          alt="QRpop"
-          style={{ height: 36, marginBottom: 16 }}
-        />
-        <div style={{ color: "hsl(240 5% 55%)", fontSize: 15 }}>
+        <Link href="/" style={{ textDecoration: "none" }}>
+          <div style={{ fontSize: 36, fontWeight: 900, color: "#0f172a", letterSpacing: -1, marginBottom: 16 }}>QRpop</div>
+        </Link>
+        <div style={{ color: "#475569", fontSize: 16, fontWeight: 500 }}>
           Accedi al pannello di controllo
         </div>
       </div>
 
       {/* Card */}
       <div
-        className="card"
-        style={{ width: "100%", maxWidth: 420, padding: "40px 32px" }}
+        style={{ width: "100%", maxWidth: 420, padding: "40px 32px", background: "white", border: "1px solid #e2e8f0", borderRadius: 24, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" }}
       >
         <h1
           style={{
@@ -76,7 +73,7 @@ function LoginForm() {
             fontWeight: 800,
             marginBottom: 32,
             textAlign: "center",
-            color: "white",
+            color: "#0f172a",
           }}
         >
           Bentornato
@@ -111,7 +108,7 @@ function LoginForm() {
                 fontSize: 14,
                 fontWeight: 600,
                 marginBottom: 8,
-                color: "hsl(240 5% 70%)",
+                color: "#475569",
               }}
             >
               Email
@@ -142,7 +139,7 @@ function LoginForm() {
                 style={{
                   fontSize: 14,
                   fontWeight: 600,
-                  color: "hsl(240 5% 70%)",
+                  color: "#475569",
                 }}
               >
                 Password
@@ -151,7 +148,8 @@ function LoginForm() {
                 href="/forgot-password"
                 style={{
                   fontSize: 13,
-                  color: "hsl(262 83% 70%)",
+                  color: "#2563eb",
+                  fontWeight: 600,
                   textDecoration: "none",
                 }}
               >
@@ -187,10 +185,10 @@ function LoginForm() {
                 height: 20,
                 borderRadius: 5,
                 border: rememberMe
-                  ? "2px solid hsl(262 83% 65%)"
-                  : "2px solid rgba(255,255,255,0.2)",
+                  ? "2px solid #2563eb"
+                  : "2px solid #cbd5e1",
                 background: rememberMe
-                  ? "hsl(262 83% 65%)"
+                  ? "#2563eb"
                   : "transparent",
                 display: "flex",
                 alignItems: "center",
@@ -217,7 +215,7 @@ function LoginForm() {
                 </svg>
               )}
             </div>
-            <span style={{ fontSize: 14, color: "hsl(240 5% 65%)" }}>
+            <span style={{ fontSize: 14, color: "#475569", fontWeight: 500 }}>
               Ricordami per 30 giorni
             </span>
           </label>
@@ -246,8 +244,8 @@ function LoginForm() {
           <Link
             href="/register"
             style={{
-              color: "hsl(262 83% 70%)",
-              fontWeight: 600,
+              color: "#2563eb",
+              fontWeight: 800,
               textDecoration: "none",
             }}
           >
@@ -263,7 +261,7 @@ export default function LoginPage() {
   return (
     <Suspense
       fallback={
-        <div style={{ minHeight: "100vh", background: "hsl(240 10% 4%)" }} />
+        <div style={{ minHeight: "100vh", background: "#f8fafc" }} />
       }
     >
       <LoginForm />
