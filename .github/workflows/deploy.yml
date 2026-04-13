@@ -5,6 +5,10 @@ on:
     branches:
       - main
 
+defaults:
+  run:
+    working-directory: web
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -18,8 +22,7 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: |
-          npm ci
+        run: npm ci
 
       - name: Generate Prisma Client & Build Next.js
         run: |
@@ -27,6 +30,7 @@ jobs:
           npm run build
         env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          NEXTAUTH_SECRET: ${{ secrets.NEXTAUTH_SECRET }}
           NEXT_PUBLIC_APP_URL: "https://qrpop.it"
 
       - name: Deploy via SSH/rsync
@@ -35,9 +39,9 @@ jobs:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           REMOTE_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
-          SOURCE: "./"
-          TARGET: "/var/www/vhosts/qrpop.it/app" # Sostituire con il path reale su Plesk
-          EXCLUDE: "/node_modules/, /.git/, /.env*"
+          SOURCE: "web/"
+          TARGET: "/var/www/vhosts/qrpop.it/app"
+          EXCLUDE: "/web/node_modules/, /web/.git/, /web/.env*, /web/.next/"
           ARGS: "-rltgoDzvO --delete"
 
       - name: Restart PM2 & Setup DB
@@ -50,7 +54,7 @@ jobs:
             cd /var/www/vhosts/qrpop.it/app
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-            npm install --production
+            npm install --omit=dev
             npx prisma db push --accept-data-loss
             pm2 start ecosystem.config.cjs || pm2 restart qrpop-web
             pm2 save
