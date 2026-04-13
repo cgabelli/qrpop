@@ -19,7 +19,7 @@ jobs:
           REMOTE_HOST: ${{ secrets.SERVER_HOST }}
           REMOTE_USER: ${{ secrets.SERVER_USER }}
           SOURCE: "./"
-          TARGET: "/var/www/vhosts/qrpop.it/app"
+          TARGET: "/var/www/vhosts/qrpop.it/httpdocs"
           EXCLUDE: "/node_modules/, /.git/, /.next/, /.env*/"
           ARGS: "-rltgoDzvO --delete"
 
@@ -43,8 +43,8 @@ jobs:
             echo "PWD: $(pwd)"
             
             # Go to app directory (create if needed)
-            mkdir -p /var/www/vhosts/qrpop.it/app
-            cd /var/www/vhosts/qrpop.it/app
+            mkdir -p /var/www/vhosts/qrpop.it/httpdocs
+            cd /var/www/vhosts/qrpop.it/httpdocs
             echo "In dir: $(pwd), files: $(ls | head -5)"
             
             npm install --legacy-peer-deps
@@ -53,7 +53,7 @@ jobs:
             DATABASE_URL="${{ secrets.DATABASE_URL }}" NEXTAUTH_SECRET="${{ secrets.NEXTAUTH_SECRET }}" NEXT_PUBLIC_APP_URL="https://qrpop.it" npm run build
             # Force PM2 to restart from the new directory
             pm2 delete qrpop-web 2>/dev/null || true
-            pm2 start /var/www/vhosts/qrpop.it/app/ecosystem.config.cjs
+            pm2 start /var/www/vhosts/qrpop.it/httpdocs/ecosystem.config.cjs
             pm2 save
             echo "PM2 status:"
             pm2 list

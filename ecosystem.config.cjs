@@ -2,7 +2,7 @@ module.exports = {
   apps: [
     {
       name: "qrpop-web",
-      cwd: "/var/www/vhosts/qrpop.it/app",
+      cwd: "/var/www/vhosts/qrpop.it/httpdocs",
       script: "node_modules/.bin/next",
       args: "start",
       env: {
