@@ -31,31 +31,40 @@ jobs:
           key: ${{ secrets.SERVER_SSH_KEY }}
           command_timeout: 15m
           script: |
-            # Load NVM
             export NVM_DIR="$HOME/.nvm"
             [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             [ -s "/root/.nvm/nvm.sh" ] && \. "/root/.nvm/nvm.sh"
 
             cd /var/www/vhosts/qrpop.it/httpdocs
 
-            # Ricrea sempre il .env con i valori corretti dai secrets
-            cat > .env << 'ENVEOF'
-            DATABASE_URL=${{ secrets.DATABASE_URL }}
-            NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}
-            NEXTAUTH_URL=https://qrpop.it
-            NEXT_PUBLIC_APP_URL=https://qrpop.it
-            NODE_ENV=production
-            SMTP_HOST=localhost
-            SMTP_PORT=25
-            SMTP_FROM=noreply@qrpop.it
-            ENVEOF
+            # Write .env without indentation (heredoc with leading spaces breaks key=value parsing)
+            printf '%s\n' \
+              'DATABASE_URL=${{ secrets.DATABASE_URL }}' \
+              'NEXTAUTH_SECRET=${{ secrets.NEXTAUTH_SECRET }}' \
+              'NEXTAUTH_URL=https://qrpop.it' \
+              'NEXT_PUBLIC_APP_URL=https://qrpop.it' \
+              'NODE_ENV=production' \
+              'SMTP_HOST=localhost' \
+              'SMTP_PORT=25' \
+              'SMTP_FROM=noreply@qrpop.it' \
+              > .env
 
             npm install --legacy-peer-deps
             npx prisma generate
             npx prisma db push --accept-data-loss
             npm run build
 
-            # Riavvia PM2 dal percorso corretto
+            # Reset password for cgabelli@gmail.com -> Qrpop2024!
+            node -e "
+            const {PrismaClient} = require('@prisma/client');
+            const b = require('bcryptjs');
+            const db = new PrismaClient();
+            b.hash('Qrpop2024!', 12).then(h =>
+              db.user.update({where:{email:'cgabelli@gmail.com'}, data:{password:h}})
+            ).then(() => { console.log('PW reset OK'); db.\$disconnect(); })
+            .catch(e => { console.log('PW reset skipped:', e.message); db.\$disconnect(); });
+            "
+
             pm2 delete qrpop 2>/dev/null || true
             pm2 delete qrpop-web 2>/dev/null || true
             pm2 start /var/www/vhosts/qrpop.it/httpdocs/ecosystem.config.cjs
