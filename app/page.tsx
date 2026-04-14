@@ -479,11 +479,19 @@ function Footer() {
           </div>
         </div>
         <div style={{ display: "flex", gap: 24, fontWeight: 600, flexWrap: "wrap", justifyContent: "center" }}>
-          <Link href="/privacy" style={{ color: "#475569", textDecoration: "none" }}>Privacy Policy</Link>
-          <Link href="/cookie" style={{ color: "#475569", textDecoration: "none" }}>Cookie</Link>
-          <Link href="/termini" style={{ color: "#475569", textDecoration: "none" }}>Termini</Link>
-          <Link href="/accedi" style={{ color: "#475569", textDecoration: "none" }}>Accedi</Link>
-          <Link href="/register" style={{ color: "#475569", textDecoration: "none" }}>Registrati</Link>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, textAlign: "left" }}>
+             <h4 style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 4 }}>Risorse SEO</h4>
+             <Link href="/menu-digitale-ristoranti" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Menu Ristoranti PDF</Link>
+             <Link href="/qr-code-recensioni-google" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>QR Code Recensioni</Link>
+          </div>
+          <div style={{ display: "flex", flexDirection: "column", gap: 12, textAlign: "left" }}>
+             <h4 style={{ fontSize: 11, textTransform: "uppercase", letterSpacing: 1, color: "#94a3b8", marginBottom: 4 }}>Company</h4>
+             <Link href="/accedi" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Accedi</Link>
+             <Link href="/register" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Registrati</Link>
+             <Link href="/privacy" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Privacy Policy</Link>
+             <Link href="/cookie" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Cookie</Link>
+             <Link href="/termini" style={{ color: "#475569", textDecoration: "none", fontSize: 14 }}>Termini & Condizioni</Link>
+          </div>
         </div>
       </div>
     </footer>

@@ -6,6 +6,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
   // Tutte le rotte pubbliche da indicizzare
   const routes = [
     '',
+    '/menu-digitale-ristoranti',
+    '/qr-code-recensioni-google',
     '/accedi',
     '/register',
     '/privacy',
