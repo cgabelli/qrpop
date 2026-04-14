@@ -5,7 +5,14 @@ const ADMIN_EMAIL = "cgabelli@gmail.com";
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
   const session = await auth();
-  if (!session?.user?.email || session.user.email !== ADMIN_EMAIL) {
+
+  // Non autenticato → vai al login con callbackUrl corretto
+  if (!session?.user?.email) {
+    redirect("/accedi?callbackUrl=/gestione");
+  }
+
+  // Autenticato ma non admin → vai al dashboard normale
+  if (session.user.email !== ADMIN_EMAIL) {
     redirect("/dashboard");
   }
   return (
