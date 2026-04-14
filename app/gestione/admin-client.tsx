@@ -144,6 +144,25 @@ export default function AdminClient({ users: initialUsers, stats }: { users: Use
     }
   };
 
+  const deleteUser = async () => {
+    if (!selected) return;
+    if (!confirm(`Sei sicuro di voler eliminare DEFINITIVAMENTE l'utente ${selected.businessName} e TUTTI i suoi QR Code? L'operazione è irreversibile.`)) return;
+    
+    setSaving(true);
+    try {
+      const res = await fetch(`/api/admin/users/${selected.id}`, { method: "DELETE" });
+      if (!res.ok) { alert("Errore nell'eliminazione"); return; }
+      
+      setUsers((prev) => prev.filter((u) => u.id !== selected.id));
+      setSelected(null);
+      setEditing(false);
+    } catch (e) {
+      alert("Errore di rete");
+    } finally {
+      setSaving(false);
+    }
+  };
+
   const toggleActive = async (user: User) => {
     setLoading(user.id);
     try {
@@ -287,9 +306,14 @@ export default function AdminClient({ users: initialUsers, stats }: { users: Use
               </div>
               <div style={{ display: "flex", gap: 8 }}>
                 {!editing ? (
-                  <button onClick={() => openEdit(selected)} style={{ padding: "8px 16px", borderRadius: 10, border: "none", background: "#7c3aed", color: "white", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
-                    ✏️ Modifica
-                  </button>
+                  <>
+                    <button onClick={deleteUser} disabled={saving} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid #fee2e2", background: "#fef2f2", color: "#ef4444", fontSize: 13, fontWeight: 700, cursor: saving ? "wait" : "pointer" }}>
+                      🗑️ Elimina
+                    </button>
+                    <button onClick={() => openEdit(selected)} style={{ padding: "8px 16px", borderRadius: 10, border: "none", background: "#7c3aed", color: "white", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>
+                      ✏️ Modifica
+                    </button>
+                  </>
                 ) : (
                   <>
                     <button onClick={() => setEditing(false)} style={{ padding: "8px 16px", borderRadius: 10, border: "1px solid #e2e8f0", background: "white", color: "#64748b", fontSize: 13, fontWeight: 700, cursor: "pointer" }}>

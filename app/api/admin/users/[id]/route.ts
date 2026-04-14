@@ -32,3 +32,18 @@ export async function PUT(req: Request, { params }: { params: Promise<{ id: stri
 
   return NextResponse.json({ ok: true, user: updated });
 }
+
+export async function DELETE(req: Request, { params }: { params: Promise<{ id: string }> }) {
+  const session = await auth();
+  if (session?.user?.email !== ADMIN_EMAIL) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  const { id } = await params;
+  
+  await prisma.user.delete({
+    where: { id },
+  });
+
+  return NextResponse.json({ ok: true });
+}
