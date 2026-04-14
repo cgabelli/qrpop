@@ -5,15 +5,17 @@ import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
 
 const PLANS = [
-  { id: "media_annual", name: "Media", price: "€49/anno", icon: "📸", type: "Media", desc: "10 upload all'anno" },
-  { id: "pdf_annual", name: "PDF", price: "€99/anno", icon: "📄", type: "PDF", desc: "20 upload all'anno" },
-  { id: "unlimited_annual", name: "Unlimited", price: "€149/anno", icon: "🚀", type: "Unlimited", desc: "Illimitati in ogni formato" },
+  { id: "free", name: "Link Redirect", price: "Gratis", icon: "🔗", desc: "Prova senza impegno" },
+  { id: "image", name: "Immagine", price: "€ 19/anno", icon: "🖼️", desc: "Menu foto e promozioni visive" },
+  { id: "video", name: "Video", price: "€ 29/anno", icon: "🎥", desc: "Promo video in loop sui tavoli" },
+  { id: "pdf", name: "PDF", price: "€ 49/anno", icon: "📄", desc: "Menù e cataloghi professionali" },
+  { id: "unlimited", name: "Unlimited", price: "€ 99/anno", icon: "🌟", desc: "Nessun vincolo, massima libertà" },
 ];
 
 function RegisterForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const defaultPlan = searchParams.get("plan") ?? "media_annual";
+  const defaultPlan = searchParams.get("spot") ?? searchParams.get("plan") ?? "free";
 
   const [step, setStep] = useState(1);
   const [selectedPlan, setSelectedPlan] = useState(defaultPlan);
@@ -31,7 +33,7 @@ function RegisterForm() {
   const [success, setSuccess] = useState(false);
 
   useEffect(() => {
-    const plan = searchParams.get("plan");
+    const plan = searchParams.get("spot") ?? searchParams.get("plan");
     if (plan) setSelectedPlan(plan);
   }, [searchParams]);
 
