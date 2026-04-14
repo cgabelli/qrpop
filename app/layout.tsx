@@ -24,6 +24,7 @@ export const metadata: Metadata = {
 };
 
 import { CookieBanner } from "@/components/CookieBanner";
+import WhatsAppWidget from "@/components/WhatsAppWidget";
 
 export default function RootLayout({
   children,
@@ -34,8 +35,10 @@ export default function RootLayout({
     <html lang="it" className={inter.className}>
       <body className="min-h-screen antialiased">
         {children}
+        <WhatsAppWidget />
         <CookieBanner />
       </body>
+
     </html>
   );
 }
