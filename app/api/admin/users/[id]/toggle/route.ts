@@ -4,17 +4,18 @@ import { prisma } from "@/lib/db";
 
 const ADMIN_EMAIL = "cgabelli@gmail.com";
 
-export async function POST(req: Request, { params }: { params: { id: string } }) {
+export async function POST(req: Request, { params }: { params: Promise<{ id: string }> }) {
   const session = await auth();
   if (session?.user?.email !== ADMIN_EMAIL) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  const user = await prisma.user.findUnique({ where: { id: params.id } });
+  const { id } = await params;
+  const user = await prisma.user.findUnique({ where: { id } });
   if (!user) return NextResponse.json({ error: "Not found" }, { status: 404 });
 
   await prisma.user.update({
-    where: { id: params.id },
+    where: { id },
     data: { isActive: !user.isActive },
   });
 

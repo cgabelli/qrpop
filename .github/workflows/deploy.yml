@@ -58,7 +58,8 @@ jobs:
 
             npm install --legacy-peer-deps
             npx prisma generate
-            npm run build
+            # Build: if fails, abort without touching PM2 (keeps old version live)
+            npm run build || { echo "❌ BUILD FAILED - keeping old version live"; exit 1; }
 
             pm2 delete qrpop 2>/dev/null || true
             pm2 delete qrpop-web 2>/dev/null || true
