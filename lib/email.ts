@@ -16,6 +16,9 @@ export async function sendVerificationEmail(email: string, token: string) {
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
     secure: Number(process.env.SMTP_PORT) === 465,
+    tls: {
+      rejectUnauthorized: false,
+    },
     ...(process.env.SMTP_USER && {
       auth: {
         user: process.env.SMTP_USER,
@@ -57,6 +60,9 @@ export async function sendPasswordResetEmail(email: string, token: string) {
     host: process.env.SMTP_HOST,
     port: Number(process.env.SMTP_PORT) || 587,
     secure: Number(process.env.SMTP_PORT) === 465,
+    tls: {
+      rejectUnauthorized: false,
+    },
     ...(process.env.SMTP_USER && {
       auth: {
         user: process.env.SMTP_USER,
