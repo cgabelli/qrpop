@@ -10,7 +10,7 @@ export default async function AdminPage() {
   if (!session?.user?.id) redirect("/accedi");
   if (session?.user?.email !== "cgabelli@gmail.com") redirect("/dashboard");
 
-  const [users, totalSpots, activeSpots] = await Promise.all([
+  const [users, totalSpots, activeSpots, campaigns] = await Promise.all([
     prisma.user.findMany({
       include: {
         qrSpots: true,
@@ -20,6 +20,13 @@ export default async function AdminPage() {
     }),
     prisma.qRSpot.count(),
     prisma.qRSpot.count({ where: { status: "active" } }),
+    prisma.creativita.findMany({
+      include: {
+        user: { select: { businessName: true } },
+        qrSpot: { select: { name: true } },
+      },
+      orderBy: { createdAt: "desc" },
+    }),
   ]);
 
   const stats = {
@@ -31,5 +38,5 @@ export default async function AdminPage() {
     stripeConnected: users.filter((u) => u.stripeCustomerId).length,
   };
 
-  return <AdminClient users={users as any} stats={stats} />;
+  return <AdminClient users={users as any} stats={stats} campaigns={campaigns as any} />;
 }

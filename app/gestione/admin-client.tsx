@@ -1,6 +1,20 @@
 "use client";
 import { useState } from "react";
 
+type Campaign = {
+  id: string;
+  type: string;
+  fileName: string;
+  title?: string | null;
+  status: string;
+  filePath: string;
+  publishAt?: string | null;
+  expiresAt?: string | null;
+  createdAt: string;
+  user: { businessName: string };
+  qrSpot?: { name: string } | null;
+};
+
 type QRSpot = {
   id: string;
   name: string;
@@ -75,9 +89,10 @@ const INPUT = {
   background: "white", boxSizing: "border-box" as const,
 };
 
-export default function AdminClient({ users: initialUsers, stats }: { users: User[]; stats: Stats }) {
+export default function AdminClient({ users: initialUsers, stats, campaigns }: { users: User[]; stats: Stats; campaigns: Campaign[] }) {
   const [users, setUsers] = useState(initialUsers);
   const [search, setSearch] = useState("");
+  const [activeTab, setActiveTab] = useState<"users" | "campaigns">("users");
   const [filter, setFilter] = useState<"all" | "active" | "inactive" | "expiring">("all");
   const [selected, setSelected] = useState<User | null>(null);
   const [editing, setEditing] = useState(false);
@@ -197,6 +212,14 @@ export default function AdminClient({ users: initialUsers, stats }: { users: Use
         ))}
       </div>
 
+      {/* Tabs */}
+      <div style={{ display: "flex", gap: 16, marginBottom: 24 }}>
+        <button onClick={() => setActiveTab("users")} style={{ padding: "10px 20px", borderRadius: 12, border: "none", background: activeTab === "users" ? "#0f172a" : "white", color: activeTab === "users" ? "white" : "#64748b", fontWeight: 700, fontSize: 14, cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>👥 Utenti Registrati</button>
+        <button onClick={() => setActiveTab("campaigns")} style={{ padding: "10px 20px", borderRadius: 12, border: "none", background: activeTab === "campaigns" ? "#0f172a" : "white", color: activeTab === "campaigns" ? "white" : "#64748b", fontWeight: 700, fontSize: 14, cursor: "pointer", boxShadow: "0 1px 3px rgba(0,0,0,0.05)" }}>🚀 Campagne / Creatività</button>
+      </div>
+
+      {activeTab === "users" ? (
+      <>
       {/* Table */}
       <div style={{ background: "white", borderRadius: 16, border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden" }}>
         <div style={{ padding: "20px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", gap: 12, alignItems: "center", flexWrap: "wrap" }}>
@@ -285,6 +308,62 @@ export default function AdminClient({ users: initialUsers, stats }: { users: Use
           </table>
         </div>
       </div>
+      </>
+      ) : (
+      <>
+      {/* Campagne */}
+      <div style={{ background: "white", borderRadius: 16, border: "1px solid #e2e8f0", boxShadow: "0 1px 3px rgba(0,0,0,0.05)", overflow: "hidden" }}>
+        <div style={{ padding: "20px 24px", borderBottom: "1px solid #f1f5f9", display: "flex", gap: 12, alignItems: "center" }}>
+          <h2 style={{ fontSize: 18, fontWeight: 800, color: "#0f172a", flexGrow: 1 }}>Tutte le Creatività ({campaigns.length})</h2>
+        </div>
+        <div style={{ overflowX: "auto" }}>
+          <table style={{ width: "100%", borderCollapse: "collapse" }}>
+            <thead>
+              <tr style={{ background: "#f8fafc" }}>
+                {["Creatività", "Azienda / Utente", "QR Spot", "Tipo / Stato", "Inizio", "Fine", ""].map((h) => (
+                  <th key={h} style={{ padding: "12px 16px", textAlign: "left", fontSize: 11, fontWeight: 700, color: "#64748b", textTransform: "uppercase", letterSpacing: 0.5, whiteSpace: "nowrap", borderBottom: "1px solid #f1f5f9" }}>{h}</th>
+                ))}
+              </tr>
+            </thead>
+            <tbody>
+              {campaigns.map((camp) => (
+                <tr key={camp.id} style={{ borderBottom: "1px solid #f8fafc" }}>
+                  <td style={{ padding: "14px 16px" }}>
+                    <div style={{ fontWeight: 700, fontSize: 14, color: "#0f172a" }}>{camp.title || camp.fileName || "Senza Titolo"}</div>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 2 }}>{new Date(camp.createdAt).toLocaleDateString("it-IT")}</div>
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 14, fontWeight: 600, color: "#0284c7" }}>
+                    {camp.user?.businessName || "Sconosciuto"}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: "#475569", fontWeight: 500 }}>
+                    {camp.qrSpot?.name || "Nessuno (Orfano)"}
+                  </td>
+                  <td style={{ padding: "14px 16px" }}>
+                    <span style={{ padding: "3px 10px", borderRadius: 99, fontSize: 11, fontWeight: 700, background: "rgba(124,58,237,0.1)", color: "#7c3aed" }}>
+                      {camp.type.toUpperCase()}
+                    </span>
+                    <div style={{ fontSize: 11, color: "#94a3b8", marginTop: 4, fontWeight: 600 }}>STATUS: {camp.status}</div>
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: camp.publishAt ? "#16a34a" : "#94a3b8", fontWeight: 700 }}>
+                    {camp.publishAt ? new Date(camp.publishAt).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" }) : "Nessuno"}
+                  </td>
+                  <td style={{ padding: "14px 16px", fontSize: 13, color: camp.expiresAt ? "#dc2626" : "#94a3b8", fontWeight: 700 }}>
+                    {camp.expiresAt ? new Date(camp.expiresAt).toLocaleString("it-IT", { dateStyle: "short", timeStyle: "short" }) : "Nessuna"}
+                  </td>
+                  <td style={{ padding: "14px 16px", textAlign: "right" }}>
+                     <a href={camp.filePath} target="_blank" rel="noopener noreferrer" style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid #e2e8f0", background: "white", color: "#0f172a", fontSize: 11, fontWeight: 700, textDecoration: "none" }}>Apri File</a>
+                  </td>
+                </tr>
+              ))}
+              {campaigns.length === 0 && (
+                <tr><td colSpan={7} style={{ padding: 40, textAlign: "center", color: "#94a3b8", fontSize: 14 }}>Nessuna creatività trovata</td></tr>
+              )}
+            </tbody>
+          </table>
+        </div>
+      </div>
+      </>
+      )}
 
       {/* Detail / Edit Modal */}
       {selected && (
@@ -434,6 +513,36 @@ export default function AdminClient({ users: initialUsers, stats }: { users: Use
                 </div>
               )}
             </Section>
+
+            {/* Creatività dell'utente */}
+            {!editing && (() => {
+              const userCampaigns = campaigns.filter(c => c.userId === selected.id);
+              return (
+              <Section title={`Creatività Caricate (${userCampaigns.length})`}>
+                {userCampaigns.length === 0 ? (
+                  <p style={{ color: "#94a3b8", fontSize: 13 }}>Nessun file caricato</p>
+                ) : (
+                  <div style={{ display: "grid", gap: 10 }}>
+                    {userCampaigns.map((camp) => (
+                      <div key={camp.id} style={{ display: "flex", justifyContent: "space-between", alignItems: "center", padding: "14px 16px", background: "#f8fafc", borderRadius: 12, border: "1px solid #f1f5f9" }}>
+                        <div>
+                          <div style={{ fontSize: 13, fontWeight: 700, color: "#0f172a" }}>{camp.title || camp.fileName || "File"}</div>
+                          <span style={{ fontSize: 11, color: "#7c3aed", fontWeight: 700 }}>{camp.type.toUpperCase()}</span>
+                          <span style={{ fontSize: 11, color: "#94a3b8", marginLeft: 8 }}>{camp.qrSpot?.name || "Orfano"}</span>
+                        </div>
+                        <div style={{ display: "flex", gap: 12, alignItems: "center" }}>
+                           {camp.publishAt && <div style={{ fontSize: 11, color: "#16a34a", fontWeight: 700 }}>Dal: {new Date(camp.publishAt).toLocaleDateString("it-IT")}</div>}
+                           {camp.expiresAt && <div style={{ fontSize: 11, color: "#dc2626", fontWeight: 700 }}>Al: {new Date(camp.expiresAt).toLocaleDateString("it-IT")}</div>}
+                           <a href={camp.filePath} target="_blank" rel="noopener noreferrer" style={{ padding: "6px 12px", borderRadius: 8, border: "1px solid #e2e8f0", background: "white", color: "#0f172a", fontSize: 11, fontWeight: 700, textDecoration: "none" }}>Apri File</a>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </Section>
+              );
+            })()}
+
           </div>
         </div>
       )}
