@@ -47,7 +47,7 @@ jobs:
               'SMTP_HOST=qrpop.it' \
               'SMTP_PORT=465' \
               'SMTP_USER=clienti@qrpop.it' \
-              'SMTP_PASS=1$8Rc0fk8' \
+              'SMTP_PASS=1\$8Rc0fk8' \
               'SMTP_FROM=clienti@qrpop.it' \
               'STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}' \
               'STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}' \
