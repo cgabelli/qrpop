@@ -6,15 +6,15 @@ const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
   title: {
-    default: "QRpop — Trasforma il tuo QR Code in un'esperienza di Marketing",
+    default: "QR Code Dinamico Gratis: Menu, Offerte e Recensioni | QRpop",
     template: "%s | QRpop",
   },
   description:
-    "Crea il tuo QR Code gratuitamente e posiziona il tuo logo al centro. Gestisci menu, promozioni visive, video e PDF in tempo reale. Per ristoranti e attività.",
-  keywords: ["QR code", "ristorante", "menu digitale", "marketing", "QRpop", "QR Dinamico", "Generatore QR Code", "Fidelity Card"],
+    "Generatore QR Code dinamico progettato per uffici e ristoranti. Inserisci il logo gratis, crea menu digitali o converti i clienti su Google Maps. Cambia link live.",
+  keywords: ["Generatore QR Code", "QR code", "Menu digitale ristorante", "QR Dinamico Gratis", "QR code con logo", "marketing", "QRpop"],
   authors: [{ name: "Springfield S.r.l.", url: "https://www.springfield.srl" }],
   creator: "Springfield S.r.l.",
-  category: "Software",
+  category: "BusinessApplication",
   metadataBase: new URL("https://qrpop.it"),
   alternates: {
     canonical: '/',
@@ -24,9 +24,9 @@ export const metadata: Metadata = {
     locale: "it_IT",
     url: "https://qrpop.it",
     siteName: "QRpop",
-    title: "QRpop — Trasforma il tuo QR Code in Marketing Dinamico",
+    title: "QR Code Dinamico Gratis: Menu e Marketing | QRpop",
     description:
-      "Crea e gestisci QR Code dinamici per il tuo locale. Nessun vincolo, aggiorna i contenuti quante volte vuoi senza dover ristampare nulla.",
+      "Il tool definitivo per il tuo locale. Personalizza il QR Code con il tuo logo gratuitamente ed aggiorna il link interno di continuo senza mai dover ristampare i codici.",
     images: [
       {
         url: "https://qrpop.it/og-image.jpg",
@@ -38,8 +38,8 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: "summary_large_image",
-    title: "QRpop — Il QR Code Dinamico per il TUO Locale",
-    description: "Crea il tuo QR Code gratuito con logo. Gestisci menu, file video e PDF dei tuoi prodotti in tempo reale.",
+    title: "Miglior Generatore QR Code Dinamico ITA | QRpop",
+    description: "Crea il tuo QR Code aziendale. Gestisci menu, grafiche, recensioni Google in tempo reale dal telefono.",
     images: ["https://qrpop.it/og-image.jpg"],
   },
   robots: {
