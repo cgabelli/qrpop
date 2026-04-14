@@ -44,9 +44,11 @@ jobs:
               'NEXTAUTH_URL=https://qrpop.it' \
               'NEXT_PUBLIC_APP_URL=https://qrpop.it' \
               'NODE_ENV=production' \
-              'SMTP_HOST=localhost' \
-              'SMTP_PORT=25' \
-              'SMTP_FROM=noreply@qrpop.it' \
+              'SMTP_HOST=qrpop.it' \
+              'SMTP_PORT=465' \
+              'SMTP_USER=clienti@qrpop.it' \
+              'SMTP_PASS=1$8Rc0fk8' \
+              'SMTP_FROM=clienti@qrpop.it' \
               'STRIPE_SECRET_KEY=${{ secrets.STRIPE_SECRET_KEY }}' \
               'STRIPE_PUBLISHABLE_KEY=${{ secrets.STRIPE_PUBLISHABLE_KEY }}' \
               'STRIPE_WEBHOOK_SECRET=${{ secrets.STRIPE_WEBHOOK_SECRET }}' \
