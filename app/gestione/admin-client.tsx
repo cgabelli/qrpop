@@ -3,6 +3,7 @@ import { useState } from "react";
 
 type Campaign = {
   id: string;
+  userId: string;
   type: string;
   fileName: string;
   title?: string | null;
