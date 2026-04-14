@@ -7,7 +7,7 @@ export const metadata = { title: "Super Admin | QRpop" };
 
 export default async function AdminPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  if (!session?.user?.id) redirect("/accedi");
 
   const [users, totalSpots, activeSpots] = await Promise.all([
     prisma.user.findMany({

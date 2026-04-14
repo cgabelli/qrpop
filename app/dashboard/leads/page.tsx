@@ -6,7 +6,7 @@ export const metadata = { title: "I tuoi Clienti" };
 
 export default async function LeadsPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  if (!session?.user?.id) redirect("/accedi");
 
   const leads = await prisma.customerLead.findMany({
     where: { qrSpot: { userId: session.user.id } },

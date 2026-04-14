@@ -12,8 +12,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
     maxAge: 30 * 24 * 60 * 60, // 30 giorni default
   },
   pages: {
-    signIn: "/login",
-    error: "/login",
+    signIn: "/accedi",
+    error: "/accedi",
   },
   callbacks: {
     async jwt({ token, user }) {

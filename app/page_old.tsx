@@ -105,7 +105,7 @@ function NavBar() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 12 }}>
           <Link
-            href="/login"
+            href="/accedi"
             style={{
               color: "hsl(240 5% 65%)",
               textDecoration: "none",
@@ -682,7 +682,7 @@ function Footer() {
           <span>© {new Date().getFullYear()} Tutti i diritti riservati</span>
         </div>
         <div style={{ display: "flex", gap: 24 }}>
-          <Link href="/login" style={{ color: "hsl(240 5% 50%)", textDecoration: "none", transition: "color 0.2s" }}>
+          <Link href="/accedi" style={{ color: "hsl(240 5% 50%)", textDecoration: "none", transition: "color 0.2s" }}>
             Accedi
           </Link>
           <Link href="/register" style={{ color: "hsl(240 5% 50%)", textDecoration: "none", transition: "color 0.2s" }}>

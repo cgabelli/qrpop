@@ -7,13 +7,13 @@ export const metadata = { title: "Impostazioni | QRpop" };
 
 export default async function SettingsPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  if (!session?.user?.id) redirect("/accedi");
 
   const utente = await prisma.user.findUnique({
     where: { id: session.user.id },
   });
 
-  if (!utente) redirect("/login");
+  if (!utente) redirect("/accedi");
 
   return <ImpostazioniClient utente={utente} />;
 }

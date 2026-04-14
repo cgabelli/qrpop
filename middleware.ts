@@ -7,11 +7,11 @@ export const middleware = auth((req) => {
 
   // Proteggi /dashboard
   if (pathname.startsWith("/dashboard") && !isLoggedIn) {
-    return NextResponse.redirect(new URL("/login", req.url));
+    return NextResponse.redirect(new URL("/accedi", req.url));
   }
 
   // Redirect chi è già loggato da login/register
-  if ((pathname === "/login" || pathname === "/register") && isLoggedIn) {
+  if ((pathname === "/accedi" || pathname === "/register") && isLoggedIn) {
     return NextResponse.redirect(new URL("/dashboard", req.url));
   }
 
@@ -19,5 +19,5 @@ export const middleware = auth((req) => {
 });
 
 export const config = {
-  matcher: ["/dashboard/:path*", "/login", "/register"],
+  matcher: ["/dashboard/:path*", "/accedi", "/register"],
 };

@@ -37,7 +37,7 @@ function ResetPasswordForm() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error || "Errore");
       setDone(true);
-      setTimeout(() => router.push("/login"), 3000);
+      setTimeout(() => router.push("/accedi"), 3000);
     } catch (err: unknown) {
       setError(err instanceof Error ? err.message : "Errore");
     } finally {

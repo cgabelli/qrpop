@@ -67,7 +67,7 @@ export default function ForgotPasswordPage() {
                 Se l&apos;email è registrata nel sistema, riceverai un link per reimpostare la password entro pochi minuti.
                 Controlla anche la cartella spam.
               </p>
-              <Link href="/login" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none", fontSize: 14 }}>
+              <Link href="/accedi" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none", fontSize: 14 }}>
                 ← Torna al login
               </Link>
             </div>
@@ -119,7 +119,7 @@ export default function ForgotPasswordPage() {
               </form>
 
               <p style={{ textAlign: "center", marginTop: 24, fontSize: 14, color: "#475569", fontWeight: 500 }}>
-                <Link href="/login" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none" }}>
+                <Link href="/accedi" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none" }}>
                   ← Torna al login
                 </Link>
               </p>

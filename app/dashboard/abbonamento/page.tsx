@@ -11,7 +11,7 @@ export default async function AbbonamentoPage({
   searchParams: Promise<{ success?: string; canceled?: string }>;
 }) {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  if (!session?.user?.id) redirect("/accedi");
 
   const params = await searchParams;
   const user = await prisma.user.findUnique({ 
@@ -23,7 +23,7 @@ export default async function AbbonamentoPage({
     }
   });
 
-  if (!user) redirect("/login");
+  if (!user) redirect("/accedi");
 
   return (
     <AbbonamentoClient

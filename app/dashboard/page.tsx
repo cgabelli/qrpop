@@ -7,7 +7,7 @@ export const metadata = { title: "Dashboard" };
 
 export default async function DashboardPage() {
   const session = await auth();
-  if (!session?.user?.id) redirect("/login");
+  if (!session?.user?.id) redirect("/accedi");
 
   const user = await prisma.user.findUnique({
     where: { id: session.user.id },
@@ -20,7 +20,7 @@ export default async function DashboardPage() {
     },
   });
 
-  if (!user) redirect("/login");
+  if (!user) redirect("/accedi");
 
   const totalSpots = user.qrSpots.length;
   const activeSpots = user.qrSpots.filter((s) => s.status === "active").length;

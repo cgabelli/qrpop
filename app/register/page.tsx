@@ -87,7 +87,7 @@ function RegisterForm() {
             Ti abbiamo inviato un link di verifica all'indirizzo <strong>{form.email}</strong>.<br/><br/>
             Clicca sul link per confermare la tua identità e accedere alla piattaforma.
           </p>
-          <Link href="/login" className="btn-primary" style={{ display: "inline-block", padding: "12px 24px", textDecoration: "none" }}>
+          <Link href="/accedi" className="btn-primary" style={{ display: "inline-block", padding: "12px 24px", textDecoration: "none" }}>
             Vai al Login
           </Link>
         </div>
@@ -160,7 +160,7 @@ function RegisterForm() {
               Continua con {plan.name} →
             </button>
             <p style={{ textAlign: "center", marginTop: 24, fontSize: 15, color: "#475569", fontWeight: 500 }}>
-              Hai già un account? <Link href="/login" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none" }}>Accedi</Link>
+              Hai già un account? <Link href="/accedi" style={{ color: "#2563eb", fontWeight: 800, textDecoration: "none" }}>Accedi</Link>
             </p>
           </div>
         )}

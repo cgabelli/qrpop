@@ -129,7 +129,7 @@ function NavBar() {
 
         <div style={{ display: "flex", alignItems: "center", gap: 16 }}>
           <Link
-            href="/login"
+            href="/accedi"
             style={{
               color: "hsl(var(--text-muted))",
               textDecoration: "none",
@@ -482,7 +482,7 @@ function Footer() {
           <Link href="/privacy" style={{ color: "#475569", textDecoration: "none" }}>Privacy Policy</Link>
           <Link href="/cookie" style={{ color: "#475569", textDecoration: "none" }}>Cookie</Link>
           <Link href="/termini" style={{ color: "#475569", textDecoration: "none" }}>Termini</Link>
-          <Link href="/login" style={{ color: "#475569", textDecoration: "none" }}>Accedi</Link>
+          <Link href="/accedi" style={{ color: "#475569", textDecoration: "none" }}>Accedi</Link>
           <Link href="/register" style={{ color: "#475569", textDecoration: "none" }}>Registrati</Link>
         </div>
       </div>
