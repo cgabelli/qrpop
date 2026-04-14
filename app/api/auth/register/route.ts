@@ -78,10 +78,11 @@ export async function POST(req: NextRequest) {
       },
     });
 
+    // TEMPORANEAMENTE DISABILITATO 
     // Invia email di verifica
-    await sendVerificationEmail(email, verificationToken);
+    // await sendVerificationEmail(email, verificationToken);
 
-    return NextResponse.json({ success: true, message: "Verification link sent" });
+    return NextResponse.json({ success: true, message: "Account salvato con successo (Email disabilitata)" });
   } catch (error) {
     console.error("Registration error:", error);
     return NextResponse.json({ error: "Errore interno del server" }, { status: 500 });
