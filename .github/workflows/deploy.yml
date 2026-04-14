@@ -60,6 +60,7 @@ jobs:
 
             npm install --legacy-peer-deps
             npx prisma generate
+            npx prisma db push
             # Build: if fails, abort without touching PM2 (keeps old version live)
             npm run build || { echo "❌ BUILD FAILED - keeping old version live"; exit 1; }
 
