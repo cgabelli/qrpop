@@ -494,6 +494,31 @@ export default function HomePage() {
   return (
     <>
       <NavBar />
+      {/* Script SEO Schema.org */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "WebApplication",
+            name: "QRpop",
+            url: "https://qrpop.it",
+            description: "Generatore di QR Code dinamici per ristoranti e attività commerciali con logo personalizzato e modifiche in tempo reale.",
+            applicationCategory: "BusinessApplication",
+            operatingSystem: "All",
+            offers: {
+              "@type": "Offer",
+              price: "0.00",
+              priceCurrency: "EUR"
+            },
+            creator: {
+              "@type": "Organization",
+              name: "Springfield S.r.l.",
+              url: "https://www.springfield.srl"
+            }
+          })
+        }}
+      />
       <main>
         <HeroSection />
         <HowItWorks />
