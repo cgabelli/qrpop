@@ -8,7 +8,7 @@ export async function POST(req: NextRequest) {
   try {
     const data = await req.json();
     const { 
-      email, password,
+      email, password, plan,
       isCompany, businessName, firstName, lastName,
       address, city, province, zipCode, phone,
       fiscalCode, vatNumber, sdiCode 
@@ -76,6 +76,25 @@ export async function POST(req: NextRequest) {
         phone,
         verificationToken
       },
+    });
+
+    // Crea un QRSpot predefinito basato sul piano scelto
+    const spotType = plan && ["free", "image", "video", "pdf", "unlimited"].includes(plan) ? plan : "free";
+    
+    let spotSlug = `${slug}-qr`;
+    let spotCounter = 1;
+    while (await prisma.qRSpot.findUnique({ where: { slug: spotSlug } })) {
+      spotSlug = `${slug}-qr-${spotCounter++}`;
+    }
+
+    await prisma.qRSpot.create({
+      data: {
+        userId: user.id,
+        name: `Il mio QR ${spotType.toUpperCase()}`,
+        slug: spotSlug,
+        type: spotType,
+        status: spotType === "free" ? "active" : "inactive", 
+      }
     });
 
     // TEMPORANEAMENTE DISABILITATO 

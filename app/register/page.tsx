@@ -83,15 +83,19 @@ function RegisterForm() {
     return (
       <div style={{ minHeight: "100vh", display: "flex", alignItems: "center", justifyContent: "center", padding: 24, background: "#f8fafc" }}>
         <div style={{ maxWidth: 460, padding: 40, textAlign: "center", background: "white", border: "1px solid #e2e8f0", borderRadius: 24, boxShadow: "0 10px 25px -5px rgba(0,0,0,0.05)" }}>
-          <div style={{ fontSize: 48, marginBottom: 16 }}>📧</div>
-          <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16, color: "#0f172a" }}>Controlla la tua email</h1>
+          <div style={{ fontSize: 48, marginBottom: 16 }}>🎉</div>
+          <h1 style={{ fontSize: 24, fontWeight: 800, marginBottom: 16, color: "#0f172a" }}>Account creato!</h1>
           <p style={{ color: "#475569", lineHeight: 1.6, marginBottom: 24, fontWeight: 500 }}>
-            Ti abbiamo inviato un link di verifica all'indirizzo <strong>{form.email}</strong>.<br/><br/>
-            Clicca sul link per confermare la tua identità e accedere alla piattaforma.
+            Il tuo account aziendale <strong>{form.email}</strong> è stato configurato con successo.<br/><br/>
+            Accedi ora alla tua Dashboard per configurare il tuo QR Code e abbonarti!
           </p>
-          <Link href="/accedi" className="btn-primary" style={{ display: "inline-block", padding: "12px 24px", textDecoration: "none" }}>
-            Vai al Login
-          </Link>
+          <button 
+            autoFocus
+            onClick={() => router.push('/accedi')} 
+            className="btn-primary" 
+            style={{ width: "100%", padding: "14px 24px", fontSize: 16, cursor: "pointer", border: "none" }}>
+            Vai alla Dashboard →
+          </button>
         </div>
       </div>
     );
